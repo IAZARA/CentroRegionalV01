@@ -1,0 +1,343 @@
+/* Variables */
+:root {
+    --primary-color: #1DA1F2;
+    --secondary-color: #14171A;
+    --background-color: #F5F8FA;
+    --border-color: #E1E8ED;
+    --text-color: #14171A;
+    --text-secondary: #657786;
+    --hover-color: #F5F8FA;
+    --card-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Estilos generales */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    background-color: white !important;
+    box-shadow: var(--card-shadow);
+    padding: 0.5rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* Sidebar */
+.sidebar {
+    position: sticky;
+    top: 80px;
+}
+
+.stats-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 1rem;
+}
+
+.stats-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 10px;
+    transition: background-color 0.2s;
+}
+
+.stats-item:hover {
+    background-color: var(--hover-color);
+}
+
+.stats-item i {
+    font-size: 1.2rem;
+    margin-right: 1rem;
+    color: var(--primary-color);
+}
+
+.stats-label {
+    flex-grow: 1;
+    color: var(--text-secondary);
+}
+
+.stats-value {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* Panel de Control */
+.control-panel {
+    border: none;
+    border-radius: 15px;
+    box-shadow: var(--card-shadow);
+}
+
+.control-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.control-link {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+.control-link:hover {
+    background-color: var(--hover-color);
+    color: var(--primary-color);
+    text-decoration: none;
+    transform: translateX(5px);
+}
+
+.control-link i {
+    font-size: 1.2rem;
+    margin-right: 1rem;
+    width: 24px;
+    text-align: center;
+}
+
+/* Feed de Noticias */
+.news-feed {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.news-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 1rem;
+    padding: 1rem;
+    transition: transform 0.2s;
+}
+
+.news-card:hover {
+    transform: translateY(-2px);
+}
+
+.news-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.source-info {
+    display: flex;
+    align-items: center;
+}
+
+.country-flag {
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.country-flag-small {
+    font-size: 1rem;
+    margin-right: 0.5rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.source-name {
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+.source-country {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.keyword-tag {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.news-content {
+    margin-bottom: 1rem;
+}
+
+.news-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.news-title a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.news-title a:hover {
+    color: var(--primary-color);
+}
+
+.news-snippet {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.news-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.read-more {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.read-more:hover {
+    text-decoration: underline;
+}
+
+.news-time {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Panel Derecho */
+.right-sidebar {
+    position: sticky;
+    top: 80px;
+}
+
+.country-stats {
+    margin-top: 1rem;
+}
+
+.country-stat-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.country-stat-item:hover {
+    background-color: var(--hover-color);
+    transform: translateX(5px);
+}
+
+.country-stat-item.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.country-stat-item.active .country-count {
+    color: white;
+}
+
+.country-name {
+    flex-grow: 1;
+    margin-right: 0.5rem;
+}
+
+.country-count {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.card-title {
+    margin-bottom: 1rem;
+}
+
+.clear-filter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.clear-filter:hover {
+    background-color: var(--hover-color);
+    color: var(--primary-color);
+}
+
+.clear-filter i {
+    margin-right: 0.5rem;
+}
+
+/* Eliminando los estilos adicionales de títulos */
+.stats-card .card-title,
+.control-panel .card-title,
+.right-sidebar .card-title {
+    margin-bottom: 1rem;
+}
+
+/* No News State */
+.no-news {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+}
+
+.no-news i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar, .right-sidebar {
+        position: static;
+        margin-bottom: 1rem;
+    }
+
+    .news-feed {
+        margin: 0;
+    }
+
+    .container-fluid {
+        padding: 0.5rem;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.news-card {
+    animation: fadeIn 0.3s ease-out;
+}

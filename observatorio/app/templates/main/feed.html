@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('main.feed') }}">
+                <i class="fas fa-microscope"></i> Observatorio de Drogas Sintéticas
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.change_password') }}">
+                            <i class="fas fa-key"></i> Cambiar Contraseña
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Panel de Control (Sidebar) -->
+            <div class="col-md-3">
+                <div class="sidebar">
+                    <!-- Estadísticas -->
+                    <div class="card mb-4 stats-card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-chart-bar"></i> Estadísticas</h5>
+                            <div class="stats-item">
+                                <i class="fas fa-newspaper"></i>
+                                <span class="stats-label">Total de Noticias</span>
+                                <span class="stats-value">{{ stats.total }}</span>
+                            </div>
+                            <div class="stats-item">
+                                <i class="fas fa-clock"></i>
+                                <span class="stats-label">Últimas 24h</span>
+                                <span class="stats-value">{{ stats.news_last_24h }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel de Control -->
+                    <div class="card control-panel">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-sliders-h"></i> Panel de Control</h5>
+                            <ul class="control-menu">
+                                <li>
+                                    <a href="#" class="control-link">
+                                        <i class="fas fa-chart-line"></i>
+                                        <span>Tendencias y Patrones</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="control-link">
+                                        <i class="fas fa-book"></i>
+                                        <span>Biblioteca de Informes</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="control-link">
+                                        <i class="fas fa-map-marked-alt"></i>
+                                        <span>GeoMap</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="control-link">
+                                        <i class="fas fa-database"></i>
+                                        <span>Datos Abiertos</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="control-link">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <span>Sistema de Alerta</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="control-link">
+                                        <i class="fas fa-gavel"></i>
+                                        <span>Legislación</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="control-link">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>Agenda MinSeg</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feed de Noticias -->
+            <div class="col-md-6">
+                <div class="news-feed">
+                    {% if news %}
+                        {% for item in news %}
+                            <div class="news-card">
+                                <div class="news-header">
+                                    <div class="source-info">
+                                        <span class="country-flag">
+                                            {% if item.country == '.ar' %}🇦🇷
+                                            {% elif item.country == '.cl' %}🇨🇱
+                                            {% elif item.country == '.uy' %}🇺🇾
+                                            {% elif item.country == '.py' %}🇵🇾
+                                            {% elif item.country == '.bo' %}🇧🇴
+                                            {% else %}🌎
+                                            {% endif %}
+                                        </span>
+                                        <span class="source-name">{{ item.source }}</span>
+                                        <span class="source-country">{{ stats.countries[item.country].name if item.country else 'Internacional' }}</span>
+                                    </div>
+                                    <span class="keyword-tag">{{ item.keyword }}</span>
+                                </div>
+                                <div class="news-content">
+                                    <h5 class="news-title">
+                                        <a href="{{ item.link }}" target="_blank">{{ item.title }}</a>
+                                    </h5>
+                                    <p class="news-snippet">{{ item.snippet }}</p>
+                                </div>
+                                <div class="news-footer">
+                                    <a href="{{ item.link }}" target="_blank" class="read-more">
+                                        <i class="fas fa-external-link-alt"></i> Leer más
+                                    </a>
+                                    <span class="news-time">
+                                        <i class="far fa-clock"></i> {{ item.published_date.strftime('%d/%m/%Y %H:%M') if item.published_date else 'Fecha no disponible' }}
+                                    </span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="no-news">
+                            <i class="fas fa-newspaper"></i>
+                            <p>No se encontraron noticias.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Panel Derecho -->
+            <div class="col-md-3">
+                <div class="right-sidebar">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-globe-americas"></i> Cobertura por País</h5>
+                            <div class="country-stats">
+                                {% for country_code, info in stats.countries.items() %}
+                                    {% if info.count > 0 %}
+                                        <a href="{{ url_for('main.feed', country=country_code) }}" 
+                                           class="country-stat-item {% if request.args.get('country') == country_code %}active{% endif %}">
+                                            <span class="country-flag">
+                                                {% if country_code == '.ar' %}🇦🇷
+                                                {% elif country_code == '.cl' %}🇨🇱
+                                                {% elif country_code == '.uy' %}🇺🇾
+                                                {% elif country_code == '.py' %}🇵🇾
+                                                {% elif country_code == '.bo' %}🇧🇴
+                                                {% else %}🌎
+                                                {% endif %}
+                                            </span>
+                                            <span class="country-name">{{ info.name }}</span>
+                                            <span class="country-count">{{ info.count }}</span>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if request.args.get('country') %}
+                                    <a href="{{ url_for('main.feed') }}" class="clear-filter">
+                                        <i class="fas fa-times"></i> Limpiar filtro
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
