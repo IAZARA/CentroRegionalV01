@@ -10,6 +10,13 @@
     --card-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+/* Header */
+.header-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
 /* Estilos generales */
 body {
     background-color: var(--background-color);
