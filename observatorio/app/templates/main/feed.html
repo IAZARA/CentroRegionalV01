@@ -67,7 +67,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="control-link">
+                                    <a href="{{ url_for('main.geomap') }}" class="control-link" onclick="event.preventDefault(); window.location.href='{{ url_for('main.geomap') }}';">
                                         <i class="fas fa-map-marked-alt"></i>
                                         <span>GeoMap</span>
                                     </a>

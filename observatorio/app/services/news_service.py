@@ -68,6 +68,9 @@ class NewsService:
                     # Extraer el dominio de la URL
                     domain = urlparse(item['link']).netloc
                     
+                    # Extraer el nombre del medio desde el dominio
+                    media_name = domain.replace('www.', '').split('.')[0]
+                    
                     # Encontrar el país correspondiente al dominio
                     country_code = None
                     for code, info in self.country_domains.items():
@@ -79,7 +82,7 @@ class NewsService:
                         'title': item.get('title'),
                         'link': item.get('link'),
                         'snippet': item.get('snippet'),
-                        'source': domain,
+                        'source': media_name,
                         'country': country_code,
                         'keyword': keyword,
                         'published_date': datetime.now()  # Google no proporciona la fecha directamente

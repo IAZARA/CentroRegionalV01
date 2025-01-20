@@ -4,8 +4,10 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from celery import Celery
-from config import Config
+from dotenv import load_dotenv
 import os
+
+load_dotenv()  # Cargar variables de entorno desde .env
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -33,9 +35,43 @@ def create_admin_user():
         db.session.commit()
         print('Usuario administrador creado exitosamente.')
 
-def create_app(config_class=Config):
+def create_app(config_class=None):
     app = Flask(__name__)
-    app.config.from_object(config_class)
+    
+    if config_class is None:
+        # Configuración desde variables de entorno
+        app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-12345')
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///observatorio.db')
+        app.config['GOOGLE_API_KEY'] = os.environ.get('GOOGLE_API_KEY')
+        app.config['GOOGLE_SEARCH_ENGINE_ID'] = os.environ.get('GOOGLE_SEARCH_ENGINE_ID')
+        app.config['MAPBOX_TOKEN'] = os.environ.get('MAPBOX_TOKEN')
+        app.config['OPENCAGE_API_KEY'] = os.environ.get('OPENCAGE_API_KEY')
+        
+        # Configuración de dominios por país
+        app.config['COUNTRY_DOMAINS'] = {
+            '.ar': {
+                'name': 'Argentina',
+                'domains': ['clarin.com', 'lanacion.com.ar', 'infobae.com', 'pagina12.com.ar', 'telam.com.ar']
+            },
+            '.cl': {
+                'name': 'Chile',
+                'domains': ['emol.com', 'latercera.com', 'cooperativa.cl', 'elmostrador.cl']
+            },
+            '.uy': {
+                'name': 'Uruguay',
+                'domains': ['elpais.com.uy', 'elobservador.com.uy', 'montevideo.com.uy']
+            },
+            '.py': {
+                'name': 'Paraguay',
+                'domains': ['abc.com.py', 'ultimahora.com', 'lanacion.com.py']
+            },
+            '.bo': {
+                'name': 'Bolivia',
+                'domains': ['eldeber.com.bo', 'la-razon.com', 'lostiempos.com']
+            }
+        }
+    else:
+        app.config.from_object(config_class)
 
     # Inicializar extensiones
     db.init_app(app)

@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+<style>
+    #map {
+        width: 100%;
+        height: 80vh;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    .marker-popup {
+        max-width: 300px;
+        padding: 10px;
+    }
+    .marker-popup h5 {
+        margin: 0 0 8px 0;
+        color: #2c3e50;
+    }
+    .marker-popup p {
+        margin: 0 0 5px 0;
+        font-size: 0.9em;
+        color: #34495e;
+    }
+    #debug-info {
+        margin-top: 10px;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 4px;
+    }
+    
+    /* Estilos para el modal de carga */
+    .loading-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .loading-content {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .loading-spinner {
+        border: 5px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 5px solid #3498db;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px auto;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Estilos para los marcadores */
+    .mapboxgl-marker {
+        cursor: pointer;
+    }
+    
+    .mapboxgl-marker:hover {
+        transform: scale(1.2);
+    }
+    
+    /* Estilos para el popup */
+    .mapboxgl-popup {
+        max-width: 400px !important;
+    }
+    
+    .mapboxgl-popup-content {
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Modal de Carga -->
+<div id="loadingModal" class="loading-modal">
+    <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <h4>Cargando Noticias</h4>
+        <p>Por favor espere mientras se cargan las noticias en el mapa...</p>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-3">
+                <i class="fas fa-map-marked-alt"></i> 
+                Mapa de Noticias
+            </h2>
+            <p class="text-muted">
+                Visualización geográfica de noticias sobre drogas sintéticas en Sudamérica
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div id="map"></div>
+            <div id="debug-info"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+<script>
+    // Mostrar modal de carga
+    function showLoadingModal() {
+        document.getElementById('loadingModal').style.display = 'flex';
+    }
+    
+    // Ocultar modal de carga
+    function hideLoadingModal() {
+        document.getElementById('loadingModal').style.display = 'none';
+    }
+
+    // Función para agregar marcadores al mapa
+    function addMarkersToMap(map, markersData) {
+        console.log('Adding markers to map...', markersData);
+        let validMarkers = 0;
+        let invalidMarkers = 0;
+
+        markersData.forEach((markerData, index) => {
+            try {
+                if (!markerData.coordinates || markerData.coordinates.length !== 2) {
+                    console.warn(`Invalid coordinates for marker ${index}:`, markerData);
+                    invalidMarkers++;
+                    return;
+                }
+
+                const [lat, lng] = markerData.coordinates;
+                
+                // Validar coordenadas
+                if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+                    console.warn(`Invalid coordinate values for marker ${index}:`, lat, lng);
+                    invalidMarkers++;
+                    return;
+                }
+
+                // Crear popup con más información
+                const popup = new mapboxgl.Popup({ offset: 25 })
+                    .setHTML(`
+                        <div class="marker-popup">
+                            <h5>${markerData.news.title}</h5>
+                            <p>${markerData.news.snippet || ''}</p>
+                            <p><small><strong>Ubicación:</strong> ${markerData.location || 'No especificada'}</small></p>
+                            <p><small><strong>Fecha:</strong> ${markerData.news.published_date || 'No especificada'}</small></p>
+                            <a href="${markerData.news.link}" target="_blank" class="btn btn-sm btn-primary">Leer más</a>
+                        </div>
+                    `);
+
+                // Crear marcador
+                const marker = new mapboxgl.Marker({
+                    color: '#e74c3c'
+                })
+                .setLngLat([lng, lat])
+                .setPopup(popup)
+                .addTo(map);
+                
+                validMarkers++;
+            } catch (error) {
+                console.error(`Error adding marker ${index}:`, error);
+                invalidMarkers++;
+            }
+        });
+
+        console.log(`Markers summary: Valid=${validMarkers}, Invalid=${invalidMarkers}, Total=${markersData.length}`);
+        document.getElementById('debug-info').innerHTML += `<br>Marcadores válidos: ${validMarkers}, Inválidos: ${invalidMarkers}`;
+
+        // Ajustar el mapa para mostrar todos los marcadores
+        if (validMarkers > 0) {
+            const bounds = new mapboxgl.LngLatBounds();
+            markersData.forEach(markerData => {
+                if (markerData.coordinates && 
+                    markerData.coordinates.length === 2 &&
+                    markerData.coordinates[0] >= -90 && 
+                    markerData.coordinates[0] <= 90 &&
+                    markerData.coordinates[1] >= -180 && 
+                    markerData.coordinates[1] <= 180) {
+                    const [lat, lng] = markerData.coordinates;
+                    bounds.extend([lng, lat]);
+                }
+            });
+            map.fitBounds(bounds, { 
+                padding: 50,
+                maxZoom: 8 // Limitar el zoom máximo
+            });
+        }
+        
+        // Ocultar el modal de carga cuando todo esté listo
+        hideLoadingModal();
+    }
+
+    // Inicializar el mapa cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            // Mostrar el modal de carga
+            showLoadingModal();
+            
+            console.log('Initializing map...');
+            const debugInfo = document.getElementById('debug-info');
+            
+            // Debug info
+            debugInfo.innerHTML = 'Token length: ' + '{{ mapbox_token }}'.length + '<br>';
+            debugInfo.innerHTML += 'Markers count: ' + {{ markers|length }} + '<br>';
+            
+            // Inicializar el mapa primero
+            mapboxgl.accessToken = '{{ mapbox_token }}';
+            console.log('Access token set');
+            
+            const map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/light-v11',
+                center: [-58.3816, -34.6037], // Buenos Aires
+                zoom: 4,
+                projection: 'mercator'
+            });
+
+            // Agregar controles básicos
+            map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+            map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
+
+            // Esperar a que el mapa se cargue completamente
+            map.on('load', () => {
+                console.log('Map loaded successfully');
+                debugInfo.innerHTML += '<br>Map loaded successfully';
+                
+                // Convertir los marcadores de Python a JavaScript
+                const markersData = {{ markers|tojson|safe }};
+                console.log('Markers data loaded:', markersData);
+                
+                // Agregar los marcadores después de que el mapa esté cargado
+                addMarkersToMap(map, markersData);
+            });
+
+            // Manejar errores del mapa
+            map.on('error', (e) => {
+                console.error('Map error:', e);
+                debugInfo.innerHTML += '<br>Map error: ' + (e.error ? e.error.message : JSON.stringify(e));
+                hideLoadingModal(); // Ocultar el modal si hay un error
+            });
+
+        } catch (error) {
+            console.error('Error initializing map:', error);
+            document.getElementById('debug-info').innerHTML += '<br>Error: ' + error.message;
+            hideLoadingModal(); // Ocultar el modal si hay un error
+        }
+    });
+</script>
+{% endblock %}
