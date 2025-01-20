@@ -9,7 +9,7 @@ bp = Blueprint('auth', __name__)
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('main.feed'))
+        return redirect(url_for('main.home'))
     
     form = LoginForm()
     if form.validate_on_submit():
@@ -18,7 +18,7 @@ def login():
             login_user(user, remember=form.remember_me.data)
             next_page = request.args.get('next')
             if not next_page or not next_page.startswith('/'):
-                next_page = url_for('main.feed')
+                next_page = url_for('main.home')
             return redirect(next_page)
         flash('Email o contraseña incorrectos', 'danger')
     return render_template('auth/login.html', form=form)

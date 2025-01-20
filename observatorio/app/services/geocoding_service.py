@@ -41,40 +41,42 @@ class GeocodingService:
         """
         Extraer posibles ubicaciones del texto usando patrones comunes
         """
-        # Normalizar texto
-        text = text.lower()
-        
-        # Palabras a ignorar
+        # Lista de palabras a ignorar (reducida y más específica)
         ignore_words = {
-            'pesos', 'millones', 'drogas', 'metanfetamina', 'mdma', 'éxtasis', 
-            'cocaína', 'marihuana', 'cannabis', 'narcotráfico', 'consumidores',
-            'manera', 'sector', 'terminal', 'aduana', 'policía', 'gobierno',
-            'estado', 'país', 'región'
+            'pesos', 'millones', 'drogas', 'manera', 'sector', 'policía',
+            'gobierno', 'estado'
         }
         
-        # Patrones de ubicación específicos
+        # Patrones de ubicación más flexibles
         patterns = [
-            # Ciudades y lugares específicos
-            r'(?:en|desde|de|cerca de) (?:la ciudad de |el municipio de )?([A-Z][a-záéíóúñ]+(?:\s+[A-Z][a-záéíóúñ]+)*)',
-            # Referencias geográficas con preposiciones
-            r'(?:en|desde|de|cerca de) (?:la |el |los |las )?([A-Z][a-záéíóúñ]+(?:\s+[A-Z][a-záéíóúñ]+)*)'
+            # Ciudades y lugares después de preposiciones
+            r'(?:en|desde|de|cerca de|hacia|para|sobre) (?:la ciudad de |el municipio de |la localidad de )?([A-Za-záéíóúñÁÉÍÓÚÑ]+(?:\s+[A-Za-záéíóúñÁÉÍÓÚÑ]+)*)',
+            # Nombres propios que parecen ubicaciones
+            r'(?<![a-záéíóúñ])[A-Z][a-záéíóúñ]+(?:\s+[A-Z][a-záéíóúñ]+)*(?![a-záéíóúñ])',
+            # Referencias geográficas específicas
+            r'(?:puerto|ciudad|provincia|estado|región|departamento|municipio) (?:de |del |de la )?([A-Za-záéíóúñÁÉÍÓÚÑ]+(?:\s+[A-Za-záéíóúñÁÉÍÓÚÑ]+)*)'
         ]
 
         locations = []
-        # Primero buscar en el texto original (sin lowercase) para mantener las mayúsculas
+        
+        # Buscar en el texto original para mantener las mayúsculas
         for pattern in patterns:
-            matches = re.finditer(pattern, text, re.UNICODE)
+            matches = re.finditer(pattern, text, re.UNICODE | re.IGNORECASE)
             for match in matches:
-                location = match.group(1).strip()
+                # Tomar el grupo capturado si existe, sino tomar todo el match
+                location = match.group(1) if match.groups() else match.group(0)
+                location = location.strip()
+                
                 # Validar la ubicación
                 location_lower = location.lower()
-                if (len(location) > 3 and  # Más de 3 caracteres
+                if (len(location) > 2 and  # Más de 2 caracteres
                     not any(word in location_lower for word in ignore_words) and  # No contiene palabras a ignorar
                     not re.match(r'\d', location) and  # No empieza con número
-                    not re.match(r'[A-Z\s]+$', location)):  # No es todo mayúsculas
+                    not location.isupper()):  # No es todo mayúsculas
                     locations.append(location)
 
-        return list(set(locations))  # Eliminar duplicados
+        # Eliminar duplicados preservando el orden
+        return list(dict.fromkeys(locations))
 
     def get_country_from_url(self, url: str) -> Optional[str]:
         """
@@ -154,6 +156,8 @@ class GeocodingService:
             if not country_name:
                 return None
 
+            # Limpiar y preparar la ubicación
+            location = re.sub(r'^(?:ciudad|provincia|estado|región|departamento|municipio)(?:\s+(?:de|del|de la))?\s+', '', location, flags=re.IGNORECASE)
             search_query = f"{location}, {country_name}"
             
             response = requests.get(
@@ -174,10 +178,10 @@ class GeocodingService:
                 if data['results']:
                     result = data['results'][0]
                     
-                    # Verificar la confianza del resultado
+                    # Reducir el umbral de confianza para obtener más resultados
                     confidence = result.get('confidence', 0)
-                    if confidence < 7:  # Aumentar el umbral de confianza
-                        print(f"Baja confianza ({confidence}) para la ubicación: {location}")
+                    if confidence < 5:  # Umbral más permisivo
+                        logger.warning(f"Baja confianza ({confidence}) para la ubicación: {location}")
                         return None
                     
                     lat = result['geometry']['lat']
@@ -193,7 +197,7 @@ class GeocodingService:
                             self._save_cache()
                             return coordinates
                         else:
-                            print(f"Coordenadas fuera del país para {location}: ({lat}, {lng})")
+                            logger.warning(f"Coordenadas fuera del país para {location}: ({lat}, {lng})")
                             return None
 
             return None

@@ -1,0 +1,214 @@
+{% extends "base_dashboard.html" %}
+
+{% block dashboard_content %}
+<div class="row">
+    <!-- Columna de Noticias -->
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-newspaper text-primary"></i> Noticias
+                    </h5>
+                    <div class="stats d-flex gap-4">
+                        <div class="stat-item">
+                            <i class="fas fa-chart-bar text-primary"></i>
+                            <span class="ms-2">Total: {{ stats.total }}</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-clock text-primary"></i>
+                            <span class="ms-2">Últimas 24h: {{ stats.news_last_24h }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {% if news %}
+                    {% for item in news %}
+                        <div class="news-item mb-4">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="source-info d-flex align-items-center">
+                                    <span class="source-name me-2">{{ item.source }}</span>
+                                    <span class="country-badge me-2">
+                                        {% if item.country == '.ar' %}🇦🇷 Argentina
+                                        {% elif item.country == '.cl' %}🇨🇱 Chile
+                                        {% elif item.country == '.uy' %}🇺🇾 Uruguay
+                                        {% elif item.country == '.py' %}🇵🇾 Paraguay
+                                        {% elif item.country == '.bo' %}🇧🇴 Bolivia
+                                        {% else %}🌎 Internacional
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <span class="badge bg-primary ms-auto">{{ item.source }}</span>
+                            </div>
+                            
+                            <h6 class="mb-2">
+                                <a href="{{ item.url }}" target="_blank" class="news-title">{{ item.title }}</a>
+                            </h6>
+                            
+                            <p class="news-content mb-2">{{ item.content[:200] }}...</p>
+                            
+                            <div class="news-meta text-muted">
+                                <small>
+                                    <i class="far fa-clock me-1"></i>
+                                    {{ item.published_date.strftime('%d/%m/%Y %H:%M') }}
+                                </small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                    <!-- Paginación -->
+                    {% if total_pages > 1 %}
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            {% if current_page > 1 %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('main.feed_new', page=current_page-1) }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            
+                            {% for page in range(1, total_pages + 1) %}
+                            <li class="page-item {% if page == current_page %}active{% endif %}">
+                                <a class="page-link" href="{{ url_for('main.feed_new', page=page) }}">{{ page }}</a>
+                            </li>
+                            {% endfor %}
+                            
+                            {% if current_page < total_pages %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('main.feed_new', page=current_page+1) }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                {% else %}
+                    <div class="alert alert-info">
+                        No hay noticias disponibles en este momento.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Columna de Estadísticas -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-chart-pie text-primary"></i> Estadísticas por País
+                </h5>
+                <div class="country-stats mt-3">
+                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                        <span>🇦🇷 Argentina</span>
+                        <span class="badge bg-primary">{{ stats.get('ar', 0) }}</span>
+                    </div>
+                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                        <span>🇨🇱 Chile</span>
+                        <span class="badge bg-primary">{{ stats.get('cl', 0) }}</span>
+                    </div>
+                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                        <span>🇺🇾 Uruguay</span>
+                        <span class="badge bg-primary">{{ stats.get('uy', 0) }}</span>
+                    </div>
+                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                        <span>🇵🇾 Paraguay</span>
+                        <span class="badge bg-primary">{{ stats.get('py', 0) }}</span>
+                    </div>
+                    <div class="country-stat-item d-flex justify-content-between align-items-center">
+                        <span>🇧🇴 Bolivia</span>
+                        <span class="badge bg-primary">{{ stats.get('bo', 0) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.news-item {
+    padding: 15px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+
+.news-item:hover {
+    transform: translateY(-2px);
+}
+
+.source-name {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.country-badge {
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+.news-title {
+    color: #2c3e50;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.news-title:hover {
+    color: #3498db;
+}
+
+.news-content {
+    color: #6c757d;
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+.news-meta {
+    font-size: 0.85em;
+}
+
+.stat-item {
+    background: rgba(52, 152, 219, 0.1);
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: #2c3e50;
+}
+
+.country-stat-item {
+    padding: 8px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.country-stat-item:hover {
+    background: rgba(52, 152, 219, 0.1);
+}
+
+.pagination {
+    margin-bottom: 0;
+}
+
+.page-link {
+    color: #2c3e50;
+    border: none;
+    margin: 0 2px;
+    border-radius: 4px;
+}
+
+.page-link:hover {
+    background: #3498db;
+    color: white;
+}
+
+.page-item.active .page-link {
+    background: #3498db;
+    border-color: #3498db;
+}
+</style>
+{% endblock %}

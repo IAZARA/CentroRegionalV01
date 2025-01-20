@@ -348,3 +348,161 @@ body {
 .news-card {
     animation: fadeIn 0.3s ease-out;
 }
+
+/* Sidebar Styles */
+.sidebar {
+    width: 280px;
+    background: white;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 80px; /* Ajustado para estar debajo del header */
+    bottom: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    border-right: 1px solid #e9ecef;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    padding: 1rem 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.menu-item {
+    margin: 0.5rem 0;
+}
+
+.menu-item a {
+    color: #666;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.menu-item a:hover {
+    background: #f8f9fa;
+    color: #1a1a1a;
+}
+
+.menu-item.active a {
+    background: #e9ecef;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.menu-item i {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.sidebar-footer {
+    padding-top: 1rem;
+    margin-top: auto;
+    border-top: 1px solid #e9ecef;
+}
+
+.logout-btn {
+    color: #666;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.logout-btn:hover {
+    background: #f8f9fa;
+    color: #dc3545;
+}
+
+.logout-btn i {
+    margin-right: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        margin-left: -280px;
+        transition: margin 0.3s ease-in-out;
+    }
+
+    .sidebar.active {
+        margin-left: 0;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+    }
+}
+
+/* Main Content Styles */
+.main-content {
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 80px); /* Ajustado para considerar el header */
+    padding: 2rem;
+    margin-left: 280px;
+    margin-top: 80px; /* Agregado margen superior */
+}
+
+/* Header Styles */
+.main-header {
+    background: white;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #e9ecef;
+    position: fixed; /* Fijamos el header */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1001; /* Por encima del sidebar */
+    height: 80px;
+}
+
+.header-logo {
+    height: 60px;
+    width: auto;
+}
+
+/* General Styles */
+body {
+    background-color: #f8f9fa;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}

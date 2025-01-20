@@ -3,45 +3,59 @@ from flask_login import login_required, current_user
 from app.services.news_service import NewsService
 from app.services.geocoding_service import GeocodingService
 from datetime import datetime, timedelta
+from app.models import News
 
 bp = Blueprint('main', __name__)
 
 @bp.route('/')
 def index():
     if current_user.is_authenticated:
-        return redirect(url_for('main.feed'))
+        return redirect(url_for('main.home'))
     return redirect(url_for('auth.login'))
 
-@bp.route('/feed')
+@bp.route('/home')
 @login_required
-def feed():
-    country_filter = request.args.get('country', None)
-    news_service = NewsService()
+def home():
+    return render_template('main/home.html')
+
+@bp.route('/noticias')
+@login_required
+def feed_new():
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
     
-    # Obtener todas las noticias
-    all_news = news_service.search_news()
+    # Obtener las noticias paginadas
+    news = News.query.order_by(News.published_date.desc()).paginate(
+        page=page, per_page=per_page, error_out=False)
     
-    # Filtrar por país si se especifica
-    if country_filter:
-        filtered_news = [news for news in all_news if news.get('country') == country_filter]
-    else:
-        filtered_news = all_news
+    # Estadísticas generales
+    total_news = News.query.count()
+    news_last_24h = News.query.filter(
+        News.published_date >= datetime.now() - timedelta(days=1)
+    ).count()
     
-    # Calcular estadísticas
-    current_time = datetime.now()
-    stats = {
-        'total': len(all_news),
-        'news_last_24h': len([n for n in all_news if n.get('published_date') > (current_time - timedelta(days=1))]),
-        'countries': {
-            '.ar': {'name': 'Argentina', 'count': len([n for n in all_news if n.get('country') == '.ar'])},
-            '.cl': {'name': 'Chile', 'count': len([n for n in all_news if n.get('country') == '.cl'])},
-            '.uy': {'name': 'Uruguay', 'count': len([n for n in all_news if n.get('country') == '.uy'])},
-            '.py': {'name': 'Paraguay', 'count': len([n for n in all_news if n.get('country') == '.py'])},
-            '.bo': {'name': 'Bolivia', 'count': len([n for n in all_news if n.get('country') == '.bo'])}
-        }
+    # Estadísticas por país
+    countries = {
+        'ar': News.query.filter(News.country == '.ar').count(),
+        'cl': News.query.filter(News.country == '.cl').count(),
+        'uy': News.query.filter(News.country == '.uy').count(),
+        'py': News.query.filter(News.country == '.py').count(),
+        'bo': News.query.filter(News.country == '.bo').count()
     }
     
-    return render_template('main/feed.html', news=filtered_news, stats=stats)
+    stats = {
+        'total': total_news,
+        'news_last_24h': news_last_24h,
+        **countries
+    }
+    
+    return render_template(
+        'main/feed_new.html',
+        news=news.items,
+        stats=stats,
+        current_page=page,
+        total_pages=news.pages
+    )
 
 @bp.route('/geomap')
 @login_required
@@ -73,7 +87,7 @@ def geomap():
     if not mapbox_token:
         print("Error: No se encontró el token de Mapbox")
         flash('Error: No se encontró el token de Mapbox', 'error')
-        return redirect(url_for('main.feed'))
+        return redirect(url_for('main.feed_new'))
     
     print(f"Token de Mapbox encontrado (primeros 10 caracteres): {mapbox_token[:10]}...")
     

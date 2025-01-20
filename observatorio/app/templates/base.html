@@ -8,52 +8,131 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    
-    {% block extra_css %}{% endblock %}
 </head>
 <body>
     <!-- Header -->
-    <header class="bg-primary text-white py-3">
-        <div class="container d-flex align-items-center">
-            <img src="{{ url_for('static', filename='img/pngegg.png') }}" alt="Logo" class="header-logo me-3">
-            <h1 class="mb-0">Centro Regional de Drogas Sintéticas</h1>
-        </div>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    </ul>
-                </div>
+    <header class="main-header">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <img src="{{ url_for('static', filename='img/CENTRO REGIONAL con letra.png') }}" alt="Logo" class="header-logo me-3">
+                <h1 class="mb-0 h3">Centro Regional de Drogas Sintéticas</h1>
             </div>
-        </nav>
+            {% if current_user.is_authenticated %}
+            <div class="user-actions">
+                <a href="{{ url_for('auth.change_password') }}" class="btn btn-outline-primary btn-sm me-2">
+                    <i class="fas fa-key"></i> Cambiar Contraseña
+                </a>
+            </div>
+            {% endif %}
+        </div>
     </header>
 
-    <!-- Flash Messages -->
-    <div class="container mt-3">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+    <div class="app-container">
+        {% if current_user.is_authenticated %}
+            <!-- Sidebar -->
+            <nav id="sidebar" class="sidebar">
+                <div class="sidebar-header">
+                    <h3>Panel de Control</h3>
+                </div>
+
+                <ul class="sidebar-menu">
+                    <li class="menu-item {% if request.endpoint == 'main.home' %}active{% endif %}">
+                        <a href="{{ url_for('main.home') }}">
+                            <i class="fas fa-home"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+                    <li class="menu-item {% if request.endpoint == 'main.feed_new' %}active{% endif %}">
+                        <a href="{{ url_for('main.feed_new') }}">
+                            <i class="fas fa-newspaper"></i>
+                            <span>Noticias</span>
+                        </a>
+                    </li>
+                    <li class="menu-item {% if request.endpoint == 'main.trends' %}active{% endif %}">
+                        <a href="#">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Tendencias y Patrones</span>
+                        </a>
+                    </li>
+                    <li class="menu-item {% if request.endpoint == 'main.library' %}active{% endif %}">
+                        <a href="#">
+                            <i class="fas fa-book"></i>
+                            <span>Biblioteca de Informes</span>
+                        </a>
+                    </li>
+                    <li class="menu-item {% if request.endpoint == 'main.geomap' %}active{% endif %}">
+                        <a href="{{ url_for('main.geomap') }}">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <span>GeoMap</span>
+                        </a>
+                    </li>
+                    <li class="menu-item {% if request.endpoint == 'main.data' %}active{% endif %}">
+                        <a href="#">
+                            <i class="fas fa-database"></i>
+                            <span>Datos Abiertos</span>
+                        </a>
+                    </li>
+                    <li class="menu-item {% if request.endpoint == 'main.alerts' %}active{% endif %}">
+                        <a href="#">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>Sistema de Alerta</span>
+                        </a>
+                    </li>
+                    <li class="menu-item {% if request.endpoint == 'main.legislation' %}active{% endif %}">
+                        <a href="#">
+                            <i class="fas fa-gavel"></i>
+                            <span>Legislación</span>
+                        </a>
+                    </li>
+                    <li class="menu-item {% if request.endpoint == 'main.agenda' %}active{% endif %}">
+                        <a href="#">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Agenda MinSeg</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="sidebar-footer">
+                    <a href="{{ url_for('auth.logout') }}" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Cerrar Sesión</span>
+                    </a>
+                </div>
+            </nav>
+        {% endif %}
+
+        <div class="content-wrapper">
+            <!-- Flash Messages -->
+            <div class="container-fluid">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="container mt-4">
-        {% block content %}{% endblock %}
-    </div>
-
-    <!-- Bootstrap Bundle with Popper -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     
     {% block extra_js %}{% endblock %}
 </body>
