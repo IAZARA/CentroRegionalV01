@@ -31,13 +31,7 @@
                                 <div class="d-flex justify-content-between align-items-start mb-3">
                                     <span class="text-capitalize source-badge">{{ item.source }}</span>
                                     <span class="country-badge px-2 py-1 rounded-pill" style="background-color: {% if item.country == '.ar' %}#74ACDF{% elif item.country == '.cl' %}#D52B1E{% elif item.country == '.uy' %}#FCD116{% elif item.country == '.py' %}#D80027{% elif item.country == '.bo' %}#007934{% else %}#6C757D{% endif %}; color: white;">
-                                        {% if item.country == '.ar' %}🇦🇷 Argentina
-                                        {% elif item.country == '.cl' %}🇨🇱 Chile
-                                        {% elif item.country == '.uy' %}🇺🇾 Uruguay
-                                        {% elif item.country == '.py' %}🇵🇾 Paraguay
-                                        {% elif item.country == '.bo' %}🇧🇴 Bolivia
-                                        {% else %}🌎 Internacional
-                                        {% endif %}
+                                        {% if item.country == '.ar' %}🇦🇷 Argentina{% elif item.country == '.cl' %}🇨🇱 Chile{% elif item.country == '.uy' %}🇺🇾 Uruguay{% elif item.country == '.py' %}🇵🇾 Paraguay{% elif item.country == '.bo' %}🇧🇴 Bolivia{% else %}🌎 Internacional{% endif %}
                                     </span>
                                 </div>
                                 
@@ -139,12 +133,14 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const ctx = document.getElementById('countryChart').getContext('2d');
-    const countryData = {
-        {% for country, count in stats.by_country.items() %}
-            '{{ country }}': {{ count }},
-        {% endfor %}
-    };
     
+    // Convertir los datos de Jinja2 a un objeto JavaScript
+    const countryData = {};
+    {% for country, count in stats.by_country.items() %}
+    countryData['{{ country }}'] = {{ count }};
+    {% endfor %}
+    
+    // Definir colores para cada país
     const colors = {
         '.ar': '#74ACDF',
         '.cl': '#D52B1E',
@@ -154,22 +150,26 @@ document.addEventListener('DOMContentLoaded', function() {
         'other': '#6C757D'
     };
     
+    // Función para obtener el nombre del país
+    const getCountryName = (code) => {
+        const names = {
+            '.ar': 'Argentina',
+            '.cl': 'Chile',
+            '.uy': 'Uruguay',
+            '.py': 'Paraguay',
+            '.bo': 'Bolivia'
+        };
+        return names[code] || 'Internacional';
+    };
+    
+    // Crear el gráfico
     new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: Object.keys(countryData).map(country => {
-                switch(country) {
-                    case '.ar': return 'Argentina';
-                    case '.cl': return 'Chile';
-                    case '.uy': return 'Uruguay';
-                    case '.py': return 'Paraguay';
-                    case '.bo': return 'Bolivia';
-                    default: return 'Internacional';
-                }
-            }),
+            labels: Object.keys(countryData).map(getCountryName),
             datasets: [{
                 data: Object.values(countryData),
-                backgroundColor: Object.keys(countryData).map(country => colors[country] || colors.other),
+                backgroundColor: Object.keys(countryData).map(code => colors[code] || colors.other),
                 borderWidth: 1
             }]
         },
@@ -203,6 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
 .country-badge {
     font-size: 0.85rem;
     font-weight: 500;
+    white-space: nowrap;
 }
 .news-title {
     color: #2c3e50;

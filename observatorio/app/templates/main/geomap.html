@@ -1,120 +1,168 @@
-{% extends "base.html" %}
+{% extends "base_dashboard.html" %}
 
 {% block extra_css %}
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
 <style>
-    #map {
-        width: 100%;
-        height: 80vh;
-        margin-bottom: 20px;
+    .map-container {
+        display: flex;
+        gap: 20px;
+        height: calc(100vh - 100px);
+        margin-top: 20px;
+    }
+    
+    .map-area {
+        flex: 1;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 15px;
         position: relative;
     }
+    
+    .metrics-area {
+        width: 300px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 15px;
+        overflow-y: auto;
+    }
+    
+    #map {
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
+    }
+    
     .marker-popup {
         max-width: 300px;
         padding: 10px;
     }
+    
     .marker-popup h5 {
         margin: 0 0 8px 0;
         color: #2c3e50;
     }
+    
     .marker-popup p {
         margin: 0 0 5px 0;
         font-size: 0.9em;
         color: #34495e;
     }
-    #debug-info {
-        margin-top: 10px;
-        padding: 10px;
+    
+    .filter-section {
+        margin-bottom: 20px;
+        padding: 15px;
         background: #f8f9fa;
-        border-radius: 4px;
-    }
-    
-    /* Estilos para el modal de carga */
-    .loading-modal {
-        display: none;
-        position: fixed;
-        z-index: 9999;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.5);
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .loading-content {
-        background-color: white;
-        padding: 30px;
-        border-radius: 10px;
-        text-align: center;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    
-    .loading-spinner {
-        border: 5px solid #f3f3f3;
-        border-radius: 50%;
-        border-top: 5px solid #3498db;
-        width: 50px;
-        height: 50px;
-        animation: spin 1s linear infinite;
-        margin: 0 auto 20px auto;
-    }
-    
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        border-radius: 8px;
     }
 
-    /* Estilos para los marcadores */
-    .mapboxgl-marker {
+    .filter-section h5 {
+        margin-bottom: 10px;
+        color: #2c3e50;
+        font-size: 1rem;
+    }
+
+    .form-control {
+        margin-bottom: 10px;
+    }
+
+    .page-header {
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem;
+        color: #2c3e50;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .page-header p {
+        color: #7f8c8d;
+        margin: 5px 0 0 0;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 8px 15px;
+        border-radius: 4px;
+        font-weight: 500;
         cursor: pointer;
+        transition: all 0.2s;
     }
-    
-    .mapboxgl-marker:hover {
-        transform: scale(1.2);
+
+    .btn-primary {
+        background-color: #3498db;
+        border-color: #3498db;
+        color: white;
     }
-    
-    /* Estilos para el popup */
-    .mapboxgl-popup {
-        max-width: 400px !important;
+
+    .btn-secondary {
+        background-color: #95a5a6;
+        border-color: #95a5a6;
+        color: white;
     }
-    
-    .mapboxgl-popup-content {
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+
+    .btn:hover {
+        opacity: 0.9;
+    }
+
+    .mb-2 {
+        margin-bottom: 0.5rem;
+    }
+
+    .w-100 {
+        width: 100%;
     }
 </style>
 {% endblock %}
 
-{% block content %}
-<!-- Modal de Carga -->
-<div id="loadingModal" class="loading-modal">
-    <div class="loading-content">
-        <div class="loading-spinner"></div>
-        <h4>Cargando Noticias</h4>
-        <p>Por favor espere mientras se cargan las noticias en el mapa...</p>
-    </div>
+{% block dashboard_content %}
+<div class="page-header">
+    <h1>
+        <i class="fas fa-map-marked-alt"></i>
+        Visualización Geográfica
+    </h1>
+    <p>Visualización geográfica de noticias sobre drogas sintéticas en Sudamérica</p>
 </div>
 
-<div class="container-fluid">
-    <div class="row mb-4">
-        <div class="col">
-            <h2 class="mb-3">
-                <i class="fas fa-map-marked-alt"></i> 
-                Mapa de Noticias
-            </h2>
-            <p class="text-muted">
-                Visualización geográfica de noticias sobre drogas sintéticas en Sudamérica
-            </p>
-        </div>
+<div class="map-container">
+    <div class="map-area">
+        <div id="map"></div>
     </div>
-
-    <div class="row">
-        <div class="col">
-            <div id="map"></div>
-            <div id="debug-info"></div>
+    <div class="metrics-area">
+        <div class="filter-section">
+            <h5>FILTROS</h5>
+            <div class="date-filters">
+                <h5>Rango de Fechas</h5>
+                <input type="text" id="start_date" class="form-control" placeholder="Fecha inicial">
+                <input type="text" id="end_date" class="form-control" placeholder="Fecha final">
+            </div>
+            <div class="country-filter">
+                <h5>País</h5>
+                <select id="country_filter" class="form-control">
+                    <option value="">Todos los países</option>
+                    {% for country in countries %}
+                    <option value="{{ country.code }}">{{ country.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button id="apply_filters" class="btn btn-primary w-100 mb-2">
+                <i class="fas fa-filter"></i> Aplicar Filtros
+            </button>
+            <button id="clear_filters" class="btn btn-secondary w-100">
+                <i class="fas fa-times"></i> Limpiar Filtros
+            </button>
         </div>
     </div>
 </div>
@@ -122,148 +170,131 @@
 
 {% block extra_js %}
 <script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
 <script>
-    // Mostrar modal de carga
-    function showLoadingModal() {
-        document.getElementById('loadingModal').style.display = 'flex';
-    }
+let map;
+let markers = [];
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Inicializando mapa...');
     
-    // Ocultar modal de carga
-    function hideLoadingModal() {
-        document.getElementById('loadingModal').style.display = 'none';
-    }
+    // Inicializar datepickers
+    flatpickr("#start_date", {
+        locale: "es",
+        dateFormat: "Y-m-d",
+        maxDate: "today"
+    });
 
-    // Función para agregar marcadores al mapa
-    function addMarkersToMap(map, markersData) {
-        console.log('Adding markers to map...', markersData);
-        let validMarkers = 0;
-        let invalidMarkers = 0;
+    flatpickr("#end_date", {
+        locale: "es",
+        dateFormat: "Y-m-d",
+        maxDate: "today"
+    });
 
-        markersData.forEach((markerData, index) => {
-            try {
-                if (!markerData.coordinates || markerData.coordinates.length !== 2) {
-                    console.warn(`Invalid coordinates for marker ${index}:`, markerData);
-                    invalidMarkers++;
-                    return;
-                }
+    // Inicializar mapa
+    mapboxgl.accessToken = '{{ mapbox_token }}';
+    console.log('Token configurado:', !!mapboxgl.accessToken);
 
-                const [lat, lng] = markerData.coordinates;
-                
-                // Validar coordenadas
-                if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
-                    console.warn(`Invalid coordinate values for marker ${index}:`, lat, lng);
-                    invalidMarkers++;
-                    return;
-                }
-
-                // Crear popup con más información
-                const popup = new mapboxgl.Popup({ offset: 25 })
-                    .setHTML(`
-                        <div class="marker-popup">
-                            <h5>${markerData.news.title}</h5>
-                            <p>${markerData.news.snippet || ''}</p>
-                            <p><small><strong>Ubicación:</strong> ${markerData.location || 'No especificada'}</small></p>
-                            <p><small><strong>Fecha:</strong> ${markerData.news.published_date || 'No especificada'}</small></p>
-                            <a href="${markerData.news.link}" target="_blank" class="btn btn-sm btn-primary">Leer más</a>
-                        </div>
-                    `);
-
-                // Crear marcador
-                const marker = new mapboxgl.Marker({
-                    color: '#e74c3c'
-                })
-                .setLngLat([lng, lat])
-                .setPopup(popup)
-                .addTo(map);
-                
-                validMarkers++;
-            } catch (error) {
-                console.error(`Error adding marker ${index}:`, error);
-                invalidMarkers++;
-            }
+    try {
+        map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/light-v10',
+            center: [-58.3816, -34.6037],
+            zoom: 4
         });
 
-        console.log(`Markers summary: Valid=${validMarkers}, Invalid=${invalidMarkers}, Total=${markersData.length}`);
-        document.getElementById('debug-info').innerHTML += `<br>Marcadores válidos: ${validMarkers}, Inválidos: ${invalidMarkers}`;
+        map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+        map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
 
-        // Ajustar el mapa para mostrar todos los marcadores
-        if (validMarkers > 0) {
-            const bounds = new mapboxgl.LngLatBounds();
-            markersData.forEach(markerData => {
-                if (markerData.coordinates && 
-                    markerData.coordinates.length === 2 &&
-                    markerData.coordinates[0] >= -90 && 
-                    markerData.coordinates[0] <= 90 &&
-                    markerData.coordinates[1] >= -180 && 
-                    markerData.coordinates[1] <= 180) {
-                    const [lat, lng] = markerData.coordinates;
-                    bounds.extend([lng, lat]);
-                }
-            });
-            map.fitBounds(bounds, { 
-                padding: 50,
-                maxZoom: 8 // Limitar el zoom máximo
-            });
-        }
-        
-        // Ocultar el modal de carga cuando todo esté listo
-        hideLoadingModal();
+        map.on('load', function() {
+            console.log('Mapa cargado, cargando ubicaciones...');
+            loadLocations();
+        });
+    } catch (error) {
+        console.error('Error al inicializar el mapa:', error);
     }
+});
 
-    // Inicializar el mapa cuando el DOM esté listo
-    document.addEventListener('DOMContentLoaded', function() {
-        try {
-            // Mostrar el modal de carga
-            showLoadingModal();
+function loadLocations(filters = {}) {
+    console.log('Cargando ubicaciones con filtros:', filters);
+    
+    const params = new URLSearchParams();
+    if (filters.start_date) params.append('start_date', filters.start_date);
+    if (filters.end_date) params.append('end_date', filters.end_date);
+    if (filters.country) params.append('country', filters.country);
+
+    fetch(`/api/news_locations?${params.toString()}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Datos recibidos:', data);
             
-            console.log('Initializing map...');
-            const debugInfo = document.getElementById('debug-info');
-            
-            // Debug info
-            debugInfo.innerHTML = 'Token length: ' + '{{ mapbox_token }}'.length + '<br>';
-            debugInfo.innerHTML += 'Markers count: ' + {{ markers|length }} + '<br>';
-            
-            // Inicializar el mapa primero
-            mapboxgl.accessToken = '{{ mapbox_token }}';
-            console.log('Access token set');
-            
-            const map = new mapboxgl.Map({
-                container: 'map',
-                style: 'mapbox://styles/mapbox/light-v11',
-                center: [-58.3816, -34.6037], // Buenos Aires
-                zoom: 4,
-                projection: 'mercator'
-            });
+            // Limpiar marcadores existentes
+            markers.forEach(marker => marker.remove());
+            markers = [];
 
-            // Agregar controles básicos
-            map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-            map.addControl(new mapboxgl.FullscreenControl(), 'top-right');
+            if (data.locations && data.locations.length > 0) {
+                const bounds = new mapboxgl.LngLatBounds();
 
-            // Esperar a que el mapa se cargue completamente
-            map.on('load', () => {
-                console.log('Map loaded successfully');
-                debugInfo.innerHTML += '<br>Map loaded successfully';
-                
-                // Convertir los marcadores de Python a JavaScript
-                const markersData = {{ markers|tojson|safe }};
-                console.log('Markers data loaded:', markersData);
-                
-                // Agregar los marcadores después de que el mapa esté cargado
-                addMarkersToMap(map, markersData);
-            });
+                data.locations.forEach(location => {
+                    const popup = new mapboxgl.Popup({ offset: 25 })
+                        .setHTML(`
+                            <div class="marker-popup">
+                                <h5>${location.title}</h5>
+                                <p>${location.description}</p>
+                                <p><small>
+                                    <i class="far fa-calendar-alt"></i>
+                                    Fecha: ${location.date}
+                                </small></p>
+                                <p><small>
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    ${location.location_name}
+                                </small></p>
+                                <a href="${location.url}" target="_blank" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-external-link-alt"></i>
+                                    Ver noticia
+                                </a>
+                            </div>
+                        `);
 
-            // Manejar errores del mapa
-            map.on('error', (e) => {
-                console.error('Map error:', e);
-                debugInfo.innerHTML += '<br>Map error: ' + (e.error ? e.error.message : JSON.stringify(e));
-                hideLoadingModal(); // Ocultar el modal si hay un error
-            });
+                    const marker = new mapboxgl.Marker({ color: "#FF0000" })
+                        .setLngLat([location.longitude, location.latitude])
+                        .setPopup(popup)
+                        .addTo(map);
 
-        } catch (error) {
-            console.error('Error initializing map:', error);
-            document.getElementById('debug-info').innerHTML += '<br>Error: ' + error.message;
-            hideLoadingModal(); // Ocultar el modal si hay un error
-        }
-    });
+                    markers.push(marker);
+                    bounds.extend([location.longitude, location.latitude]);
+                });
+
+                map.fitBounds(bounds, { padding: 50 });
+            }
+        })
+        .catch(error => {
+            console.error('Error al cargar ubicaciones:', error);
+            alert('Error al cargar las ubicaciones. Por favor, intente nuevamente.');
+        });
+}
+
+// Event listeners para los filtros
+document.getElementById('apply_filters').addEventListener('click', function() {
+    const filters = {
+        start_date: document.getElementById('start_date').value,
+        end_date: document.getElementById('end_date').value,
+        country: document.getElementById('country_filter').value
+    };
+    loadLocations(filters);
+});
+
+document.getElementById('clear_filters').addEventListener('click', function() {
+    document.getElementById('start_date').value = '';
+    document.getElementById('end_date').value = '';
+    document.getElementById('country_filter').value = '';
+    loadLocations();
+});
 </script>
 {% endblock %}

@@ -7,6 +7,8 @@ from flask import current_app
 from datetime import datetime
 import json
 import os
+from app.models.news_location import NewsLocation
+from app import db
 
 logger = logging.getLogger(__name__)
 
@@ -123,15 +125,15 @@ class GeocodingService:
             logger.error(f"Error getting country from URL {url}: {str(e)}")
             return None
 
-    def geocode_location(self, location: str, country_code: str) -> Optional[Tuple[float, float]]:
+    def geocode_location(self, location: str) -> Optional[Tuple[float, float]]:
         """
         Geocodificar una ubicación usando OpenCage Geocoding API
         """
-        cache_key = f"{location}_{country_code}"
+        cache_key = f"{location}"
         
         # Verificar caché
         if cache_key in self.cache:
-            return self.cache[cache_key]
+            return self.cache[cache_key].get('coordinates')
 
         try:
             # Mapeo de países y sus coordenadas aproximadas de centro
@@ -152,6 +154,7 @@ class GeocodingService:
                 'bo': 'Bolivia'
             }
             
+            country_code = self._get_country_code(location)
             country_name = country_names.get(country_code.lower())
             if not country_name:
                 return None
@@ -193,7 +196,10 @@ class GeocodingService:
                         if (bounds['min_lat'] <= lat <= bounds['max_lat'] and 
                             bounds['min_lng'] <= lng <= bounds['max_lng']):
                             coordinates = (lat, lng)
-                            self.cache[cache_key] = coordinates
+                            self.cache[cache_key] = {
+                                'coordinates': coordinates,
+                                'timestamp': datetime.utcnow().isoformat()
+                            }
                             self._save_cache()
                             return coordinates
                         else:
@@ -206,50 +212,104 @@ class GeocodingService:
             logger.error(f"Error geocoding location {location}: {str(e)}")
             return None
 
+    def _get_country_code(self, news_item: Dict) -> Optional[str]:
+        """
+        Obtener código de país desde la URL de la noticia o su contenido
+        """
+        # Mapeo de dominios específicos a países
+        domain_country_map = {
+            'infobae.com': 'ar',
+            'clarin.com': 'ar',
+            'lanacion.com.ar': 'ar',
+            'pagina12.com.ar': 'ar',
+            'emol.com': 'cl',
+            'latercera.com': 'cl',
+            'elmostrador.cl': 'cl',
+            'elpais.com.uy': 'uy',
+            'elobservador.com.uy': 'uy',
+            'montevideo.com.uy': 'uy',
+            'abc.com.py': 'py',
+            'ultimahora.com': 'py',
+            'lanacion.com.py': 'py',
+            'eldeber.com.bo': 'bo',
+            'paginasiete.bo': 'bo',
+            'la-razon.com': 'bo'
+        }
+
+        try:
+            domain = urlparse(news_item['link']).netloc.lower()
+            # Eliminar 'www.' si existe
+            domain = re.sub(r'^www\.', '', domain)
+            
+            # Buscar en el mapeo de dominios
+            for known_domain, country in domain_country_map.items():
+                if known_domain in domain:
+                    return country
+                    
+            # Si no se encuentra en el mapeo, intentar extraer del TLD
+            tld = domain.split('.')[-1].lower()
+            if tld in ['ar', 'cl', 'uy', 'py', 'bo']:
+                return tld
+                
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error getting country from URL {news_item['link']}: {str(e)}")
+            return None
+
     def process_news_item(self, news_item: Dict) -> Optional[Dict]:
         """
-        Procesar un item de noticia para obtener sus coordenadas
+        Procesa una noticia para obtener sus coordenadas y las guarda en la base de datos
         """
         try:
-            print(f"\nProcesando noticia: {news_item.get('title')}")
+            # Extraer ubicaciones del título y contenido
+            text = f"{news_item.get('title', '')} {news_item.get('content', '')}"
+            locations = self.extract_locations(text)
             
-            # Extraer ubicaciones del título y descripción
-            locations = self.extract_locations(news_item['title'])
-            if 'snippet' in news_item:
-                locations.extend(self.extract_locations(news_item['snippet']))
-            
-            print(f"Ubicaciones encontradas: {locations}")
-
-            # Obtener país de la URL
-            country_code = news_item.get('country', '').replace('.', '')
-            if not country_code:
-                country_code = self.get_country_from_url(news_item['link'])
-            
-            print(f"Código de país: {country_code}")
-
-            if not country_code:
-                print("No se pudo determinar el país de la noticia")
+            if not locations:
                 return None
-
-            # Intentar geocodificar cada ubicación encontrada
+            
             for location in locations:
-                print(f"Intentando geocodificar: {location}")
-                coordinates = self.geocode_location(location, country_code)
-                if coordinates:
-                    print(f"Coordenadas encontradas: {coordinates}")
-                    return {
-                        'id': hash(news_item['link']),
-                        'coordinates': coordinates,
-                        'news': news_item,
-                        'location': location
-                    }
-                else:
-                    print(f"No se encontraron coordenadas para: {location}")
+                # Verificar si ya existe en caché
+                cached = self.cache.get(location)
+                if cached:
+                    coordinates = cached.get('coordinates')
+                    if coordinates:
+                        # Guardar en la base de datos
+                        news_location = NewsLocation(
+                            news_id=news_item['id'],
+                            latitude=coordinates[0],
+                            longitude=coordinates[1],
+                            location_name=location,
+                            country_code=self._get_country_code(news_item)
+                        )
+                        db.session.add(news_location)
+                        continue
 
-            print("No se encontraron coordenadas para ninguna ubicación")
-            return None
+                # Si no está en caché, geocodificar
+                coordinates = self.geocode_location(location)
+                if coordinates:
+                    # Guardar en caché
+                    self.cache[location] = {
+                        'coordinates': coordinates,
+                        'timestamp': datetime.utcnow().isoformat()
+                    }
+                    self._save_cache()
+                    
+                    # Guardar en la base de datos
+                    news_location = NewsLocation(
+                        news_id=news_item['id'],
+                        latitude=coordinates[0],
+                        longitude=coordinates[1],
+                        location_name=location,
+                        country_code=self._get_country_code(news_item)
+                    )
+                    db.session.add(news_location)
+            
+            db.session.commit()
+            return True
 
         except Exception as e:
             logger.error(f"Error processing news item: {str(e)}")
-            print(f"Error al procesar la noticia: {str(e)}")
+            db.session.rollback()
             return None
