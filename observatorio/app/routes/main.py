@@ -25,7 +25,7 @@ def feed_new():
     per_page = 10
     
     # Obtener las noticias paginadas
-    news = News.query.order_by(News.published_date.desc()).paginate(
+    pagination = News.query.order_by(News.published_date.desc()).paginate(
         page=page, per_page=per_page, error_out=False)
     
     # Estadísticas generales
@@ -35,26 +35,21 @@ def feed_new():
     ).count()
     
     # Estadísticas por país
-    countries = {
-        'ar': News.query.filter(News.country == '.ar').count(),
-        'cl': News.query.filter(News.country == '.cl').count(),
-        'uy': News.query.filter(News.country == '.uy').count(),
-        'py': News.query.filter(News.country == '.py').count(),
-        'bo': News.query.filter(News.country == '.bo').count()
-    }
+    countries = {}
+    for country in ['.ar', '.cl', '.uy', '.py', '.bo']:
+        countries[country] = News.query.filter(News.country == country).count()
     
     stats = {
         'total': total_news,
         'news_last_24h': news_last_24h,
-        **countries
+        'by_country': countries
     }
     
     return render_template(
         'main/feed_new.html',
-        news=news.items,
-        stats=stats,
-        current_page=page,
-        total_pages=news.pages
+        news=pagination.items,
+        pagination=pagination,
+        stats=stats
     )
 
 @bp.route('/geomap')

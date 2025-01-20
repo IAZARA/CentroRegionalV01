@@ -2,9 +2,9 @@
 
 {% block dashboard_content %}
 <div class="row">
-    <!-- Columna de Noticias -->
-    <div class="col-lg-8">
-        <div class="card shadow-sm">
+    <!-- Columna principal de noticias -->
+    <div class="col-md-9">
+        <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h5 class="card-title mb-0">
@@ -23,12 +23,14 @@
                 </div>
 
                 {% if news %}
+                <div class="row">
                     {% for item in news %}
-                        <div class="news-item mb-4">
-                            <div class="d-flex align-items-center mb-2">
-                                <div class="source-info d-flex align-items-center">
-                                    <span class="source-name me-2">{{ item.source }}</span>
-                                    <span class="country-badge me-2">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 news-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <span class="text-capitalize source-badge">{{ item.source }}</span>
+                                    <span class="country-badge px-2 py-1 rounded-pill" style="background-color: {% if item.country == '.ar' %}#74ACDF{% elif item.country == '.cl' %}#D52B1E{% elif item.country == '.uy' %}#FCD116{% elif item.country == '.py' %}#D80027{% elif item.country == '.bo' %}#007934{% else %}#6C757D{% endif %}; color: white;">
                                         {% if item.country == '.ar' %}🇦🇷 Argentina
                                         {% elif item.country == '.cl' %}🇨🇱 Chile
                                         {% elif item.country == '.uy' %}🇺🇾 Uruguay
@@ -38,177 +40,176 @@
                                         {% endif %}
                                     </span>
                                 </div>
-                                <span class="badge bg-primary ms-auto">{{ item.source }}</span>
+                                
+                                <h6 class="card-title mb-3">
+                                    <a href="{{ item.url }}" target="_blank" class="news-title text-decoration-none">{{ item.title }}</a>
+                                </h6>
+                                
+                                <p class="card-text text-muted small mb-3">{{ item.content }}</p>
+                                
+                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                    <span class="badge bg-primary">{{ item.keywords }}</span>
+                                    <small class="text-muted">
+                                        <i class="far fa-clock me-1"></i>
+                                        {{ item.published_date.strftime('%d/%m/%Y %H:%M') if item.published_date else 'Fecha no disponible' }}
+                                    </small>
+                                </div>
                             </div>
-                            
-                            <h6 class="mb-2">
-                                <a href="{{ item.url }}" target="_blank" class="news-title">{{ item.title }}</a>
-                            </h6>
-                            
-                            <p class="news-content mb-2">{{ item.content[:200] }}...</p>
-                            
-                            <div class="news-meta text-muted">
-                                <small>
-                                    <i class="far fa-clock me-1"></i>
-                                    {{ item.published_date.strftime('%d/%m/%Y %H:%M') }}
-                                </small>
+                            <div class="card-footer bg-transparent">
+                                <a href="{{ item.url }}" target="_blank" class="btn btn-sm btn-outline-primary w-100">
+                                    <i class="fas fa-external-link-alt me-1"></i> Leer más
+                                </a>
                             </div>
                         </div>
-                    {% endfor %}
-                    
-                    <!-- Paginación -->
-                    {% if total_pages > 1 %}
-                    <nav aria-label="Page navigation" class="mt-4">
-                        <ul class="pagination justify-content-center">
-                            {% if current_page > 1 %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('main.feed_new', page=current_page-1) }}" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            {% endif %}
-                            
-                            {% for page in range(1, total_pages + 1) %}
-                            <li class="page-item {% if page == current_page %}active{% endif %}">
-                                <a class="page-link" href="{{ url_for('main.feed_new', page=page) }}">{{ page }}</a>
-                            </li>
-                            {% endfor %}
-                            
-                            {% if current_page < total_pages %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('main.feed_new', page=current_page+1) }}" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </nav>
-                    {% endif %}
-                {% else %}
-                    <div class="alert alert-info">
-                        No hay noticias disponibles en este momento.
                     </div>
+                    {% endfor %}
+                </div>
+
+                {% if pagination.pages > 1 %}
+                <nav aria-label="Navegación de páginas" class="mt-4">
+                    <ul class="pagination justify-content-center mb-0">
+                        <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+                            <a class="page-link" href="{{ url_for('main.feed_new', page=pagination.prev_num) if pagination.has_prev else '#' }}">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+                        </li>
+                        
+                        {% for page in pagination.iter_pages() %}
+                            {% if page %}
+                                <li class="page-item {% if page == pagination.page %}active{% endif %}">
+                                    <a class="page-link" href="{{ url_for('main.feed_new', page=page) }}">{{ page }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+                            <a class="page-link" href="{{ url_for('main.feed_new', page=pagination.next_num) if pagination.has_next else '#' }}">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                {% endif %}
+                {% else %}
+                <div class="text-center text-muted py-5">
+                    <i class="fas fa-newspaper fa-3x mb-3"></i>
+                    <p class="mb-0">No hay noticias disponibles en este momento.</p>
+                </div>
                 {% endif %}
             </div>
         </div>
     </div>
 
-    <!-- Columna de Estadísticas -->
-    <div class="col-lg-4">
-        <div class="card shadow-sm mb-4">
+    <!-- Columna lateral con estadísticas -->
+    <div class="col-md-3">
+        <div class="card">
             <div class="card-body">
                 <h5 class="card-title">
                     <i class="fas fa-chart-pie text-primary"></i> Estadísticas por País
                 </h5>
-                <div class="country-stats mt-3">
-                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
-                        <span>🇦🇷 Argentina</span>
-                        <span class="badge bg-primary">{{ stats.get('ar', 0) }}</span>
+                
+                <!-- Gráfico de dona -->
+                <canvas id="countryChart" width="100%" height="200"></canvas>
+                
+                <!-- Lista de países -->
+                <div class="mt-4">
+                    {% for country, count in stats.by_country.items() %}
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>
+                            {% if country == '.ar' %}🇦🇷 Argentina
+                            {% elif country == '.cl' %}🇨🇱 Chile
+                            {% elif country == '.uy' %}🇺🇾 Uruguay
+                            {% elif country == '.py' %}🇵🇾 Paraguay
+                            {% elif country == '.bo' %}🇧🇴 Bolivia
+                            {% else %}🌎 Internacional
+                            {% endif %}
+                        </span>
+                        <span class="badge bg-primary">{{ count }}</span>
                     </div>
-                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
-                        <span>🇨🇱 Chile</span>
-                        <span class="badge bg-primary">{{ stats.get('cl', 0) }}</span>
-                    </div>
-                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
-                        <span>🇺🇾 Uruguay</span>
-                        <span class="badge bg-primary">{{ stats.get('uy', 0) }}</span>
-                    </div>
-                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
-                        <span>🇵🇾 Paraguay</span>
-                        <span class="badge bg-primary">{{ stats.get('py', 0) }}</span>
-                    </div>
-                    <div class="country-stat-item d-flex justify-content-between align-items-center">
-                        <span>🇧🇴 Bolivia</span>
-                        <span class="badge bg-primary">{{ stats.get('bo', 0) }}</span>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block extra_css %}
+<!-- Script para el gráfico -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('countryChart').getContext('2d');
+    const countryData = {
+        {% for country, count in stats.by_country.items() %}
+            '{{ country }}': {{ count }},
+        {% endfor %}
+    };
+    
+    const colors = {
+        '.ar': '#74ACDF',
+        '.cl': '#D52B1E',
+        '.uy': '#FCD116',
+        '.py': '#D80027',
+        '.bo': '#007934',
+        'other': '#6C757D'
+    };
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(countryData).map(country => {
+                switch(country) {
+                    case '.ar': return 'Argentina';
+                    case '.cl': return 'Chile';
+                    case '.uy': return 'Uruguay';
+                    case '.py': return 'Paraguay';
+                    case '.bo': return 'Bolivia';
+                    default: return 'Internacional';
+                }
+            }),
+            datasets: [{
+                data: Object.values(countryData),
+                backgroundColor: Object.keys(countryData).map(country => colors[country] || colors.other),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+});
+</script>
+
 <style>
-.news-item {
-    padding: 15px;
-    border-radius: 8px;
-    background: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+.news-card {
     transition: transform 0.2s;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-
-.news-item:hover {
-    transform: translateY(-2px);
+.news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
-
-.source-name {
+.source-badge {
     font-weight: 500;
-    color: #2c3e50;
-}
-
-.country-badge {
-    font-size: 0.9em;
     color: #6c757d;
+    text-transform: capitalize;
 }
-
+.country-badge {
+    font-size: 0.85rem;
+    font-weight: 500;
+}
 .news-title {
     color: #2c3e50;
     text-decoration: none;
-    font-weight: 600;
-    transition: color 0.2s;
 }
-
 .news-title:hover {
-    color: #3498db;
-}
-
-.news-content {
-    color: #6c757d;
-    font-size: 0.95em;
-    line-height: 1.5;
-}
-
-.news-meta {
-    font-size: 0.85em;
-}
-
-.stat-item {
-    background: rgba(52, 152, 219, 0.1);
-    padding: 8px 12px;
-    border-radius: 6px;
-    color: #2c3e50;
-}
-
-.country-stat-item {
-    padding: 8px;
-    border-radius: 6px;
-    transition: background-color 0.2s;
-}
-
-.country-stat-item:hover {
-    background: rgba(52, 152, 219, 0.1);
-}
-
-.pagination {
-    margin-bottom: 0;
-}
-
-.page-link {
-    color: #2c3e50;
-    border: none;
-    margin: 0 2px;
-    border-radius: 4px;
-}
-
-.page-link:hover {
-    background: #3498db;
-    color: white;
-}
-
-.page-item.active .page-link {
-    background: #3498db;
-    border-color: #3498db;
+    color: #0056b3;
 }
 </style>
 {% endblock %}

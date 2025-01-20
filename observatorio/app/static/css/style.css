@@ -37,14 +37,74 @@ body {
 .navbar-brand {
     font-weight: bold;
     font-size: 1.2rem;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
 }
 
 /* Sidebar */
 .sidebar {
-    position: sticky;
-    top: 80px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 48px 0 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
 }
 
+@media (max-width: 767.98px) {
+    .sidebar {
+        top: 5rem;
+    }
+}
+
+.sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 48px);
+    padding-top: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Main content */
+.main {
+    margin-top: 48px;
+}
+
+/* Navigation */
+.nav-link {
+    color: #495057;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.2rem;
+}
+
+.nav-link:hover {
+    background-color: #f8f9fa;
+    color: #0d6efd;
+}
+
+.nav-link.active {
+    background-color: #e9ecef;
+    color: #0d6efd;
+    font-weight: 500;
+}
+
+.nav-link i {
+    width: 1.5rem;
+    text-align: center;
+    margin-right: 0.5rem;
+}
+
+/* Cards */
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 1rem;
+}
+
+/* Stats Card */
 .stats-card {
     border: none;
     border-radius: 15px;
@@ -349,160 +409,21 @@ body {
     animation: fadeIn 0.3s ease-out;
 }
 
-/* Sidebar Styles */
-.sidebar {
-    width: 280px;
-    background: white;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    position: fixed;
-    top: 80px; /* Ajustado para estar debajo del header */
-    bottom: 0;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    padding: 1.5rem;
-    border-right: 1px solid #e9ecef;
-    overflow-y: auto;
+/* Utilities */
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
-.sidebar-header {
-    padding: 1rem 0;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.sidebar-header h3 {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1a1a1a;
-}
-
-.sidebar-menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex-grow: 1;
-}
-
-.menu-item {
-    margin: 0.5rem 0;
-}
-
-.menu-item a {
-    color: #666;
-    padding: 0.75rem 1rem;
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: all 0.2s;
-    font-weight: 500;
-}
-
-.menu-item a:hover {
-    background: #f8f9fa;
-    color: #1a1a1a;
-}
-
-.menu-item.active a {
-    background: #e9ecef;
-    color: #1a1a1a;
-    font-weight: 600;
-}
-
-.menu-item i {
-    width: 24px;
-    height: 24px;
-    margin-right: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-}
-
-.sidebar-footer {
-    padding-top: 1rem;
-    margin-top: auto;
-    border-top: 1px solid #e9ecef;
-}
-
-.logout-btn {
-    color: #666;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    transition: all 0.2s;
-    font-weight: 500;
-}
-
-.logout-btn:hover {
-    background: #f8f9fa;
-    color: #dc3545;
-}
-
-.logout-btn i {
-    margin-right: 12px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
+/* Fix for sidebar and main content */
+@media (min-width: 768px) {
+    main {
+        margin-top: 48px;
+    }
+    
     .sidebar {
-        margin-left: -280px;
-        transition: margin 0.3s ease-in-out;
+        margin-top: 48px;
     }
-
-    .sidebar.active {
-        margin-left: 0;
-    }
-
-    .main-content {
-        margin-left: 0 !important;
-    }
-}
-
-/* Main Content Styles */
-.main-content {
-    background-color: #f8f9fa;
-    min-height: calc(100vh - 80px); /* Ajustado para considerar el header */
-    padding: 2rem;
-    margin-left: 280px;
-    margin-top: 80px; /* Agregado margen superior */
-}
-
-/* Header Styles */
-.main-header {
-    background: white;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid #e9ecef;
-    position: fixed; /* Fijamos el header */
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1001; /* Por encima del sidebar */
-    height: 80px;
-}
-
-.header-logo {
-    height: 60px;
-    width: auto;
-}
-
-/* General Styles */
-body {
-    background-color: #f8f9fa;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
-
-.app-container {
-    display: flex;
-    min-height: 100vh;
-}
-
-.content-wrapper {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
 }

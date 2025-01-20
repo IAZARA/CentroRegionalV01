@@ -13,7 +13,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
-celery = Celery(__name__)
+celery = Celery(__name__, broker=os.environ.get('REDIS_URL', 'redis://localhost:6379/0'))
 
 def create_admin_user():
     from app.models.user import User, UserRoles
@@ -79,6 +79,9 @@ def create_app(config_class=None):
     login_manager.init_app(app)
     bcrypt.init_app(app)
 
+    # Importar modelos
+    from app.models import User, News
+
     # Configurar login
     login_manager.login_view = 'auth.login'
     login_manager.login_message = 'Por favor inicia sesión para acceder a esta página.'
@@ -88,7 +91,6 @@ def create_app(config_class=None):
 
     # Registrar blueprints
     with app.app_context():
-        from app.models import User
         db.create_all()
         create_admin_user()  # Crear usuario admin si no existe
         
