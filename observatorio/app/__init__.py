@@ -126,13 +126,16 @@ def create_app(config_class=None):
         create_admin_user()  # Crear usuario admin si no existe
 
     # Registrar blueprints
-    from app.main import bp as main_bp
+    from app.main.routes import bp as main_bp
     app.register_blueprint(main_bp)
     
-    from app.auth import bp as auth_bp
+    from app.auth.routes import bp as auth_bp
     app.register_blueprint(auth_bp)
     
-    from app.api import bp as api_bp
-    app.register_blueprint(api_bp)
+    try:
+        from app.routes.api import bp as api_bp
+        app.register_blueprint(api_bp)
+    except ImportError:
+        app.logger.warning("API blueprint not found")
 
     return app
