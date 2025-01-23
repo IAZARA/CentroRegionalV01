@@ -124,3 +124,8 @@ def geomap():
     return render_template('main/geomap.html', 
                          mapbox_token=mapbox_token,
                          countries=countries)
+
+@bp.route('/legislation')
+@login_required
+def legislation():
+    return render_template('main/legislation.html')

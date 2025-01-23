@@ -7,8 +7,8 @@ from flask import current_app
 from datetime import datetime
 import json
 import os
-from app.models.news_location import NewsLocation
 from app import db
+from app.models.news_location import NewsLocation
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +18,51 @@ class GeocodingService:
         self.cache = {}
         self.cache_file = 'geocoding_cache.json'
         self._load_cache()
+        
+        # Palabras a ignorar en la detección de ubicaciones
+        self.ignore_words = {
+            # Títulos y nombres
+            'señor', 'don', 'doña', 'sr', 'sra', 'dr', 'dra', 'lic', 'ing',
+            
+            # Pronombres y artículos
+            'su', 'este', 'esta', 'aquel', 'aquella', 'el', 'la', 'los', 'las',
+            
+            # Términos genéricos
+            'jurisdicción', 'sector', 'zona', 'área', 'región', 'lugar', 'sitio',
+            'punto', 'parte', 'lado', 'centro', 'norte', 'sur', 'este', 'oeste',
+            
+            # Términos relacionados con drogas y crimen
+            'droga', 'drogas', 'cocaína', 'marihuana', 'narcotráfico', 'operativo',
+            'decomiso', 'incautación', 'laboratorio', 'laboratorios', 'cárcel',
+            'prisión', 'penal', 'comisaría', 'policía', 'investigación',
+            
+            # Términos administrativos
+            'gobierno', 'ministerio', 'secretaría', 'departamento', 'oficina',
+            'dependencia', 'institución', 'organismo', 'entidad',
+            
+            # Otros términos comunes
+            'acceso', 'manera', 'forma', 'modo', 'tipo', 'clase', 'especie',
+            'cantidad', 'número', 'total', 'pesos', 'dólares', 'euros',
+            'millones', 'miles', 'cientos', 'docenas',
+            
+            # Nuevos términos a ignorar
+            'airbnb', 'será', 'castigada', 'hasta', 'parecía', 'idea',
+            'emergiendo', 'prohibición', 'supuesta'
+        }
+
+        # Ubicaciones conocidas con sus países
+        self.known_locations = {
+            'Mexicali': 'México',
+            'Culiacán': 'México',
+            'Sinaloa': 'México',
+            'Guerrero': 'México',
+            'Antioquia': 'Colombia',
+            'Rosario': 'Argentina',
+            'Mendoza': 'Argentina',
+            'Salta': 'Argentina',
+            'Chile': 'Chile',
+            'Son Banya': 'España'
+        }
         
         # Actualizar el mapeo de dominios a países
         self.country_domains = {
@@ -189,33 +234,6 @@ class GeocodingService:
             'Estado de Michoacan': 'mx'
         }
         
-        # Palabras a ignorar
-        ignore_words = {
-            # Títulos y nombres
-            'señor', 'don', 'doña', 'sr', 'sra', 'dr', 'dra', 'lic', 'ing',
-            
-            # Pronombres y artículos
-            'su', 'este', 'esta', 'aquel', 'aquella', 'el', 'la', 'los', 'las',
-            
-            # Términos genéricos
-            'jurisdicción', 'sector', 'zona', 'área', 'región', 'lugar', 'sitio',
-            'punto', 'parte', 'lado', 'centro', 'norte', 'sur', 'este', 'oeste',
-            
-            # Términos relacionados con drogas y crimen
-            'droga', 'drogas', 'cocaína', 'marihuana', 'narcotráfico', 'operativo',
-            'decomiso', 'incautación', 'laboratorio', 'laboratorios', 'cárcel',
-            'prisión', 'penal', 'comisaría', 'policía', 'investigación',
-            
-            # Términos administrativos
-            'gobierno', 'ministerio', 'secretaría', 'departamento', 'oficina',
-            'dependencia', 'institución', 'organismo', 'entidad',
-            
-            # Otros términos comunes
-            'acceso', 'manera', 'forma', 'modo', 'tipo', 'clase', 'especie',
-            'cantidad', 'número', 'total', 'pesos', 'dólares', 'euros',
-            'millones', 'miles', 'cientos', 'docenas'
-        }
-        
         locations = set()
         
         # Buscar ubicaciones usando los indicadores
@@ -224,11 +242,11 @@ class GeocodingService:
             for match in matches:
                 location = match.group(1).strip()
                 # Verificar que la ubicación no sea una palabra a ignorar
-                if not any(word in location.lower() for word in ignore_words):
+                if not any(word in location.lower() for word in self.ignore_words):
                     locations.add(location)
         
         # Buscar ubicaciones conocidas directamente en el texto
-        for location in known_locations:
+        for location in self.known_locations:
             if re.search(r'\b' + re.escape(location) + r'\b', text):
                 locations.add(location)
         
@@ -241,7 +259,7 @@ class GeocodingService:
             loc = re.sub(r'^(?:ciudad|provincia|estado|región|departamento|municipio|localidad|barrio)\s+(?:de|del)?\s+', '', loc, flags=re.IGNORECASE)
             # Si después de la normalización la ubicación es válida, agregarla
             if (len(loc) > 2 and  # Más de 2 caracteres
-                not any(word in loc.lower() for word in ignore_words) and  # No contiene palabras a ignorar
+                not any(word in loc.lower() for word in self.ignore_words) and  # No contiene palabras a ignorar
                 not re.match(r'\d', loc) and  # No empieza con número
                 not loc.isupper() and  # No es todo mayúsculas
                 re.match(r'^[A-ZÁÉÍÓÚÑ]', loc)):  # Comienza con mayúscula
@@ -382,73 +400,72 @@ class GeocodingService:
         logger.warning(f"No se pudo determinar el país para la ubicación: {location}")
         return None
 
-    def geocode_location(self, location: str) -> Optional[dict]:
+    def geocode_location(self, location: str) -> Optional[Dict]:
         """
-        Geocodificar una ubicación usando OpenCage
+        Geocodificar una ubicación usando OpenCage o caché
         """
         try:
-            # Obtener el código de país
-            country_code = self._get_country_code(location)
-            
-            # Construir el query con el país
-            country_name = {
-                'ar': 'Argentina',
-                'cl': 'Chile',
-                'mx': 'México',
-                'co': 'Colombia',
-                'pe': 'Perú',
-                'bo': 'Bolivia',
-                'ec': 'Ecuador',
-                'py': 'Paraguay',
-                'uy': 'Uruguay',
-                'br': 'Brasil',
-                've': 'Venezuela'
-            }.get(country_code, 'Argentina')
-            
-            query = f"{location}, {country_name}"
-            
-            # Verificar caché
-            if query in self.cache:
-                logger.info(f"Ubicación encontrada en caché: {location}")
-                return self.cache[query]
-            
-            logger.info(f"Búsqueda en OpenCage: {query}")
+            # Obtener el código de país si está disponible
+            country_code = self.get_country_code(location)
+            if country_code:
+                country_name = {
+                    'ar': 'Argentina',
+                    'cl': 'Chile',
+                    'co': 'Colombia',
+                    'mx': 'México',
+                    'pe': 'Perú',
+                    'py': 'Paraguay',
+                    'uy': 'Uruguay',
+                    'es': 'España'
+                }.get(country_code)
+                if country_name:
+                    search_query = f"{location}, {country_name}"
+                    
+            logger.info(f"Búsqueda en OpenCage: {search_query}")
             logger.info(f"OpenCage API Key: {self.opencage_api_key[:5]}...")
             
-            # Realizar la búsqueda
-            response = requests.get(
-                'https://api.opencagedata.com/geocode/v1/json',
-                params={
-                    'q': query,
-                    'key': self.opencage_api_key,
-                    'language': 'es',
-                    'limit': 1,
-                    'countrycode': country_code
-                }
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                if data['results']:
-                    result = data['results'][0]
-                    
-                    # Verificar la confianza del resultado
-                    if result['confidence'] < 7:
-                        logger.warning(f"Baja confianza ({result['confidence']}) para la ubicación: {location}")
-                    
-                    # Obtener las coordenadas
-                    coords = result['geometry']
-                    logger.info(f"Coordenadas encontradas para {location}: ({coords['lat']}, {coords['lng']})")
-                    
-                    # Guardar en caché
-                    geocoded = {
-                        'latitude': coords['lat'],
-                        'longitude': coords['lng'],
-                        'country_code': country_code
+            cached_location = self.cache.get(location)
+            if cached_location:
+                logger.info(f"Ubicación encontrada en caché: {location} ({cached_location['lat']}, {cached_location['lng']})")
+                return {
+                    'geometry': {
+                        'lat': cached_location['lat'],
+                        'lng': cached_location['lng']
+                    },
+                    'components': {
+                        'country_code': cached_location.get('country_code', '')
                     }
-                    self.cache[query] = geocoded
-                    return geocoded
+                }
             
+            # Si no está en caché, usar OpenCage
+            params = {
+                'q': location,
+                'key': self.opencage_api_key,
+                'limit': 1,
+                'language': 'es'
+            }
+            
+            response = requests.get("https://api.opencagedata.com/geocode/v1/json", params=params)
+            response.raise_for_status()
+            
+            data = response.json()
+            if data['results']:
+                result = data['results'][0]
+                
+                # Guardar en caché
+                self.cache[location] = {
+                    'lat': result['geometry']['lat'],
+                    'lng': result['geometry']['lng'],
+                    'country_code': result['components'].get('country_code', '').lower()
+                }
+                
+                return {
+                    'geometry': result['geometry'],
+                    'components': {
+                        'country_code': result['components'].get('country_code', '').lower()
+                    }
+                }
+                
             return None
             
         except Exception as e:
@@ -457,51 +474,85 @@ class GeocodingService:
 
     def process_news_item(self, news_item: Dict) -> Optional[Dict]:
         """
-        Procesa una noticia para obtener sus coordenadas y las guarda en la base de datos
+        Procesar una noticia para extraer y geocodificar sus ubicaciones
         """
         try:
-            # Extraer texto relevante de la noticia
-            text = f"{news_item.get('title', '')} {news_item.get('description', '')}"
-            logger.info(f"Extrayendo ubicaciones del texto: {text[:100]}...")
-            
-            # Extraer ubicaciones del texto
+            if not news_item or 'text' not in news_item:
+                return None
+                
+            text = news_item['text']
             locations = self.extract_locations(text)
             logger.info(f"Ubicaciones encontradas: {locations}")
             
-            if not locations:
-                return None
-                
-            # Determinar la fuente y categoría
-            source = self._get_source(news_item)
-            category = self._determine_category(news_item)
-            
-            # Geocodificar cada ubicación
             processed_locations = []
             for location in locations:
-                geocoded = self.geocode_location(location)
-                if geocoded:
-                    processed_location = {
-                        'name': location,
-                        'latitude': float(geocoded['latitude']) if isinstance(geocoded['latitude'], str) else geocoded['latitude'],
-                        'longitude': float(geocoded['longitude']) if isinstance(geocoded['longitude'], str) else geocoded['longitude'],
-                        'country_code': geocoded['country_code'],
-                        'source': source,
-                        'category': category
-                    }
-                    processed_locations.append(processed_location)
+                try:
+                    # Geocodificar la ubicación
+                    geocoded_data = self.geocode_location(location)
+                    
+                    if geocoded_data and 'geometry' in geocoded_data:
+                        # Extraer y validar coordenadas
+                        lat = geocoded_data['geometry'].get('lat')
+                        lng = geocoded_data['geometry'].get('lng')
+                        
+                        if lat is not None and lng is not None:
+                            try:
+                                # Convertir a float y validar rangos
+                                lat = float(lat)
+                                lng = float(lng)
+                                
+                                if not (-90 <= lat <= 90) or not (-180 <= lng <= 180):
+                                    logger.warning(f"Coordenadas fuera de rango para {location}: lat={lat}, lng={lng}")
+                                    continue
+                                    
+                                # Redondear a 6 decimales
+                                lat = round(lat, 6)
+                                lng = round(lng, 6)
+                                
+                                # Crear objeto de ubicación procesada
+                                processed_location = {
+                                    'name': location,
+                                    'lat': lat,
+                                    'lng': lng,
+                                    'country_code': geocoded_data.get('components', {}).get('country_code', '').lower()
+                                }
+                                
+                                # Guardar en la base de datos
+                                saved_location = self.save_location({
+                                    'geometry': {
+                                        'lat': lat,
+                                        'lng': lng
+                                    },
+                                    'components': {
+                                        'country_code': processed_location['country_code']
+                                    }
+                                }, {
+                                    'id': news_item['id'],
+                                    'location': location
+                                })
+                                
+                                if saved_location:
+                                    processed_locations.append(processed_location)
+                                    logger.info(f"Ubicación procesada exitosamente: {location} ({lat}, {lng})")
+                                
+                            except (ValueError, TypeError) as e:
+                                logger.warning(f"Error al procesar coordenadas para {location}: {str(e)}")
+                                continue
+                                
+                except Exception as e:
+                    logger.error(f"Error procesando ubicación {location}: {str(e)}")
+                    continue
             
-            if not processed_locations:
-                return None
-                
-            return {
-                'news_id': news_item['id'],
-                'locations': processed_locations,
-                'source': source,
-                'category': category
-            }
+            if processed_locations:
+                return {
+                    'news_id': news_item['id'],
+                    'locations': processed_locations
+                }
+            
+            return None
             
         except Exception as e:
-            logger.error(f"Error procesando ubicaciones para noticia {news_item.get('id')}: {str(e)}")
+            logger.error(f"Error procesando noticia {news_item.get('id')}: {str(e)}")
             return None
 
     def _get_source(self, news_item: Dict) -> str:
@@ -551,31 +602,63 @@ class GeocodingService:
                 
         return 'Internacional'
 
-    def save_location(self, news_id: int, location_name: str, latitude: float, longitude: float) -> None:
+    def save_location(self, location_data: Dict, news_item: Dict) -> Optional[Dict]:
         """
         Guardar una ubicación en la base de datos
         """
         try:
-            logger.info(f"Guardando ubicación: {location_name} ({latitude}, {longitude}) para noticia {news_id}")
-            # Verificar si ya existe una ubicación similar para esta noticia
-            existing_location = NewsLocation.query.filter_by(
-                news_id=news_id,
-                location_name=location_name
+            if not location_data or 'geometry' not in location_data:
+                return None
+                
+            # Extraer y validar las coordenadas
+            lat = location_data['geometry'].get('lat')
+            lng = location_data['geometry'].get('lng')
+            
+            # Validar que lat y lng sean números y estén en rangos válidos
+            try:
+                lat = float(lat)
+                lng = float(lng)
+                
+                if not (-90 <= lat <= 90) or not (-180 <= lng <= 180):
+                    logger.warning(f"Coordenadas fuera de rango: lat={lat}, lng={lng}")
+                    return None
+                    
+                # Redondear a 6 decimales
+                lat = round(lat, 6)
+                lng = round(lng, 6)
+                
+            except (TypeError, ValueError) as e:
+                logger.warning(f"Error al convertir coordenadas: {str(e)}")
+                return None
+            
+            # Crear o actualizar la ubicación
+            location = NewsLocation.query.filter_by(
+                news_id=news_item['id'],
+                location_name=news_item.get('location', ''),
+                latitude=lat,
+                longitude=lng
             ).first()
             
-            if not existing_location:
+            if not location:
                 location = NewsLocation(
-                    news_id=news_id,
-                    location_name=location_name,
-                    latitude=latitude,
-                    longitude=longitude
+                    news_id=news_item['id'],
+                    location_name=news_item.get('location', ''),
+                    latitude=lat,
+                    longitude=lng,
+                    country_code=location_data.get('components', {}).get('country_code', '').lower()
                 )
                 db.session.add(location)
-                db.session.commit()
-                logger.info(f"Ubicación guardada: {location_name} ({latitude}, {longitude})")
-            else:
-                logger.info(f"Ubicación ya existe: {location_name}")
+            
+            db.session.commit()
+            
+            return {
+                'id': location.id,
+                'latitude': location.latitude,
+                'longitude': location.longitude,
+                'country_code': location.country_code
+            }
             
         except Exception as e:
-            logger.error(f"Error saving location {location_name}: {str(e)}")
+            logger.error(f"Error al guardar ubicación: {str(e)}")
             db.session.rollback()
+            return None

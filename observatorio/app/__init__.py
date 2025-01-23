@@ -6,6 +6,8 @@ from flask_bcrypt import Bcrypt
 from celery import Celery
 from dotenv import load_dotenv
 import os
+import logging
+from logging.handlers import RotatingFileHandler
 
 load_dotenv()  # Cargar variables de entorno desde .env
 
@@ -41,11 +43,17 @@ def create_app(config_class=None):
     if config_class is None:
         # Configuración desde variables de entorno
         app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-12345')
-        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///observatorio.db')
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///' + os.path.join(app.instance_path, 'observatorio.db'))
         app.config['GOOGLE_API_KEY'] = os.environ.get('GOOGLE_API_KEY')
         app.config['GOOGLE_SEARCH_ENGINE_ID'] = os.environ.get('GOOGLE_SEARCH_ENGINE_ID')
         app.config['MAPBOX_TOKEN'] = os.environ.get('MAPBOX_TOKEN')
         app.config['OPENCAGE_API_KEY'] = os.environ.get('OPENCAGE_API_KEY')
+        
+        # Verificar variables de entorno críticas
+        if not app.config.get('OPENCAGE_API_KEY'):
+            app.logger.error('OPENCAGE_API_KEY no está configurada')
+        else:
+            app.logger.info('OPENCAGE_API_KEY está configurada')
         
         # Configuración de dominios por país
         app.config['COUNTRY_DOMAINS'] = {
@@ -72,6 +80,19 @@ def create_app(config_class=None):
         }
     else:
         app.config.from_object(config_class)
+
+    # Configurar logging
+    if not os.path.exists('instance'):
+        os.makedirs('instance')
+    
+    file_handler = RotatingFileHandler('instance/app.log', maxBytes=10240, backupCount=10)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    ))
+    file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(file_handler)
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('Observatorio startup')
 
     # Inicializar extensiones
     db.init_app(app)
