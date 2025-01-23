@@ -1,0 +1,45 @@
+# Base de datos
+*.db
+instance/
+*.sqlite3
+
+# Archivos de backup
+*_backup*
+*_backup.sql
+migrations_backup/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Entorno virtual
+venv/
+ENV/
+
+# Logs
+*.log
+
+# Archivos de sistema
+.DS_Store
+.env
+.env.local
+.env.*.local
