@@ -61,7 +61,7 @@ class NewsService:
         # La noticia debe contener palabras clave de al menos 2 categorías diferentes
         return categories_found >= 2
 
-    def search_news(self, keywords=None, country=None, days=7):
+    def search_news(self, keywords=None, country=None, days=7, hours=None):
         """
         Busca noticias usando Google Custom Search API.
         
@@ -69,6 +69,7 @@ class NewsService:
             keywords (list): Lista de palabras clave para buscar
             country (str): Código de país para filtrar (.ar, .cl, etc.)
             days (int): Número de días hacia atrás para buscar
+            hours (int): Número de horas hacia atrás para buscar (tiene precedencia sobre days)
             
         Returns:
             list: Lista de noticias encontradas
@@ -132,7 +133,7 @@ class NewsService:
                         'key': self.api_key,
                         'cx': self.search_engine_id,
                         'q': formatted_query,
-                        'dateRestrict': f'd{days}',
+                        'dateRestrict': f'h{hours}' if hours else f'd{days}',
                         'num': 10,
                         'sort': 'date:r'
                     }

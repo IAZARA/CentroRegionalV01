@@ -40,7 +40,10 @@ def create_admin_user():
 def create_app(config_class=None):
     # Crear la aplicación Flask con el directorio instance explícito
     instance_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'instance'))
-    app = Flask(__name__, instance_path=instance_path)
+    app = Flask(__name__, 
+                static_folder='static',
+                template_folder='templates',
+                instance_path=instance_path)
     
     # Asegurarse de que el directorio instance existe
     os.makedirs(instance_path, exist_ok=True)
@@ -49,21 +52,27 @@ def create_app(config_class=None):
         # Configuración desde variables de entorno
         app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-12345')
         
-        # Usar ruta absoluta para la base de datos SQLite
-        db_path = os.path.join(app.instance_path, 'observatorio.db')
-        app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
-        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Desactivar la advertencia
+        # Configurar base de datos
+        instance_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'instance'))
+        os.makedirs(instance_path, exist_ok=True)
+        os.chmod(instance_path, 0o777)  # Dar permisos totales al directorio
         
+        db_path = os.path.join(instance_path, 'observatorio.db')
+        app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+        
+        # Configurar login manager
+        login_manager.init_app(app)
+        login_manager.login_view = 'auth.login'
+        login_manager.login_message = 'Por favor inicia sesión para acceder a esta página.'
+        login_manager.login_message_category = 'info'
+        
+        # Configurar tokens de APIs
+        app.config['MAPBOX_TOKEN'] = os.environ.get('MAPBOX_TOKEN')
         app.config['GOOGLE_API_KEY'] = os.environ.get('GOOGLE_API_KEY')
         app.config['GOOGLE_SEARCH_ENGINE_ID'] = os.environ.get('GOOGLE_SEARCH_ENGINE_ID')
-        app.config['MAPBOX_TOKEN'] = os.environ.get('MAPBOX_TOKEN')
         app.config['OPENCAGE_API_KEY'] = os.environ.get('OPENCAGE_API_KEY')
-        
-        # Verificar variables de entorno críticas
-        if not app.config.get('OPENCAGE_API_KEY'):
-            app.logger.error('OPENCAGE_API_KEY no está configurada')
-        else:
-            app.logger.info('OPENCAGE_API_KEY está configurada')
+        app.config['ANTHROPIC_API_KEY'] = os.environ.get('ANTHROPIC_API_KEY')
         
         # Configuración de dominios por país
         app.config['COUNTRY_DOMAINS'] = {
@@ -104,26 +113,26 @@ def create_app(config_class=None):
     # Inicializar extensiones
     db.init_app(app)
     migrate.init_app(app, db)
-    login_manager.init_app(app)
     bcrypt.init_app(app)
 
     # Importar modelos
     from app.models import User, News
 
-    # Configurar login
-    login_manager.login_view = 'auth.login'
-    login_manager.login_message = 'Por favor inicia sesión para acceder a esta página.'
-    login_manager.login_message_category = 'info'
-
     celery.conf.update(app.config)
 
-    # Registrar blueprints
+    # Crear las tablas de la base de datos
     with app.app_context():
         db.create_all()
         create_admin_user()  # Crear usuario admin si no existe
-        
-        from app.routes import auth, main
-        app.register_blueprint(auth.bp)
-        app.register_blueprint(main.bp)
+
+    # Registrar blueprints
+    from app.main import bp as main_bp
+    app.register_blueprint(main_bp)
+    
+    from app.auth import bp as auth_bp
+    app.register_blueprint(auth_bp)
+    
+    from app.api import bp as api_bp
+    app.register_blueprint(api_bp)
 
     return app

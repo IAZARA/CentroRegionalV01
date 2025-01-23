@@ -11,13 +11,14 @@ from app.services.enhanced_geocoding_service import EnhancedGeocodingService
 from sqlalchemy import exists
 from sqlalchemy.exc import IntegrityError
 
-def update_news(reprocess_all=False, days=1):
+def update_news(reprocess_all=False, days=1, hours=None):
     """
     Actualiza las noticias y sus ubicaciones geográficas
     
     Args:
         reprocess_all (bool): Si es True, reprocesa todas las noticias existentes
         days (int): Número de días hacia atrás para buscar noticias
+        hours (int): Número de horas hacia atrás para buscar noticias (tiene precedencia sobre days)
     """
     app = create_app()
     
@@ -25,7 +26,8 @@ def update_news(reprocess_all=False, days=1):
         print("🔄 Iniciando actualización de noticias y ubicaciones...")
         
         # 1. Actualizar noticias
-        print(f"\n📰 Buscando noticias de los últimos {days} días...")
+        time_window = f"{hours} horas" if hours else f"{days} días"
+        print(f"\n📰 Buscando noticias de las últimas {time_window}...")
         news_service = NewsService()
         
         try:
@@ -33,7 +35,10 @@ def update_news(reprocess_all=False, days=1):
             existing_urls = {url[0] for url in db.session.query(News.url).all()}
             
             # Buscar noticias
-            new_news = news_service.search_news(days=days)
+            if hours:
+                new_news = news_service.search_news(hours=hours)
+            else:
+                new_news = news_service.search_news(days=days)
             
             # Filtrar noticias que ya existen
             new_news_filtered = [news for news in new_news if news['link'] not in existing_urls]
@@ -140,6 +145,8 @@ if __name__ == "__main__":
                        help='Reprocesa todas las noticias existentes')
     parser.add_argument('--days', type=int, default=1,
                        help='Número de días hacia atrás para buscar noticias')
+    parser.add_argument('--hours', type=int,
+                       help='Número de horas hacia atrás para buscar noticias (tiene precedencia sobre days)')
     args = parser.parse_args()
     
-    update_news(reprocess_all=args.reprocess_all, days=args.days)
+    update_news(reprocess_all=args.reprocess_all, days=args.days, hours=args.hours)

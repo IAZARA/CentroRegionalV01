@@ -262,7 +262,7 @@ class GeocodingService:
             # Crear o actualizar la ubicación
             location = NewsLocation.query.filter_by(
                 news_id=news_item['id'],
-                location_name=news_item.get('location', ''),
+                name=news_item.get('location', ''),
                 latitude=lat,
                 longitude=lng
             ).first()
@@ -270,7 +270,7 @@ class GeocodingService:
             if not location:
                 location = NewsLocation(
                     news_id=news_item['id'],
-                    location_name=news_item.get('location', ''),
+                    name=news_item.get('location', ''),
                     latitude=lat,
                     longitude=lng,
                     country_code=location_data.get('components', {}).get('country_code', '').lower()
