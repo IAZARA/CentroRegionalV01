@@ -28,6 +28,9 @@ class Config:
     GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY') or 'AIzaSyCvxpQAB-wBAqe25KrBdIelktXrT26IPs4'
     GOOGLE_SEARCH_ENGINE_ID = os.environ.get('GOOGLE_SEARCH_ENGINE_ID') or 'c7187cfce45fa4986'
     
+    # Configuración de Anthropic
+    ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY')
+    
     # Configuración de dominios de búsqueda
     COUNTRY_DOMAINS = {
         '.ar': {'name': 'Argentina', 'domains': ['clarin.com', 'lanacion.com.ar', 'infobae.com', 'pagina12.com.ar']},

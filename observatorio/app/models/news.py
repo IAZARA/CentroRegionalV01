@@ -2,6 +2,8 @@ from app import db
 from datetime import datetime
 
 class News(db.Model):
+    __tablename__ = 'news'
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(500), nullable=False)
     content = db.Column(db.Text)
@@ -12,6 +14,8 @@ class News(db.Model):
     image_url = db.Column(db.String(1000))
     keywords = db.Column(db.String(500))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    primary_location = db.Column(db.String(255))  # Nueva columna para la ubicación principal
+    primary_country = db.Column(db.String(2))     # Nueva columna para el país principal
     
     def __repr__(self):
         return f'<News {self.title}>'
@@ -34,5 +38,7 @@ class News(db.Model):
             'published_date': self.published_date.isoformat() if self.published_date else None,
             'image_url': self.image_url,
             'keywords': self.keywords,
-            'created_at': self.created_at.isoformat()
+            'created_at': self.created_at.isoformat(),
+            'primary_location': self.primary_location,
+            'primary_country': self.primary_country
         }

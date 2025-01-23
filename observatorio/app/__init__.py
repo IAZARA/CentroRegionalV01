@@ -38,12 +38,22 @@ def create_admin_user():
         print('Usuario administrador creado exitosamente.')
 
 def create_app(config_class=None):
-    app = Flask(__name__)
+    # Crear la aplicación Flask con el directorio instance explícito
+    instance_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'instance'))
+    app = Flask(__name__, instance_path=instance_path)
+    
+    # Asegurarse de que el directorio instance existe
+    os.makedirs(instance_path, exist_ok=True)
     
     if config_class is None:
         # Configuración desde variables de entorno
         app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-12345')
-        app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///' + os.path.join(app.instance_path, 'observatorio.db'))
+        
+        # Usar ruta absoluta para la base de datos SQLite
+        db_path = os.path.join(app.instance_path, 'observatorio.db')
+        app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Desactivar la advertencia
+        
         app.config['GOOGLE_API_KEY'] = os.environ.get('GOOGLE_API_KEY')
         app.config['GOOGLE_SEARCH_ENGINE_ID'] = os.environ.get('GOOGLE_SEARCH_ENGINE_ID')
         app.config['MAPBOX_TOKEN'] = os.environ.get('MAPBOX_TOKEN')
@@ -82,9 +92,6 @@ def create_app(config_class=None):
         app.config.from_object(config_class)
 
     # Configurar logging
-    if not os.path.exists('instance'):
-        os.makedirs('instance')
-    
     file_handler = RotatingFileHandler('instance/app.log', maxBytes=10240, backupCount=10)
     file_handler.setFormatter(logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'

@@ -1,7 +1,3 @@
-# Base de datos
-*.db
-instance/
-*.sqlite3
 
 # Archivos de backup
 *_backup*
