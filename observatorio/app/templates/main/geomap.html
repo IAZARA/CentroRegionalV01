@@ -129,32 +129,34 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
 <script>
     let map;
     let markers = [];
 
     document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(function() {
-            try {
-                mapboxgl.accessToken = "{{ mapbox_token }}";
-                map = new mapboxgl.Map({
-                    container: 'map',
-                    style: 'mapbox://styles/mapbox/streets-v12',
-                    center: [-58.3816, -34.6037], // Buenos Aires
-                    zoom: 4
-                });
+        try {
+            mapboxgl.accessToken = '{{ mapbox_token }}';
+            console.log('Mapbox Token:', mapboxgl.accessToken); // Para debug
+            
+            map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v12',
+                center: [-58.3816, -34.6037], // Buenos Aires
+                zoom: 4
+            });
 
-                map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-                map.addControl(new mapboxgl.ScaleControl(), 'bottom-right');
+            map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+            map.addControl(new mapboxgl.ScaleControl(), 'bottom-right');
 
-                // Cargar marcadores iniciales
+            // Esperar a que el mapa se cargue antes de agregar marcadores
+            map.on('load', function() {
                 loadNewsMarkers();
+            });
 
-            } catch (error) {
-                console.error('Error initializing map:', error);
-            }
-        }, 100);
+        } catch (error) {
+            console.error('Error initializing map:', error);
+        }
     });
 
     // Función para cargar y mostrar noticias
@@ -163,7 +165,7 @@
             // Limpiar marcadores existentes
             clearMarkers();
 
-            let url = '/api/news/locations';
+            let url = '/api/news_locations';  
             if (filters.startDate || filters.endDate) {
                 const params = new URLSearchParams();
                 if (filters.startDate) params.append('start_date', filters.startDate);
@@ -172,8 +174,14 @@
             }
 
             const response = await fetch(url);
-            const newsLocations = await response.json();
+            const data = await response.json();
+            const newsLocations = data.locations;  
             
+            if (!newsLocations) {
+                console.error('No se encontraron ubicaciones');
+                return;
+            }
+
             // Agrupar noticias por ubicación
             const locationGroups = {};
             newsLocations.forEach(loc => {
@@ -191,15 +199,13 @@
                 // Crear el contenido del popup
                 let popupContent = '<div class="news-popup">';
                 locations.forEach(loc => {
-                    const news = loc.news;
-                    const date = news.published_date ? new Date(news.published_date).toLocaleDateString() : 'Fecha no disponible';
                     popupContent += `
                         <div class="news-item">
-                            <h4>${news.title}</h4>
-                            <p>${news.snippet}</p>
-                            <p class="source">Fuente: ${news.source}</p>
-                            <p class="date">Fecha: ${date}</p>
-                            <a href="${news.link}" target="_blank">Leer más</a>
+                            <h4>${loc.title}</h4>
+                            <p>${loc.description}</p>
+                            <p class="source">Ubicación: ${loc.location_name}</p>
+                            <p class="date">Fecha: ${loc.date || 'No disponible'}</p>
+                            ${loc.url ? `<a href="${loc.url}" target="_blank">Leer más</a>` : ''}
                         </div>
                         <hr>
                     `;

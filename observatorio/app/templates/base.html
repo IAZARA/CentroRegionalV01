@@ -16,6 +16,9 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+    
+    <!-- Extra CSS -->
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
     <!-- Header -->
@@ -144,6 +147,9 @@
 
     <!-- Custom JavaScript -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    <!-- Extra JavaScript -->
+    {% block extra_js %}{% endblock %}
 
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
