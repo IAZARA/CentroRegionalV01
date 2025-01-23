@@ -11,6 +11,55 @@ class NewsService:
         self.api_key = current_app.config['GOOGLE_API_KEY']
         self.search_engine_id = current_app.config['GOOGLE_SEARCH_ENGINE_ID']
         self.country_domains = current_app.config['COUNTRY_DOMAINS']
+        
+        # Palabras clave que indican que una noticia es relevante
+        self.relevant_keywords = {
+            'sustancias': [
+                'droga', 'drogas', 'estupefaciente', 'estupefacientes',
+                'metanfetamina', 'anfetamina', 'mdma', 'éxtasis', 'extasis',
+                'ketamina', 'fentanilo', 'fentanil', 'crystal', 'cristal',
+                'tusi', 'cocaína', 'heroína', 'lsd', 'nbome', '2cb'
+            ],
+            'acciones': [
+                'decomiso', 'incautación', 'allanamiento', 'operativo',
+                'secuestro', 'detención', 'detuvieron', 'arrestaron',
+                'desbarataron', 'descubrieron', 'encontraron'
+            ],
+            'lugares': [
+                'laboratorio', 'laboratorios', 'cocina', 'bunker',
+                'depósito', 'deposito', 'almacén', 'almacen'
+            ],
+            'temas': [
+                'narcotráfico', 'narcotrafico', 'tráfico', 'trafico',
+                'producción', 'produccion', 'venta', 'distribución',
+                'distribucion', 'comercialización', 'comercializacion'
+            ]
+        }
+
+    def is_news_relevant(self, title, snippet):
+        """
+        Determina si una noticia es relevante basándose en su título y contenido.
+        
+        Args:
+            title (str): Título de la noticia
+            snippet (str): Extracto o contenido de la noticia
+            
+        Returns:
+            bool: True si la noticia es relevante, False en caso contrario
+        """
+        # Convertir a minúsculas para comparación
+        text = (title + ' ' + snippet).lower()
+        
+        # Contador de categorías encontradas
+        categories_found = 0
+        
+        # Verificar cada categoría de palabras clave
+        for category, keywords in self.relevant_keywords.items():
+            if any(keyword.lower() in text for keyword in keywords):
+                categories_found += 1
+        
+        # La noticia debe contener palabras clave de al menos 2 categorías diferentes
+        return categories_found >= 2
 
     def search_news(self, keywords=None, country=None, days=7):
         """
@@ -25,7 +74,40 @@ class NewsService:
             list: Lista de noticias encontradas
         """
         if not keywords:
-            keywords = ["drogas sintéticas", "narcotráfico", "metanfetamina", "éxtasis", "mdma"]
+            # Términos generales
+            general_terms = [
+                "drogas sintéticas",
+                "drogas de diseño",
+                "narcotráfico",
+                "laboratorio clandestino",
+                "cocina de drogas"
+            ]
+            
+            # Nombres específicos de drogas
+            specific_drugs = [
+                "metanfetamina",
+                "éxtasis",
+                "mdma",
+                "anfetaminas",
+                "crystal meth",
+                "ketamina",
+                "LSD",
+                "nbome",
+                "2cb",
+                "fentanilo"
+            ]
+            
+            # Términos de producción y tráfico
+            trafficking_terms = [
+                "precursores químicos",
+                "decomiso drogas",
+                "incautación drogas",
+                "tráfico drogas sintéticas",
+                "venta drogas sintéticas",
+                "operativo drogas"
+            ]
+            
+            keywords = general_terms + specific_drugs + trafficking_terms
 
         all_news = []
         domains = []
@@ -78,16 +160,18 @@ class NewsService:
                             country_code = code
                             break
 
-                    news_item = {
-                        'title': item.get('title'),
-                        'link': item.get('link'),
-                        'snippet': item.get('snippet'),
-                        'source': media_name,
-                        'country': country_code,
-                        'keyword': keyword,
-                        'published_date': datetime.now()  # Google no proporciona la fecha directamente
-                    }
-                    all_news.append(news_item)
+                    # Verificar si la noticia es relevante antes de agregarla
+                    if self.is_news_relevant(item.get('title', ''), item.get('snippet', '')):
+                        news_item = {
+                            'title': item.get('title'),
+                            'link': item.get('link'),
+                            'snippet': item.get('snippet'),
+                            'source': media_name,
+                            'country': country_code,
+                            'keyword': keyword,
+                            'published_date': datetime.now()  # Google no proporciona la fecha directamente
+                        }
+                        all_news.append(news_item)
 
             except Exception as e:
                 logger.error(f'Error al buscar noticias para {keyword}: {str(e)}')

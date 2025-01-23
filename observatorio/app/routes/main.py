@@ -38,8 +38,14 @@ def feed_new():
     
     # Estadísticas por país
     countries = {}
-    for country in ['.ar', '.cl', '.uy', '.py', '.bo']:
+    for country in ['.ar', '.cl', '.uy', '.py', '.bo', '.mx', '.co', '.pe', '.ec', '.ve']:
         countries[country] = News.query.filter(News.country == country).count()
+    
+    # Agregar conteo de noticias internacionales (sin país específico o con otro país)
+    countries['other'] = News.query.filter(
+        (News.country == None) | 
+        (~News.country.in_(['.ar', '.cl', '.uy', '.py', '.bo', '.mx', '.co', '.pe', '.ec', '.ve']))
+    ).count()
     
     stats = {
         'total': total_news,

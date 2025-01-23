@@ -30,8 +30,19 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start mb-3">
                                     <span class="text-capitalize source-badge">{{ item.source }}</span>
-                                    <span class="country-badge px-2 py-1 rounded-pill" style="background-color: {% if item.country == '.ar' %}#74ACDF{% elif item.country == '.cl' %}#D52B1E{% elif item.country == '.uy' %}#FCD116{% elif item.country == '.py' %}#D80027{% elif item.country == '.bo' %}#007934{% else %}#6C757D{% endif %}; color: white;">
-                                        {% if item.country == '.ar' %}🇦🇷 Argentina{% elif item.country == '.cl' %}🇨🇱 Chile{% elif item.country == '.uy' %}🇺🇾 Uruguay{% elif item.country == '.py' %}🇵🇾 Paraguay{% elif item.country == '.bo' %}🇧🇴 Bolivia{% else %}🌎 Internacional{% endif %}
+                                    <span class="country-badge px-2 py-1 rounded-pill" style="background-color: {% if item.country == '.ar' %}#74ACDF{% elif item.country == '.cl' %}#D52B1E{% elif item.country == '.uy' %}#FCD116{% elif item.country == '.py' %}#D80027{% elif item.country == '.bo' %}#007934{% elif item.country == '.mx' %}#006847{% elif item.country == '.co' %}#FCD116{% elif item.country == '.pe' %}#D91023{% elif item.country == '.ec' %}#FFD100{% elif item.country == '.ve' %}#CF142B{% else %}#6C757D{% endif %}; color: white;">
+                                        {% if item.country == '.ar' %}🇦🇷 Argentina
+                                        {% elif item.country == '.cl' %}🇨🇱 Chile
+                                        {% elif item.country == '.uy' %}🇺🇾 Uruguay
+                                        {% elif item.country == '.py' %}🇵🇾 Paraguay
+                                        {% elif item.country == '.bo' %}🇧🇴 Bolivia
+                                        {% elif item.country == '.mx' %}🇲🇽 México
+                                        {% elif item.country == '.co' %}🇨🇴 Colombia
+                                        {% elif item.country == '.pe' %}🇵🇪 Perú
+                                        {% elif item.country == '.ec' %}🇪🇨 Ecuador
+                                        {% elif item.country == '.ve' %}🇻🇪 Venezuela
+                                        {% else %}🌎 Internacional
+                                        {% endif %}
                                     </span>
                                 </div>
                                 
@@ -98,31 +109,63 @@
 
     <!-- Columna lateral con estadísticas -->
     <div class="col-md-3">
-        <div class="card">
+        <div class="card stats-card" style="position: sticky; top: 20px;">
             <div class="card-body">
-                <h5 class="card-title">
+                <h5 class="card-title mb-4">
                     <i class="fas fa-chart-pie text-primary"></i> Estadísticas por País
                 </h5>
                 
                 <!-- Gráfico de dona -->
-                <canvas id="countryChart" width="100%" height="200"></canvas>
+                <div style="height: 200px; margin-bottom: 1rem;">
+                    <canvas id="countryChart"></canvas>
+                </div>
                 
                 <!-- Lista de países -->
-                <div class="mt-4">
-                    {% for country, count in stats.by_country.items() %}
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span>
-                            {% if country == '.ar' %}🇦🇷 Argentina
-                            {% elif country == '.cl' %}🇨🇱 Chile
-                            {% elif country == '.uy' %}🇺🇾 Uruguay
-                            {% elif country == '.py' %}🇵🇾 Paraguay
-                            {% elif country == '.bo' %}🇧🇴 Bolivia
-                            {% else %}🌎 Internacional
-                            {% endif %}
-                        </span>
-                        <span class="badge bg-primary">{{ count }}</span>
+                <div class="country-stats" style="max-height: 400px; overflow-y: auto;">
+                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                        <div><span class="flag">🇦🇷</span> Argentina</div>
+                        <span class="badge bg-primary">{{ stats.by_country['.ar']|default(0) }}</span>
                     </div>
-                    {% endfor %}
+                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                        <div><span class="flag">🇨🇱</span> Chile</div>
+                        <span class="badge bg-primary">{{ stats.by_country['.cl']|default(0) }}</span>
+                    </div>
+                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                        <div><span class="flag">🇺🇾</span> Uruguay</div>
+                        <span class="badge bg-primary">{{ stats.by_country['.uy']|default(0) }}</span>
+                    </div>
+                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                        <div><span class="flag">🇵🇾</span> Paraguay</div>
+                        <span class="badge bg-primary">{{ stats.by_country['.py']|default(0) }}</span>
+                    </div>
+                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                        <div><span class="flag">🇧🇴</span> Bolivia</div>
+                        <span class="badge bg-primary">{{ stats.by_country['.bo']|default(0) }}</span>
+                    </div>
+                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                        <div><span class="flag">🇲🇽</span> México</div>
+                        <span class="badge bg-primary">{{ stats.by_country['.mx']|default(0) }}</span>
+                    </div>
+                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                        <div><span class="flag">🇨🇴</span> Colombia</div>
+                        <span class="badge bg-primary">{{ stats.by_country['.co']|default(0) }}</span>
+                    </div>
+                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                        <div><span class="flag">🇵🇪</span> Perú</div>
+                        <span class="badge bg-primary">{{ stats.by_country['.pe']|default(0) }}</span>
+                    </div>
+                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                        <div><span class="flag">🇪🇨</span> Ecuador</div>
+                        <span class="badge bg-primary">{{ stats.by_country['.ec']|default(0) }}</span>
+                    </div>
+                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                        <div><span class="flag">🇻🇪</span> Venezuela</div>
+                        <span class="badge bg-primary">{{ stats.by_country['.ve']|default(0) }}</span>
+                    </div>
+                    <div class="country-stat-item d-flex justify-content-between align-items-center">
+                        <div><span class="flag">🌎</span> Internacional</div>
+                        <span class="badge bg-primary">{{ stats.by_country['other']|default(0) }}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -134,50 +177,72 @@
 document.addEventListener('DOMContentLoaded', function() {
     const ctx = document.getElementById('countryChart').getContext('2d');
     
-    // Convertir los datos de Jinja2 a un objeto JavaScript
-    const countryData = {};
-    {% for country, count in stats.by_country.items() %}
-    countryData['{{ country }}'] = {{ count }};
-    {% endfor %}
-    
-    // Definir colores para cada país
+    // Colores para cada país
     const colors = {
         '.ar': '#74ACDF',
         '.cl': '#D52B1E',
         '.uy': '#FCD116',
         '.py': '#D80027',
         '.bo': '#007934',
+        '.mx': '#006847',
+        '.co': '#FCD116',
+        '.pe': '#D91023',
+        '.ec': '#FFD100',
+        '.ve': '#CF142B',
         'other': '#6C757D'
     };
     
     // Función para obtener el nombre del país
-    const getCountryName = (code) => {
-        const names = {
-            '.ar': 'Argentina',
-            '.cl': 'Chile',
-            '.uy': 'Uruguay',
-            '.py': 'Paraguay',
-            '.bo': 'Bolivia'
+    function getCountryName(code) {
+        const countries = {
+            '.ar': '🇦🇷 Argentina',
+            '.cl': '🇨🇱 Chile',
+            '.uy': '🇺🇾 Uruguay',
+            '.py': '🇵🇾 Paraguay',
+            '.bo': '🇧🇴 Bolivia',
+            '.mx': '🇲🇽 México',
+            '.co': '🇨🇴 Colombia',
+            '.pe': '🇵🇪 Perú',
+            '.ec': '🇪🇨 Ecuador',
+            '.ve': '🇻🇪 Venezuela',
+            'other': '🌎 Internacional'
         };
-        return names[code] || 'Internacional';
-    };
+        return countries[code] || countries['other'];
+    }
+    
+    // Preparar datos para el gráfico
+    const countryData = {{ stats.by_country|tojson }};
+    const labels = Object.keys(countryData);
+    const data = Object.values(countryData);
+    const backgroundColors = labels.map(country => colors[country] || colors['other']);
     
     // Crear el gráfico
     new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: Object.keys(countryData).map(getCountryName),
+            labels: labels.map(getCountryName),
             datasets: [{
-                data: Object.values(countryData),
-                backgroundColor: Object.keys(countryData).map(code => colors[code] || colors.other),
+                data: data,
+                backgroundColor: backgroundColors,
+                borderColor: 'white',
                 borderWidth: 1
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            return `${label}: ${value} noticias`;
+                        }
+                    }
                 }
             }
         }
@@ -211,6 +276,50 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 .news-title:hover {
     color: #0056b3;
+}
+
+/* Estilos para la tarjeta de estadísticas */
+.stats-card {
+    height: calc(100vh - 40px);
+    overflow: hidden;
+}
+
+.stats-card .card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.country-stats {
+    scrollbar-width: thin;
+    scrollbar-color: #6c757d #f8f9fa;
+}
+
+.country-stats::-webkit-scrollbar {
+    width: 6px;
+}
+
+.country-stats::-webkit-scrollbar-track {
+    background: #f8f9fa;
+}
+
+.country-stats::-webkit-scrollbar-thumb {
+    background-color: #6c757d;
+    border-radius: 3px;
+}
+
+.country-stat-item {
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.country-stat-item:hover {
+    background-color: #f8f9fa;
+}
+
+.flag {
+    margin-right: 0.5rem;
 }
 </style>
 {% endblock %}
