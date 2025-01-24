@@ -6,17 +6,22 @@ import requests
 from app.utils.text_processor import TextProcessor
 import re
 from functools import lru_cache
+from app import db
+from app.models.news_location import NewsLocation
+from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
 
 class GeocodingService:
+    OPENCAGE_API_URL = 'https://api.opencagedata.com/geocode/v1/json'
+
     def __init__(self):
         """
         Inicializa el servicio de geocodificación
         """
-        self.opencage_api_key = os.environ.get('OPENCAGE_API_KEY')
+        self.api_key = os.environ.get('OPENCAGE_API_KEY')
         self.cache_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'geocoding_cache.json')
-        self.cache = self._load_cache()
+        self.location_cache = self._load_cache()
         
         # Coordenadas de provincias y ciudades importantes de Argentina
         self.argentina_provinces = {
@@ -136,7 +141,7 @@ class GeocodingService:
             os.makedirs(os.path.dirname(self.cache_file), exist_ok=True)
             
             with open(self.cache_file, 'w', encoding='utf-8') as f:
-                json.dump(self.cache, f, ensure_ascii=False, indent=2)
+                json.dump(self.location_cache, f, ensure_ascii=False, indent=2)
         except Exception as e:
             logger.error(f"Error guardando caché: {str(e)}")
 
@@ -230,13 +235,10 @@ class GeocodingService:
                                 
                                 # Guardar en la base de datos
                                 saved_location = self.save_location({
-                                    'geometry': {
-                                        'lat': lat,
-                                        'lon': lng
-                                    },
-                                    'components': {
-                                        'country_code': processed_location['country_code']
-                                    }
+                                    'name': location,
+                                    'latitude': lat,
+                                    'longitude': lng,
+                                    'country_code': processed_location['country_code']
                                 }, {
                                     'id': news_item['id'],
                                     'location': location
@@ -266,66 +268,33 @@ class GeocodingService:
             logger.error(f"Error procesando noticia {news_item.get('id')}: {str(e)}")
             return None
 
-    def save_location(self, location_data: Dict, news_item: Dict) -> Optional[Dict]:
+    def save_location(self, location_data: Dict, news_item: Dict):
         """
-        Guarda una ubicación en la base de datos
+        Guarda una única ubicación en la base de datos para una noticia
         """
         try:
-            if not location_data or 'geometry' not in location_data:
-                return None
-                
-            # Extraer y validar las coordenadas
-            lat = location_data['geometry'].get('lat')
-            lng = location_data['geometry'].get('lon')
+            # Eliminar ubicaciones existentes para esta noticia
+            NewsLocation.query.filter_by(news_id=news_item['id']).delete()
             
-            # Validar que lat y lng sean números y estén en rangos válidos
-            try:
-                lat = float(lat)
-                lng = float(lng)
-                
-                if not (-90 <= lat <= 90) or not (-180 <= lng <= 180):
-                    logger.warning(f"Coordenadas fuera de rango: lat={lat}, lng={lng}")
-                    return None
-                    
-                # Redondear a 6 decimales
-                lat = round(lat, 6)
-                lng = round(lng, 6)
-                
-            except (TypeError, ValueError) as e:
-                logger.warning(f"Error al convertir coordenadas: {str(e)}")
-                return None
-            
-            # Crear o actualizar la ubicación
-            location = NewsLocation.query.filter_by(
+            # Crear nueva ubicación
+            location = NewsLocation(
                 news_id=news_item['id'],
-                name=news_item.get('location', ''),
-                latitude=lat,
-                longitude=lng
-            ).first()
+                name=location_data['name'],
+                latitude=location_data['latitude'],
+                longitude=location_data['longitude'],
+                country_code=location_data.get('country_code', 'ar'),
+                is_primary=True
+            )
             
-            if not location:
-                location = NewsLocation(
-                    news_id=news_item['id'],
-                    name=news_item.get('location', ''),
-                    latitude=lat,
-                    longitude=lng,
-                    country_code=location_data.get('components', {}).get('country_code', '').lower()
-                )
-                db.session.add(location)
-            
+            db.session.add(location)
             db.session.commit()
             
-            return {
-                'id': location.id,
-                'latitude': location.latitude,
-                'longitude': location.longitude,
-                'country_code': location.country_code
-            }
+            logger.info(f"Ubicación guardada para noticia {news_item['id']}: {location_data['name']}")
             
         except Exception as e:
-            logger.error(f"Error al guardar ubicación: {str(e)}")
             db.session.rollback()
-            return None
+            logger.error(f"Error guardando ubicación para noticia {news_item['id']}: {str(e)}")
+            raise
 
     def _get_source(self, news_item: Dict) -> str:
         """
@@ -374,76 +343,147 @@ class GeocodingService:
                 
         return 'Internacional'
 
-    @lru_cache(maxsize=1000)
-    def geocode_location(self, location: str) -> Optional[Dict]:
+    def geocode_location(self, search_query: str) -> Optional[Dict]:
         """
-        Geocodifica una ubicación usando OpenCage o el diccionario de ubicaciones conocidas
+        Geocodifica una ubicación usando OpenCage
         """
         try:
-            # Verificar cache
-            cache_key = location.lower().strip()
-            if cache_key in self.cache:
-                logger.info(f"Ubicación encontrada en caché: {location}")
-                return self.cache[cache_key]
+            # Verificar si la ubicación está en caché
+            if search_query in self.location_cache:
+                logger.info(f"Ubicación encontrada en caché: {search_query}")
+                return self.location_cache[search_query]
             
-            # Verificar si es una provincia o ciudad argentina conocida
-            clean_name = self._clean_location_name(location)
-            if clean_name in self.argentina_provinces:
-                coords = self.argentina_provinces[clean_name]
-                result = {
-                    'name': location,
-                    'geometry': {
-                        'lat': coords['lat'],
-                        'lon': coords['lon']
-                    },
-                    'components': {
-                        'country_code': 'ar'
-                    },
-                    'country_code': 'ar'
-                }
-                self.cache[cache_key] = result
-                self._save_cache()
-                return result
+            # Asegurarse de que tenemos una API key
+            if not self.api_key:
+                logger.error("No se encontró API key para OpenCage")
+                return None
+                
+            logger.info(f"Búsqueda en OpenCage: {search_query}")
+            logger.info(f"OpenCage API Key: {self.api_key[:5]}...")
             
-            # Si no está en el diccionario, usar OpenCage
-            url = f'https://api.opencagedata.com/geocode/v1/json'
+            # Hacer la petición a OpenCage
             params = {
-                'q': location,
-                'key': self.opencage_api_key,
-                'countrycode': 'ar',  # Limitar a Argentina
-                'language': 'es',     # Resultados en español
-                'limit': 1           # Solo el primer resultado
+                'q': search_query,
+                'key': self.api_key,
+                'language': 'es',
+                'limit': 1,
+                'no_annotations': 1,
+                'countrycode': self._get_country_code(search_query)
             }
             
-            logger.info(f"Búsqueda en OpenCage: {location}")
-            logger.info(f"OpenCage API Key: {self.opencage_api_key[:5]}...")
+            response = requests.get(self.OPENCAGE_API_URL, params=params)
+            response.raise_for_status()
             
-            response = requests.get(url, params=params)
             data = response.json()
-            
             if data['results']:
                 result = data['results'][0]
-                if result['components'].get('country_code') == 'ar':
-                    formatted_result = {
-                        'name': location,
-                        'geometry': {
-                            'lat': result['geometry']['lat'],
-                            'lon': result['geometry']['lng']
-                        },
-                        'components': {
-                            'country_code': 'ar'
-                        },
-                        'country_code': 'ar'
-                    }
-                    self.cache[cache_key] = formatted_result
-                    self._save_cache()
-                    return formatted_result
-            
-            return None
-            
+                
+                # Verificar que la ubicación está en el país correcto
+                country = result['components'].get('country')
+                expected_country = self._get_expected_country(search_query)
+                if expected_country and country and country.lower() != expected_country.lower():
+                    logger.warning(f"País incorrecto para {search_query}. Esperado: {expected_country}, Obtenido: {country}")
+                    return None
+                
+                location_data = {
+                    'name': result['formatted'],
+                    'geometry': {
+                        'lat': result['geometry']['lat'],
+                        'lon': result['geometry']['lng']
+                    },
+                    'components': result['components'],
+                    'country_code': result['components'].get('country_code', '').lower()
+                }
+                
+                # Guardar en caché
+                self.location_cache[search_query] = location_data
+                return location_data
+            else:
+                logger.warning(f"No se encontraron resultados para {search_query}")
+                return None
+                
         except Exception as e:
-            logger.error(f"Error geocodificando {location}: {str(e)}")
+            logger.error(f"Error geocodificando {search_query}: {str(e)}")
             return None
+            
+    def _get_country_code(self, search_query: str) -> str:
+        """
+        Extrae el código de país de la consulta de búsqueda
+        """
+        country_codes = {
+            'argentina': 'ar',
+            'bolivia': 'bo',
+            'brasil': 'br',
+            'chile': 'cl',
+            'colombia': 'co',
+            'ecuador': 'ec',
+            'guyana': 'gy',
+            'paraguay': 'py',
+            'peru': 'pe',
+            'surinam': 'sr',
+            'uruguay': 'uy',
+            'venezuela': 've',
+            'mexico': 'mx',
+            'belice': 'bz',
+            'costa rica': 'cr',
+            'el salvador': 'sv',
+            'guatemala': 'gt',
+            'honduras': 'hn',
+            'nicaragua': 'ni',
+            'panama': 'pa',
+            'cuba': 'cu',
+            'haiti': 'ht',
+            'republica dominicana': 'do',
+            'estados unidos': 'us',
+            'united states': 'us',
+            'canada': 'ca'
+        }
+        
+        search_lower = search_query.lower()
+        for country, code in country_codes.items():
+            if country in search_lower:
+                return code
+        return ''
+        
+    def _get_expected_country(self, search_query: str) -> Optional[str]:
+        """
+        Obtiene el país esperado de la consulta de búsqueda
+        """
+        countries = {
+            'argentina': 'Argentina',
+            'bolivia': 'Bolivia',
+            'brasil': 'Brasil',
+            'chile': 'Chile',
+            'colombia': 'Colombia',
+            'ecuador': 'Ecuador',
+            'guyana': 'Guyana',
+            'paraguay': 'Paraguay',
+            'peru': 'Perú',
+            'surinam': 'Surinam',
+            'uruguay': 'Uruguay',
+            'venezuela': 'Venezuela',
+            'mexico': 'México',
+            'méxico': 'México',
+            'belice': 'Belice',
+            'costa rica': 'Costa Rica',
+            'el salvador': 'El Salvador',
+            'guatemala': 'Guatemala',
+            'honduras': 'Honduras',
+            'nicaragua': 'Nicaragua',
+            'panama': 'Panamá',
+            'cuba': 'Cuba',
+            'haiti': 'Haití',
+            'republica dominicana': 'República Dominicana',
+            'estados unidos': 'United States',
+            'united states': 'United States',
+            'canada': 'Canada'
+        }
+        
+        search_lower = search_query.lower()
+        for country_key, country_name in countries.items():
+            if country_key in search_lower:
+                return country_name
+        return None
 
     def clear_cache(self, location: str = None):
         """
@@ -452,10 +492,10 @@ class GeocodingService:
         """
         if location:
             cache_key = location.lower().strip()
-            if cache_key in self.cache:
-                del self.cache[cache_key]
+            if cache_key in self.location_cache:
+                del self.location_cache[cache_key]
                 logger.info(f"Limpiada entrada de caché para: {location}")
         else:
-            self.cache.clear()
+            self.location_cache.clear()
             logger.info("Caché limpiado completamente")
         self._save_cache()

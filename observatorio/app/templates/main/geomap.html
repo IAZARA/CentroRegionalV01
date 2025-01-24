@@ -20,17 +20,24 @@
         max-width: 400px;
     }
     .news-popup {
-        max-width: 300px;
-        padding: 10px;
+        max-width: 350px;
+        padding: 15px;
         background: #1f1f1f;
         color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     .news-popup h4 {
-        margin: 0 0 10px 0;
+        margin: 0 0 12px 0;
         color: #ffffff;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.3;
+        border-bottom: 2px solid #cc0000;
+        padding-bottom: 8px;
     }
     .news-popup .news-item {
-        margin-bottom: 15px;
+        margin-bottom: 20px;
         border-bottom: 1px solid #333;
         padding-bottom: 15px;
     }
@@ -38,29 +45,53 @@
         margin-bottom: 0;
         border-bottom: none;
     }
+    .news-popup p {
+        margin: 8px 0;
+        line-height: 1.4;
+    }
     .news-popup .source {
         font-size: 0.9em;
-        color: #888;
-        margin: 5px 0;
+        color: #aaa;
+        margin: 8px 0;
+        display: flex;
+        align-items: center;
+    }
+    .news-popup .source::before {
+        content: "📍";
+        margin-right: 5px;
     }
     .news-popup .date {
-        font-size: 0.8em;
-        color: #666;
+        font-size: 0.85em;
+        color: #888;
+        font-style: italic;
     }
     .news-popup a {
-        color: #4a9eff;
+        display: inline-block;
+        color: #ffffff;
         text-decoration: none;
+        background-color: #cc0000;
+        padding: 6px 12px;
+        border-radius: 4px;
+        margin-top: 10px;
+        transition: background-color 0.2s;
     }
     .news-popup a:hover {
-        text-decoration: underline;
+        background-color: #ff0000;
+        text-decoration: none;
     }
     .mapboxgl-popup-content {
         background: #1f1f1f;
         color: #ffffff;
         border-radius: 8px;
+        padding: 0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
     .mapboxgl-popup-close-button {
         color: #ffffff;
+        font-size: 20px;
+        padding: 5px 10px;
+        right: 5px;
+        top: 5px;
     }
     .mapboxgl-popup-tip {
         border-top-color: #1f1f1f !important;
@@ -247,25 +278,28 @@
                 // Crear el contenido del popup
                 let popupContent = '<div class="news-popup">';
                 locations.forEach(loc => {
-                    const date = loc.news.published_date ? new Date(loc.news.published_date).toLocaleDateString() : 'No disponible';
+                    const date = loc.news.published_date ? new Date(loc.news.published_date).toLocaleDateString('es-ES', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    }) : 'No disponible';
                     popupContent += `
                         <div class="news-item">
                             <h4>${loc.news.title}</h4>
                             <p>${loc.news.snippet || ''}</p>
                             <p class="source">Ubicación: ${loc.location_name}</p>
                             <p class="source">Fuente: ${loc.news.source || 'No disponible'}</p>
-                            <p class="date">Fecha: ${date}</p>
-                            ${loc.news.link ? `<a href="${loc.news.link}" target="_blank">Leer más</a>` : ''}
+                            <p class="date">Publicado el ${date}</p>
+                            ${loc.news.link ? `<a href="${loc.news.link}" target="_blank">Leer noticia completa →</a>` : ''}
                         </div>
-                        <hr>
                     `;
                 });
                 popupContent += '</div>';
 
                 // Crear marcador
                 const marker = new mapboxgl.Marker({
-                    color: "#4a9eff",  // Color más visible para el tema oscuro
-                    scale: 0.8  // Tamaño ligeramente más pequeño
+                    color: "#cc0000",  // Color rojo
+                    scale: 0.9  // Tamaño ligeramente más grande
                 })
                 .setLngLat([lng, lat])
                 .setPopup(new mapboxgl.Popup().setHTML(popupContent))

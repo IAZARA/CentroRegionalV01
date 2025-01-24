@@ -34,14 +34,36 @@ def update_news(reprocess_all=False, days=1, hours=None):
             # Obtener las URLs existentes
             existing_urls = {url[0] for url in db.session.query(News.url).all()}
             
-            # Buscar noticias
-            if hours:
-                new_news = news_service.search_news(hours=hours)
-            else:
-                new_news = news_service.search_news(days=days)
+            # Términos de búsqueda para drogas sintéticas
+            search_terms = [
+                'drogas sintéticas',
+                'drogas de diseño',
+                'metanfetamina',
+                'éxtasis',
+                'MDMA',
+                'fentanilo',
+                'ketamina',
+                'LSD',
+                'narcotráfico sintético',
+                'laboratorio drogas',
+                'nuevas drogas',
+                'drogas químicas',
+                'tusi',
+                'cocaina rosa',
+                'anfetaminas'
+            ]
+            
+            all_news = []
+            for term in search_terms:
+                print(f"\n🔍 Buscando noticias con término: {term}")
+                if hours:
+                    news_items = news_service.search_news(search_term=term, hours=hours)
+                else:
+                    news_items = news_service.search_news(search_term=term, days=days)
+                all_news.extend(news_items)
             
             # Filtrar noticias que ya existen
-            new_news_filtered = [news for news in new_news if news['link'] not in existing_urls]
+            new_news_filtered = [news for news in all_news if news['link'] not in existing_urls]
             
             if not new_news_filtered:
                 print("ℹ️ No hay nuevas noticias para agregar")

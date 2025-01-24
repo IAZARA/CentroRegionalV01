@@ -61,11 +61,12 @@ class NewsService:
         # La noticia debe contener palabras clave de al menos 2 categorías diferentes
         return categories_found >= 2
 
-    def search_news(self, keywords=None, country=None, days=7, hours=None):
+    def search_news(self, search_term=None, keywords=None, country=None, days=7, hours=None):
         """
         Busca noticias usando Google Custom Search API.
         
         Args:
+            search_term (str): Término específico de búsqueda
             keywords (list): Lista de palabras clave para buscar
             country (str): Código de país para filtrar (.ar, .cl, etc.)
             days (int): Número de días hacia atrás para buscar
@@ -74,7 +75,9 @@ class NewsService:
         Returns:
             list: Lista de noticias encontradas
         """
-        if not keywords:
+        if search_term:
+            keywords = [search_term]
+        elif not keywords:
             # Términos generales
             general_terms = [
                 "drogas sintéticas",

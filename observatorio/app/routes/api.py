@@ -15,13 +15,24 @@ def get_news_locations():
         # Obtener parámetros de filtro
         start_date = request.args.get('start_date')
         end_date = request.args.get('end_date')
+        country_code = request.args.get('country_code')
+        
+        # Lista de códigos de país de América
+        america_country_codes = [
+            'ar', 'bo', 'br', 'cl', 'co', 'ec', 'gy', 'py', 'pe', 'sr', 'uy', 've',
+            'mx', 'bz', 'cr', 'sv', 'gt', 'hn', 'ni', 'pa', 'cu', 'ht', 'do', 'us', 'ca'
+        ]
         
         # Construir la consulta base
         query = NewsLocation.query\
             .join(News)\
-            .filter(NewsLocation.country_code == 'ar')\
+            .filter(NewsLocation.country_code.in_(america_country_codes))\
             .order_by(desc(News.published_date))
         
+        # Aplicar filtro de país si está presente
+        if country_code:
+            query = query.filter(NewsLocation.country_code == country_code.lower())
+            
         # Aplicar filtros de fecha si están presentes
         if start_date:
             query = query.filter(News.published_date >= datetime.strptime(start_date, '%Y-%m-%d'))

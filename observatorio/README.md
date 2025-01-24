@@ -72,3 +72,20 @@ La API REST proporciona endpoints para:
 ## Licencia
 
 Este proyecto está bajo la Licencia MIT.
+
+
+Para buscar noticias del último día (por defecto):
+
+python -m scripts.update_news
+
+Para buscar noticias de los últimos N días:
+
+python -m scripts.update_news --days 3
+
+Para buscar noticias de las últimas N horas:
+
+python -m scripts.update_news --hours 12
+
+Para reprocesar todas las ubicaciones (manteniendo las noticias):
+
+python -m scripts.update_news --reprocess-all

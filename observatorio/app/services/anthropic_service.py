@@ -20,36 +20,26 @@ class AnthropicService:
         Extrae ubicaciones del texto usando Claude
         """
         try:
-            if not text.strip():
-                logger.warning("Texto vacío proporcionado a extract_locations")
-                return []
+            # Instrucciones para Claude
+            prompt = f"""Analiza el siguiente texto y extrae todas las ubicaciones geográficas mencionadas.
+Para cada ubicación, proporciona:
+1. El nombre específico de la ubicación
+2. El estado/provincia/departamento (si se menciona)
+3. El país (si se menciona)
+4. El tipo de ubicación (city, state, country)
+5. Si es la ubicación principal del texto (is_primary)
 
-            # Prompt para extraer ubicaciones
-            prompt = f"""
-            Analiza el siguiente texto y extrae todas las ubicaciones geográficas mencionadas que estén en Argentina.
-            Es MUY IMPORTANTE que devuelvas SOLO un array JSON válido con la siguiente estructura, sin texto adicional:
-            [
-                {{
-                    "name": "nombre de la ubicación",
-                    "type": "city/province/neighborhood",
-                    "is_primary": true/false
-                }}
-            ]
-            
-            Si no hay ubicaciones, devuelve [].
-            
-            Texto a analizar:
-            {text}
-            """
-            
-            logger.info(f"Analizando texto: {text[:200]}...")
-            
-            # Llamar a Claude
+Responde en formato JSON como una lista de objetos con las propiedades: name, state, country, type, is_primary.
+Si algún campo no está presente en el texto, omítelo del JSON.
+
+Texto: {text}"""
+
+            # Obtener respuesta de Claude
             response = self.client.messages.create(
-                model="claude-3-haiku-20240307",
+                model="claude-3-opus-20240229",
                 max_tokens=1000,
                 temperature=0,
-                system="Eres un asistente especializado en extraer ubicaciones geográficas de Argentina. SOLO debes responder con un array JSON válido.",
+                system="Eres un asistente experto en extraer y analizar ubicaciones geográficas de textos en español.",
                 messages=[
                     {
                         "role": "user",
@@ -57,40 +47,21 @@ class AnthropicService:
                     }
                 ]
             )
-            
-            if not response.content:
-                logger.warning("Claude devolvió una respuesta vacía")
+
+            # Extraer el JSON de la respuesta
+            response_text = response.content[0].text
+            # Encontrar el primer [ y último ] para extraer el JSON
+            start = response_text.find('[')
+            end = response_text.rfind(']') + 1
+            if start != -1 and end != 0:
+                json_str = response_text[start:end]
+                locations = json.loads(json_str)
+                logger.info(f"Ubicaciones extraídas: {locations}")
+                return locations
+            else:
+                logger.warning("No se encontró JSON en la respuesta")
                 return []
 
-            # Procesar la respuesta
-            response_text = response.content[0].text.strip()
-            logger.info(f"Respuesta de Claude: {response_text}")
-
-            try:
-                # Intentar parsear directamente primero
-                locations = json.loads(response_text)
-                if isinstance(locations, list):
-                    logger.info(f"Ubicaciones encontradas: {locations}")
-                    return locations
-                else:
-                    logger.warning(f"La respuesta no es una lista: {response_text}")
-                    return []
-            except json.JSONDecodeError:
-                # Si falla, intentar extraer el JSON
-                import re
-                json_match = re.search(r'\[(.*?)\]', response_text, re.DOTALL)
-                if json_match:
-                    try:
-                        locations = json.loads(f"[{json_match.group(1)}]")
-                        logger.info(f"Ubicaciones encontradas (después de extracción): {locations}")
-                        return locations
-                    except json.JSONDecodeError as e:
-                        logger.error(f"Error al parsear JSON extraído: {str(e)}")
-                        return []
-                else:
-                    logger.error("No se pudo encontrar un array JSON en la respuesta")
-                    return []
-                    
         except Exception as e:
-            logger.error(f"Error en extract_locations: {str(e)}", exc_info=True)
+            logger.error(f"Error extrayendo ubicaciones: {str(e)}")
             return []
