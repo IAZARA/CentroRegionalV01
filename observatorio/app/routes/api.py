@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from app.models.news_location import NewsLocation
 from app.models.news import News
 from sqlalchemy import desc
@@ -30,24 +30,29 @@ def get_news_locations():
         
         # Limitar a las últimas 100 ubicaciones
         locations = query.limit(100).all()
-
-        return jsonify([{
+        
+        current_app.logger.info(f"Found {len(locations)} locations")
+        
+        result = [{
             'id': loc.id,
             'latitude': loc.latitude,
             'longitude': loc.longitude,
-            'location_name': loc.location_name,
+            'location_name': loc.name,
             'country_code': loc.country_code,
-            'geocoding_confidence': loc.geocoding_confidence,
+            'geocoding_confidence': loc.geocoding_confidence if hasattr(loc, 'geocoding_confidence') else None,
             'news': {
                 'id': loc.news.id,
                 'title': loc.news.title,
-                'snippet': loc.news.snippet,
-                'link': loc.news.link,
+                'snippet': loc.news.summary,  
+                'link': loc.news.url,  
                 'source': loc.news.source,
                 'published_date': loc.news.published_date.isoformat() if loc.news.published_date else None,
                 'created_at': loc.news.created_at.isoformat()
             }
-        } for loc in locations])
+        } for loc in locations]
+        
+        return jsonify(result)
         
     except Exception as e:
+        current_app.logger.error(f"Error in get_news_locations: {str(e)}", exc_info=True)
         return jsonify({'error': str(e)}), 500

@@ -20,30 +20,50 @@
         max-width: 400px;
     }
     .news-popup {
+        max-width: 300px;
         padding: 10px;
+        background: #1f1f1f;
+        color: #ffffff;
     }
     .news-popup h4 {
         margin: 0 0 10px 0;
-        color: #333;
+        color: #ffffff;
     }
-    .news-popup p {
-        margin: 5px 0;
+    .news-popup .news-item {
+        margin-bottom: 15px;
+        border-bottom: 1px solid #333;
+        padding-bottom: 15px;
+    }
+    .news-popup .news-item:last-child {
+        margin-bottom: 0;
+        border-bottom: none;
+    }
+    .news-popup .source {
         font-size: 0.9em;
+        color: #888;
+        margin: 5px 0;
+    }
+    .news-popup .date {
+        font-size: 0.8em;
+        color: #666;
     }
     .news-popup a {
-        color: #0066cc;
+        color: #4a9eff;
         text-decoration: none;
     }
     .news-popup a:hover {
         text-decoration: underline;
     }
-    .news-popup .source {
-        color: #666;
-        font-size: 0.8em;
+    .mapboxgl-popup-content {
+        background: #1f1f1f;
+        color: #ffffff;
+        border-radius: 8px;
     }
-    .news-popup .date {
-        color: #666;
-        font-size: 0.8em;
+    .mapboxgl-popup-close-button {
+        color: #ffffff;
+    }
+    .mapboxgl-popup-tip {
+        border-top-color: #1f1f1f !important;
     }
     .filter-panel {
         position: absolute;
@@ -109,54 +129,69 @@
 
 {% block dashboard_content %}
 <div class="main-content">
+    <div id="map"></div>
+
+    <!-- Panel de filtros -->
     <div class="filter-panel">
         <h3>Filtros</h3>
         <div class="filter-group">
-            <label for="start-date">Fecha inicial:</label>
-            <input type="date" id="start-date" name="start-date">
+            <label for="startDate">Fecha Inicio:</label>
+            <input type="date" id="startDate" name="startDate">
         </div>
         <div class="filter-group">
-            <label for="end-date">Fecha final:</label>
-            <input type="date" id="end-date" name="end-date">
+            <label for="endDate">Fecha Fin:</label>
+            <input type="date" id="endDate" name="endDate">
         </div>
         <div class="filter-actions">
             <button class="filter-button apply-button" onclick="applyFilters()">Aplicar</button>
-            <button class="filter-button reset-button" onclick="resetFilters()">Restablecer</button>
+            <button class="filter-button reset-button" onclick="resetFilters()">Resetear</button>
         </div>
     </div>
-    <div id="map"></div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
 <script>
+    // Inicializar variables globales
     let map;
     let markers = [];
 
-    document.addEventListener('DOMContentLoaded', function() {
-        try {
-            mapboxgl.accessToken = '{{ mapbox_token }}';
-            console.log('Mapbox Token:', mapboxgl.accessToken); // Para debug
-            
-            map = new mapboxgl.Map({
-                container: 'map',
-                style: 'mapbox://styles/mapbox/streets-v12',
-                center: [-58.3816, -34.6037], // Buenos Aires
-                zoom: 4
-            });
-
-            map.addControl(new mapboxgl.NavigationControl(), 'top-right');
-            map.addControl(new mapboxgl.ScaleControl(), 'bottom-right');
-
-            // Esperar a que el mapa se cargue antes de agregar marcadores
-            map.on('load', function() {
-                loadNewsMarkers();
-            });
-
-        } catch (error) {
-            console.error('Error initializing map:', error);
+    // Inicializar mapa
+    mapboxgl.accessToken = '{{ mapbox_token }}';
+    map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/dark-v11',
+        center: [-64.0, -34.0],  // Centro en Argentina
+        zoom: 4,
+        transformRequest: (url, resourceType) => {
+            if (resourceType === 'Source' || resourceType === 'Tile') {
+                return {
+                    url: url,
+                    headers: {
+                        'Accept-Language': 'es'  // Forzar español
+                    }
+                };
+            }
         }
+    });
+
+    // Agregar el control de navegación
+    map.addControl(new mapboxgl.NavigationControl());
+
+    // Esperar a que el mapa cargue
+    map.on('load', function() {
+        // Personalizar el texto de las Malvinas
+        map.setLayoutProperty('country-label', 'text-field', [
+            'match',
+            ['get', 'name_en'],
+            'Falkland Islands (Islas Malvinas)',
+            'Islas Malvinas',
+            ['get', 'name']
+        ]);
+
+        // Cargar los marcadores de noticias
+        loadNewsMarkers();
     });
 
     // Función para cargar y mostrar noticias
@@ -165,7 +200,7 @@
             // Limpiar marcadores existentes
             clearMarkers();
 
-            let url = '/api/news_locations';  
+            let url = '/api/news/locations';  
             if (filters.startDate || filters.endDate) {
                 const params = new URLSearchParams();
                 if (filters.startDate) params.append('start_date', filters.startDate);
@@ -174,17 +209,30 @@
             }
 
             const response = await fetch(url);
-            const data = await response.json();
-            const newsLocations = data.locations;  
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const newsLocations = await response.json();
             
-            if (!newsLocations) {
-                console.error('No se encontraron ubicaciones');
+            if (!Array.isArray(newsLocations)) {
+                console.error('La respuesta no es un array:', newsLocations);
                 return;
             }
+
+            if (newsLocations.length === 0) {
+                console.log('No se encontraron ubicaciones');
+                return;
+            }
+
+            console.log('Ubicaciones encontradas:', newsLocations.length);
 
             // Agrupar noticias por ubicación
             const locationGroups = {};
             newsLocations.forEach(loc => {
+                if (!loc.latitude || !loc.longitude) {
+                    console.warn('Ubicación sin coordenadas:', loc);
+                    return;
+                }
                 const key = `${loc.latitude},${loc.longitude}`;
                 if (!locationGroups[key]) {
                     locationGroups[key] = [];
@@ -199,13 +247,15 @@
                 // Crear el contenido del popup
                 let popupContent = '<div class="news-popup">';
                 locations.forEach(loc => {
+                    const date = loc.news.published_date ? new Date(loc.news.published_date).toLocaleDateString() : 'No disponible';
                     popupContent += `
                         <div class="news-item">
-                            <h4>${loc.title}</h4>
-                            <p>${loc.description}</p>
+                            <h4>${loc.news.title}</h4>
+                            <p>${loc.news.snippet || ''}</p>
                             <p class="source">Ubicación: ${loc.location_name}</p>
-                            <p class="date">Fecha: ${loc.date || 'No disponible'}</p>
-                            ${loc.url ? `<a href="${loc.url}" target="_blank">Leer más</a>` : ''}
+                            <p class="source">Fuente: ${loc.news.source || 'No disponible'}</p>
+                            <p class="date">Fecha: ${date}</p>
+                            ${loc.news.link ? `<a href="${loc.news.link}" target="_blank">Leer más</a>` : ''}
                         </div>
                         <hr>
                     `;
@@ -214,7 +264,8 @@
 
                 // Crear marcador
                 const marker = new mapboxgl.Marker({
-                    color: "#0066cc"
+                    color: "#4a9eff",  // Color más visible para el tema oscuro
+                    scale: 0.8  // Tamaño ligeramente más pequeño
                 })
                 .setLngLat([lng, lat])
                 .setPopup(new mapboxgl.Popup().setHTML(popupContent))
@@ -234,8 +285,8 @@
     }
 
     function applyFilters() {
-        const startDate = document.getElementById('start-date').value;
-        const endDate = document.getElementById('end-date').value;
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
         
         loadNewsMarkers({
             startDate: startDate,
@@ -244,8 +295,8 @@
     }
 
     function resetFilters() {
-        document.getElementById('start-date').value = '';
-        document.getElementById('end-date').value = '';
+        document.getElementById('startDate').value = '';
+        document.getElementById('endDate').value = '';
         loadNewsMarkers();
     }
 </script>

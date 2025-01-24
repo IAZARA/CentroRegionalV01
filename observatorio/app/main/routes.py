@@ -1,11 +1,12 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, jsonify
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user, logout_user
 from app.services.news_service import NewsService
 from app.services.geocoding_service import GeocodingService
 from datetime import datetime, timedelta
 from app.models import News
 from app.models.news_location import NewsLocation
 from sqlalchemy import and_
+import os
 
 bp = Blueprint('main', __name__)
 
@@ -107,8 +108,11 @@ def get_news_locations():
 @login_required
 def geomap():
     # Obtener el token de Mapbox desde las variables de entorno
-    mapbox_token = current_app.config.get('MAPBOX_TOKEN')
+    mapbox_token = current_app.config.get('MAPBOX_TOKEN') or os.environ.get('MAPBOX_TOKEN')
+    current_app.logger.info(f"MAPBOX_TOKEN en la ruta: {mapbox_token}")
+    
     if not mapbox_token:
+        current_app.logger.error("No se encontró el token de Mapbox ni en config ni en variables de entorno")
         flash('Error: No se encontró el token de Mapbox', 'error')
         return redirect(url_for('main.feed_new'))
     
@@ -129,3 +133,8 @@ def geomap():
 @login_required
 def legislation():
     return render_template('main/legislation.html')
+
+@bp.route('/force-logout')
+def force_logout():
+    logout_user()
+    return 'Logged out'

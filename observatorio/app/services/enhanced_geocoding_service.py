@@ -1,15 +1,56 @@
 from typing import List, Dict, Optional
-from app.services.geocoding_service import GeocodingService
-from app.services.claude_geocoding_service import ClaudeGeocodingService
+from .geocoding_service import GeocodingService
+from .anthropic_service import AnthropicService
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 
 class EnhancedGeocodingService:
     def __init__(self):
         self.traditional_service = GeocodingService()
-        self.claude_service = ClaudeGeocodingService()
+        self.ai_service = AnthropicService()
         
+        # Lista de provincias argentinas y sus capitales
+        self.argentina_locations = {
+            'buenos aires': 'ar',
+            'ciudad autónoma de buenos aires': 'ar',
+            'córdoba': 'ar',
+            'santa fe': 'ar',
+            'mendoza': 'ar',
+            'tucumán': 'ar',
+            'entre ríos': 'ar',
+            'salta': 'ar',
+            'misiones': 'ar',
+            'chaco': 'ar',
+            'corrientes': 'ar',
+            'santiago del estero': 'ar',
+            'san juan': 'ar',
+            'jujuy': 'ar',
+            'río negro': 'ar',
+            'neuquén': 'ar',
+            'formosa': 'ar',
+            'chubut': 'ar',
+            'san luis': 'ar',
+            'la pampa': 'ar',
+            'catamarca': 'ar',
+            'la rioja': 'ar',
+            'santa cruz': 'ar',
+            'tierra del fuego': 'ar',
+            # Ciudades importantes
+            'mar del plata': 'ar',
+            'rosario': 'ar',
+            'la plata': 'ar',
+            'san miguel de tucumán': 'ar',
+            'salta': 'ar',
+            'santa fe': 'ar',
+            'san juan': 'ar',
+            'resistencia': 'ar',
+            'neuquén': 'ar',
+            'bariloche': 'ar',
+            'bahía blanca': 'ar'
+        }
+
     def process_news_item(self, news_item: Dict) -> List[Dict]:
         """
         Procesa una noticia usando tanto el servicio tradicional como Claude
@@ -17,7 +58,7 @@ class EnhancedGeocodingService:
         """
         try:
             # Obtener ubicaciones usando Claude
-            claude_locations = self.claude_service.extract_locations(news_item.get('text', ''))
+            claude_locations = self.ai_service.extract_locations(news_item.get('text', ''))
             
             # Convertir las ubicaciones de Claude al formato necesario
             processed_locations = []
@@ -25,16 +66,10 @@ class EnhancedGeocodingService:
             for loc in claude_locations:
                 try:
                     # Geocodificar usando el servicio tradicional para obtener coordenadas precisas
-                    geocoded = self.traditional_service.geocode_location(loc['name'])
+                    geocoded = self.geocode_location(loc)
                     
-                    if geocoded and 'geometry' in geocoded:
-                        processed_locations.append({
-                            'name': loc['name'],
-                            'latitude': geocoded['geometry'].get('lat'),
-                            'longitude': geocoded['geometry'].get('lng'),
-                            'country_code': loc.get('country', 'ar')[:2].lower(),
-                            'is_primary': loc.get('is_primary', False)
-                        })
+                    if geocoded:
+                        processed_locations.append(geocoded)
                 except Exception as e:
                     logger.error(f"Error procesando ubicación {loc['name']}: {str(e)}")
                     continue
@@ -45,61 +80,76 @@ class EnhancedGeocodingService:
             logger.error(f"Error en process_news_item: {str(e)}")
             return []
 
+    def geocode_location(self, location: Dict) -> Optional[Dict]:
+        """
+        Geocodifica una ubicación y verifica que sea de Argentina
+        """
+        try:
+            # Asegurarse de que la búsqueda sea específica para Argentina
+            search_query = f"{location['name']}, Argentina"
+            
+            # Intentar geocodificar
+            result = self.traditional_service.geocode_location(search_query)
+            logger.info(f"Resultado de geocodificación para {location['name']}: {result}")
+            
+            if result and 'geometry' in result:
+                # Extraer lat/lon del resultado
+                lat = result['geometry'].get('lat')
+                # Intentar obtener la longitud como 'lon' o 'lng'
+                lon = result['geometry'].get('lon') or result['geometry'].get('lng')
+                logger.info(f"Coordenadas encontradas para {location['name']}: lat={lat}, lon={lon}")
+                
+                if lat is not None and lon is not None:
+                    return {
+                        'name': location['name'],
+                        'latitude': lat,
+                        'longitude': lon,
+                        'country_code': result.get('country_code', 'ar'),
+                        'is_primary': location.get('is_primary', False),
+                        'type': location.get('type', 'unknown')
+                    }
+                else:
+                    logger.warning(f"Coordenadas inválidas para {location['name']}: lat={lat}, lon={lon}")
+            else:
+                logger.warning(f"No se encontró geometría para {location['name']}")
+                
+            logger.warning(f"La ubicación {location['name']} no se pudo geocodificar")
+            return None
+                
+        except Exception as e:
+            logger.error(f"Error al geocodificar {location['name']}: {str(e)}")
+            return None
+            
     def extract_locations(self, text: str) -> List[Dict]:
         """
-        Extrae ubicaciones del texto usando ambos servicios
+        Extrae ubicaciones del texto usando una combinación de servicios
         """
-        all_locations = {}  # Diccionario para evitar duplicados
-        
         try:
-            # 1. Intentar primero con Claude
-            claude_locations = self.claude_service.extract_locations(text)
+            # Primero usamos el servicio de IA para identificar posibles ubicaciones
+            ai_locations = self.ai_service.extract_locations(text)
+            logger.info(f"Ubicaciones identificadas por IA: {ai_locations}")
             
-            for loc in claude_locations:
+            # Lista para almacenar las ubicaciones geocodificadas
+            geocoded_locations = []
+            
+            # Procesar cada ubicación encontrada por la IA
+            for loc in ai_locations:
                 try:
                     location_name = loc['name']
-                    # Geocodificar usando el servicio tradicional
-                    geocoded = self.traditional_service.geocode_location(location_name)
                     
-                    if geocoded and 'geometry' in geocoded:
-                        # Usar el nombre como clave para evitar duplicados
-                        all_locations[location_name] = {
-                            'name': location_name,
-                            'latitude': geocoded['geometry'].get('lat'),
-                            'longitude': geocoded['geometry'].get('lng'),
-                            'country_code': loc.get('country', 'ar')[:2].lower(),
-                            'is_primary': loc.get('is_primary', False)
-                        }
-                except Exception as e:
-                    logger.error(f"Error procesando ubicación de Claude {loc['name']}: {str(e)}")
-                    continue
-            
-        except Exception as e:
-            logger.error(f"Error usando servicio de Claude: {str(e)}")
-        
-        try:
-            # 2. Usar el servicio tradicional como respaldo
-            traditional_locations = self.traditional_service.extract_locations(text)
-            
-            for location_name in traditional_locations:
-                if location_name not in all_locations:  # Solo si no fue encontrado por Claude
-                    try:
-                        geocoded = self.traditional_service.geocode_location(location_name)
-                        if geocoded and 'geometry' in geocoded:
-                            country_code = self.traditional_service.get_country_code(location_name)
-                            all_locations[location_name] = {
-                                'name': location_name,
-                                'latitude': geocoded['geometry'].get('lat'),
-                                'longitude': geocoded['geometry'].get('lng'),
-                                'country_code': country_code,
-                                'is_primary': False  # El servicio tradicional no detecta ubicación principal
-                            }
-                    except Exception as e:
-                        logger.error(f"Error procesando ubicación tradicional {location_name}: {str(e)}")
+                    # Solo procesar ubicaciones de Argentina
+                    if loc.get('type') == 'country' and loc.get('name') != 'Argentina':
                         continue
                         
+                    geocoded = self.geocode_location(loc)
+                    if geocoded:
+                        geocoded_locations.append(geocoded)
+                except Exception as e:
+                    logger.error(f"Error procesando ubicación {loc['name']}: {str(e)}")
+                    continue
+            
+            return geocoded_locations
+            
         except Exception as e:
-            logger.error(f"Error usando servicio tradicional: {str(e)}")
-        
-        # Convertir el diccionario en lista
-        return list(all_locations.values())
+            logger.error(f"Error en extract_locations: {str(e)}")
+            return []

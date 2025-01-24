@@ -10,7 +10,7 @@ class Config:
     
     # Configuración de la base de datos
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'instance', 'observatorio.db')
+        'postgresql://postgres:Vortex733-@localhost:5432/observatorio'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Configuración de paginación

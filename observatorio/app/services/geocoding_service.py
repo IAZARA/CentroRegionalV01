@@ -4,15 +4,119 @@ import logging
 from typing import Dict, List, Optional
 import requests
 from app.utils.text_processor import TextProcessor
+import re
+from functools import lru_cache
 
 logger = logging.getLogger(__name__)
 
 class GeocodingService:
     def __init__(self):
-        self.opencage_api_key = os.getenv('OPENCAGE_API_KEY')
-        self.cache_file = 'geocoding_cache.json'
+        """
+        Inicializa el servicio de geocodificación
+        """
+        self.opencage_api_key = os.environ.get('OPENCAGE_API_KEY')
+        self.cache_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'geocoding_cache.json')
         self.cache = self._load_cache()
-        self.text_processor = TextProcessor()
+        
+        # Coordenadas de provincias y ciudades importantes de Argentina
+        self.argentina_provinces = {
+            'mar del plata': {
+                'lat': -38.0055,
+                'lon': -57.5426
+            },
+            'buenos aires': {
+                'lat': -34.6037,
+                'lon': -58.3816
+            },
+            'cordoba': {
+                'lat': -31.4201,
+                'lon': -64.1888
+            },
+            'rosario': {
+                'lat': -32.9468,
+                'lon': -60.6393
+            },
+            'mendoza': {
+                'lat': -32.8908,
+                'lon': -68.8272
+            },
+            'la plata': {
+                'lat': -34.9205,
+                'lon': -57.9536
+            },
+            'san miguel de tucuman': {
+                'lat': -26.8241,
+                'lon': -65.2226
+            },
+            'salta': {
+                'lat': -24.7829,
+                'lon': -65.4232
+            },
+            'santa fe': {
+                'lat': -31.6107,
+                'lon': -60.6973
+            },
+            'corrientes': {
+                'lat': -27.4692,
+                'lon': -58.8306
+            },
+            'resistencia': {
+                'lat': -27.4510,
+                'lon': -58.9868
+            },
+            'posadas': {
+                'lat': -27.3621,
+                'lon': -55.9007
+            },
+            'parana': {
+                'lat': -31.7413,
+                'lon': -60.5115
+            },
+            'neuquen': {
+                'lat': -38.9516,
+                'lon': -68.0591
+            },
+            'formosa': {
+                'lat': -26.1775,
+                'lon': -58.1781
+            },
+            'san salvador de jujuy': {
+                'lat': -24.1858,
+                'lon': -65.2995
+            },
+            'san luis': {
+                'lat': -33.3022,
+                'lon': -66.3376
+            },
+            'san juan': {
+                'lat': -31.5375,
+                'lon': -68.5364
+            },
+            'rio gallegos': {
+                'lat': -51.6230,
+                'lon': -69.2168
+            },
+            'ushuaia': {
+                'lat': -54.8019,
+                'lon': -68.3030
+            },
+            'rawson': {
+                'lat': -43.3001,
+                'lon': -65.1023
+            },
+            'viedma': {
+                'lat': -40.8135,
+                'lon': -62.9967
+            },
+            'santa rosa': {
+                'lat': -36.6167,
+                'lon': -64.2833
+            },
+            'rio cuarto': {
+                'lat': -33.1307,
+                'lon': -64.3499
+            }
+        }
 
     def _load_cache(self) -> Dict:
         try:
@@ -24,103 +128,35 @@ class GeocodingService:
         return {}
 
     def _save_cache(self):
+        """
+        Guarda el caché en un archivo JSON
+        """
         try:
-            with open(self.cache_file, 'w') as f:
-                json.dump(self.cache, f)
+            # Asegurarse de que el directorio data existe
+            os.makedirs(os.path.dirname(self.cache_file), exist_ok=True)
+            
+            with open(self.cache_file, 'w', encoding='utf-8') as f:
+                json.dump(self.cache, f, ensure_ascii=False, indent=2)
         except Exception as e:
             logger.error(f"Error guardando caché: {str(e)}")
 
-    def geocode_location(self, location: str) -> Optional[Dict]:
+    def _clean_location_name(self, name: str) -> str:
         """
-        Geocodifica una ubicación usando OpenCage
+        Limpia y normaliza el nombre de una ubicación
         """
-        try:
-            # Verificar caché
-            cache_key = location.lower()
-            if cache_key in self.cache:
-                logger.info(f"Ubicación encontrada en caché: {location}")
-                return self.cache[cache_key]
-
-            # Lista de países conocidos
-            known_countries = {
-                'Argentina': 'ar',
-                'Chile': 'cl',
-                'Uruguay': 'uy',
-                'Paraguay': 'py',
-                'Bolivia': 'bo',
-                'Perú': 'pe',
-                'Peru': 'pe',
-                'Colombia': 'co',
-                'Ecuador': 'ec',
-                'Venezuela': 've',
-                'Brasil': 'br',
-                'Mexico': 'mx',
-                'México': 'mx'
-            }
-
-            # Verificar si la ubicación es un país conocido
-            for country, code in known_countries.items():
-                if location.lower() == country.lower():
-                    # Si es un país, no agregar ", Argentina"
-                    search_query = location
-                    break
-            else:
-                # Si no es un país conocido, buscar primero sin país
-                search_query = location
-
-            logger.info(f"Búsqueda en OpenCage: {search_query}")
-            logger.info(f"OpenCage API Key: {self.opencage_api_key[:5]}...")
-
-            # Hacer la petición a OpenCage
-            url = f"https://api.opencagedata.com/geocode/v1/json"
-            params = {
-                'q': search_query,
-                'key': self.opencage_api_key,
-                'language': 'es',
-                'limit': 1,
-                'countrycode': 'ar,cl,uy,py,bo,pe,co,ec,ve,br,mx',  # Limitar a países de interés
-                'no_annotations': 1
-            }
-
-            response = requests.get(url, params=params)
-            data = response.json()
-
-            if not data['results']:
-                # Si no hay resultados, intentar con ", Argentina" como fallback
-                if search_query != f"{location}, Argentina":
-                    return self.geocode_location(f"{location}, Argentina")
-                return None
-
-            result = data['results'][0]
-            
-            # Extraer el código de país del componente correspondiente
-            country_code = result['components'].get('country_code', '').lower()
-            
-            # Si el país no está en nuestra lista de interés, intentar con ", Argentina"
-            if country_code not in ['ar', 'cl', 'uy', 'py', 'bo', 'pe', 'co', 'ec', 've', 'br', 'mx']:
-                if search_query != f"{location}, Argentina":
-                    return self.geocode_location(f"{location}, Argentina")
-                return None
-
-            geocoded = {
-                'latitude': result['geometry']['lat'],
-                'longitude': result['geometry']['lng'],
-                'country_code': country_code
-            }
-
-            # Guardar en caché
-            self.cache[cache_key] = geocoded
-            self._save_cache()
-
-            return {
-                'lat': geocoded['latitude'],
-                'lng': geocoded['longitude'],
-                'country_code': geocoded['country_code']
-            }
-
-        except Exception as e:
-            logger.error(f"Error geocodificando {location}: {str(e)}")
-            return None
+        # Convertir a minúsculas y quitar espacios extras
+        clean = name.lower().strip()
+        
+        # Quitar acentos
+        clean = clean.replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u')
+        
+        # Quitar caracteres especiales
+        clean = re.sub(r'[^a-z\s]', '', clean)
+        
+        # Quitar espacios múltiples
+        clean = re.sub(r'\s+', ' ', clean)
+        
+        return clean.strip()
 
     def get_country_code(self, location: str) -> str:
         """
@@ -165,10 +201,10 @@ class GeocodingService:
                     # Geocodificar la ubicación
                     geocoded_data = self.geocode_location(location)
                     
-                    if geocoded_data and 'lat' in geocoded_data:
+                    if geocoded_data and 'geometry' in geocoded_data:
                         # Extraer y validar coordenadas
-                        lat = geocoded_data['lat']
-                        lng = geocoded_data['lng']
+                        lat = geocoded_data['geometry']['lat']
+                        lng = geocoded_data['geometry']['lon']
                         
                         if lat is not None and lng is not None:
                             try:
@@ -188,7 +224,7 @@ class GeocodingService:
                                 processed_location = {
                                     'name': location,
                                     'lat': lat,
-                                    'lng': lng,
+                                    'lon': lng,
                                     'country_code': geocoded_data.get('country_code', '').lower()
                                 }
                                 
@@ -196,7 +232,7 @@ class GeocodingService:
                                 saved_location = self.save_location({
                                     'geometry': {
                                         'lat': lat,
-                                        'lng': lng
+                                        'lon': lng
                                     },
                                     'components': {
                                         'country_code': processed_location['country_code']
@@ -240,7 +276,7 @@ class GeocodingService:
                 
             # Extraer y validar las coordenadas
             lat = location_data['geometry'].get('lat')
-            lng = location_data['geometry'].get('lng')
+            lng = location_data['geometry'].get('lon')
             
             # Validar que lat y lng sean números y estén en rangos válidos
             try:
@@ -337,3 +373,89 @@ class GeocodingService:
                 return category
                 
         return 'Internacional'
+
+    @lru_cache(maxsize=1000)
+    def geocode_location(self, location: str) -> Optional[Dict]:
+        """
+        Geocodifica una ubicación usando OpenCage o el diccionario de ubicaciones conocidas
+        """
+        try:
+            # Verificar cache
+            cache_key = location.lower().strip()
+            if cache_key in self.cache:
+                logger.info(f"Ubicación encontrada en caché: {location}")
+                return self.cache[cache_key]
+            
+            # Verificar si es una provincia o ciudad argentina conocida
+            clean_name = self._clean_location_name(location)
+            if clean_name in self.argentina_provinces:
+                coords = self.argentina_provinces[clean_name]
+                result = {
+                    'name': location,
+                    'geometry': {
+                        'lat': coords['lat'],
+                        'lon': coords['lon']
+                    },
+                    'components': {
+                        'country_code': 'ar'
+                    },
+                    'country_code': 'ar'
+                }
+                self.cache[cache_key] = result
+                self._save_cache()
+                return result
+            
+            # Si no está en el diccionario, usar OpenCage
+            url = f'https://api.opencagedata.com/geocode/v1/json'
+            params = {
+                'q': location,
+                'key': self.opencage_api_key,
+                'countrycode': 'ar',  # Limitar a Argentina
+                'language': 'es',     # Resultados en español
+                'limit': 1           # Solo el primer resultado
+            }
+            
+            logger.info(f"Búsqueda en OpenCage: {location}")
+            logger.info(f"OpenCage API Key: {self.opencage_api_key[:5]}...")
+            
+            response = requests.get(url, params=params)
+            data = response.json()
+            
+            if data['results']:
+                result = data['results'][0]
+                if result['components'].get('country_code') == 'ar':
+                    formatted_result = {
+                        'name': location,
+                        'geometry': {
+                            'lat': result['geometry']['lat'],
+                            'lon': result['geometry']['lng']
+                        },
+                        'components': {
+                            'country_code': 'ar'
+                        },
+                        'country_code': 'ar'
+                    }
+                    self.cache[cache_key] = formatted_result
+                    self._save_cache()
+                    return formatted_result
+            
+            return None
+            
+        except Exception as e:
+            logger.error(f"Error geocodificando {location}: {str(e)}")
+            return None
+
+    def clear_cache(self, location: str = None):
+        """
+        Limpia el caché de geocodificación. Si se especifica una ubicación,
+        solo limpia esa entrada.
+        """
+        if location:
+            cache_key = location.lower().strip()
+            if cache_key in self.cache:
+                del self.cache[cache_key]
+                logger.info(f"Limpiada entrada de caché para: {location}")
+        else:
+            self.cache.clear()
+            logger.info("Caché limpiado completamente")
+        self._save_cache()
