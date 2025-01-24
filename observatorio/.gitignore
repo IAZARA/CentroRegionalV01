@@ -1,4 +1,3 @@
-
 # Archivos de backup
 *_backup*
 *_backup.sql
@@ -10,7 +9,6 @@ __pycache__/
 *$py.class
 *.so
 .Python
-env/
 build/
 develop-eggs/
 dist/
@@ -27,15 +25,36 @@ wheels/
 .installed.cfg
 *.egg
 
-# Entorno virtual
+# Virtual Environment
 venv/
 ENV/
+env/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
 
 # Logs
 *.log
+instance/app.log*
+logs/
+
+# Database
+*.db
+instance/*.db
+*.sqlite3
+
+# Environment variables
+.env
+.env.*
+
+# Cache files
+*_cache.json
+geocoding_cache.json
+claude_geocoding_cache.json
 
 # Archivos de sistema
 .DS_Store
-.env
-.env.local
-.env.*.local
+Thumbs.db
