@@ -128,20 +128,21 @@ def update_news(reprocess_all=False, days=1, hours=None):
             for news in news_to_process:
                 try:
                     # Procesar ubicaciones para cada noticia
-                    locations = geocoding_service.process_news_item({
-                        'text': news.content,
-                        'title': news.title
-                    })
+                    locations = geocoding_service.extract_locations(news.content + " " + news.title)
+                    
+                    if not locations:
+                        print(f"ℹ️ No se encontraron ubicaciones para la noticia ID: {news.id}")
+                        continue
                     
                     for location in locations:
                         try:
                             news_location = NewsLocation(
                                 news_id=news.id,
-                                name=location['name'],
-                                latitude=location['latitude'],
-                                longitude=location['longitude'],
-                                country_code=location['country_code'],
-                                is_primary=location['is_primary']
+                                name=location.get('name'),
+                                latitude=float(location.get('latitude')),
+                                longitude=float(location.get('longitude')),
+                                country_code=location.get('country_code'),
+                                is_primary=location.get('is_primary', False)
                             )
                             db.session.add(news_location)
                         except Exception as e:
