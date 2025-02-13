@@ -1,1 +1,60 @@
-observatorio/.gitignore
+# Archivos de backup
+*_backup*
+*_backup.sql
+migrations_backup/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+instance/app.log*
+logs/
+
+# Database
+*.db
+instance/*.db
+*.sqlite3
+
+# Environment variables
+.env
+.env.*
+
+# Cache files
+*_cache.json
+geocoding_cache.json
+claude_geocoding_cache.json
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
