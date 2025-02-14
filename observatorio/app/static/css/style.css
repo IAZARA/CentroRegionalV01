@@ -1,13 +1,13 @@
 /* Variables */
 :root {
-    --primary-color: #1DA1F2;
-    --secondary-color: #14171A;
-    --background-color: #F5F8FA;
-    --border-color: #E1E8ED;
-    --text-color: #14171A;
-    --text-secondary: #657786;
-    --hover-color: #F5F8FA;
-    --card-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    --primary-color: #0A4B8F;
+    --secondary-color: #1A1F2C;
+    --background-color: #0D1117;
+    --border-color: #30363D;
+    --text-color: #E6EDF3;
+    --text-secondary: #8B949E;
+    --hover-color: #1F2937;
+    --card-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 /* Header */
@@ -26,7 +26,7 @@ body {
 
 /* Navbar */
 .navbar {
-    background-color: white !important;
+    background-color: var(--secondary-color) !important;
     box-shadow: var(--card-shadow);
     padding: 0.5rem 1rem;
     position: sticky;
@@ -49,7 +49,8 @@ body {
     left: 0;
     z-index: 100;
     padding: 48px 0 0;
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    background-color: var(--secondary-color);
+    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.3);
 }
 
 @media (max-width: 767.98px) {
@@ -65,6 +66,58 @@ body {
     padding-top: .5rem;
     overflow-x: hidden;
     overflow-y: auto;
+    background-color: var(--secondary-color);
+}
+
+/* Estilo para el scrollbar de la sidebar */
+.sidebar-sticky::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-sticky::-webkit-scrollbar-track {
+    background: var(--secondary-color);
+}
+
+.sidebar-sticky::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: 3px;
+}
+
+/* Navigation links en la sidebar */
+.sidebar .nav-link {
+    color: var(--text-color);
+    padding: 0.8rem 1rem;
+    border-radius: 0.25rem;
+    margin: 0.2rem 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.sidebar .nav-link:hover {
+    background-color: var(--hover-color);
+    color: var(--text-color);
+}
+
+.sidebar .nav-link.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.sidebar .nav-link i {
+    width: 1.5rem;
+    text-align: center;
+    margin-right: 0.8rem;
+    font-size: 1.1rem;
+}
+
+/* Ajuste para el botón de cerrar sesión en la sidebar */
+.sidebar .nav-link.logout {
+    margin-top: auto;
+    color: var(--text-secondary);
+}
+
+.sidebar .nav-link.logout:hover {
+    color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.1);
 }
 
 /* Main content */
@@ -74,20 +127,20 @@ body {
 
 /* Navigation */
 .nav-link {
-    color: #495057;
+    color: var(--text-color);
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
     margin-bottom: 0.2rem;
 }
 
 .nav-link:hover {
-    background-color: #f8f9fa;
-    color: #0d6efd;
+    background-color: var(--hover-color);
+    color: var(--primary-color);
 }
 
 .nav-link.active {
-    background-color: #e9ecef;
-    color: #0d6efd;
+    background-color: var(--hover-color);
+    color: var(--primary-color);
     font-weight: 500;
 }
 
@@ -99,6 +152,8 @@ body {
 
 /* Cards */
 .card {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
     border: none;
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
     margin-bottom: 1rem;
@@ -106,6 +161,7 @@ body {
 
 /* Stats Card */
 .stats-card {
+    background-color: var(--secondary-color);
     border: none;
     border-radius: 15px;
     box-shadow: var(--card-shadow);
@@ -143,9 +199,12 @@ body {
 
 /* Panel de Control */
 .control-panel {
+    background-color: var(--secondary-color);
     border: none;
     border-radius: 15px;
     box-shadow: var(--card-shadow);
+    padding: 1.5rem;
+    color: var(--text-color);
 }
 
 .control-menu {
@@ -155,13 +214,14 @@ body {
 }
 
 .control-link {
+    color: var(--text-color);
     display: flex;
     align-items: center;
     padding: 1rem;
-    color: var(--text-color);
     text-decoration: none;
     border-radius: 10px;
     transition: all 0.2s;
+    background-color: var(--secondary-color);
 }
 
 .control-link:hover {
@@ -176,6 +236,57 @@ body {
     margin-right: 1rem;
     width: 24px;
     text-align: center;
+    color: var(--primary-color);
+}
+
+/* Estilos para los títulos y textos del tablero */
+.dashboard-title {
+    color: var(--text-color);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.dashboard-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Ajustes para las tarjetas del tablero */
+.dashboard-card {
+    background-color: var(--secondary-color);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--card-shadow);
+}
+
+.dashboard-card-title {
+    color: var(--text-color);
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.dashboard-card-content {
+    color: var(--text-color);
+}
+
+/* Ajustes para los elementos interactivos del tablero */
+.dashboard-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.dashboard-button:hover {
+    background-color: var(--hover-color);
+    transform: translateY(-2px);
 }
 
 /* Feed de Noticias */
@@ -185,7 +296,8 @@ body {
 }
 
 .news-card {
-    background: white;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
     border-radius: 15px;
     box-shadow: var(--card-shadow);
     margin-bottom: 1rem;

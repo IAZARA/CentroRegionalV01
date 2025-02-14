@@ -22,9 +22,9 @@
 </head>
 <body>
     <!-- Header -->
-    <header class="navbar navbar-light sticky-top bg-light flex-md-nowrap p-0 shadow-sm">
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow-sm">
         <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="{{ url_for('main.home') }}">
-            <img src="{{ url_for('static', filename='img/CENTRO REGIONAL con letra.png') }}" alt="Logo" height="40">
+            <img src="{{ url_for('static', filename='img/ICONOdelministerio.png') }}" alt="Logo" height="80">
         </a>
         <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -32,11 +32,18 @@
         
         <div class="w-100"></div>
         
-        <div class="navbar-nav">
+        <div class="navbar-nav d-flex flex-row">
+            <div class="nav-item text-nowrap me-3">
+                {% if current_user.is_authenticated %}
+                <a class="nav-link px-3 text-white" href="{{ url_for('auth.change_password') }}">
+                    <i class="fas fa-key"></i> Cambiar Contraseña
+                </a>
+                {% endif %}
+            </div>
             <div class="nav-item text-nowrap">
                 {% if current_user.is_authenticated %}
-                <a class="nav-link px-3" href="{{ url_for('auth.change_password') }}">
-                    <i class="fas fa-key"></i> Cambiar Contraseña
+                <a class="nav-link px-3 text-white" href="{{ url_for('auth.logout') }}">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                 </a>
                 {% endif %}
             </div>

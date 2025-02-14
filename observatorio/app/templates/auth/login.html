@@ -7,53 +7,214 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
-        .login-logo {
-            max-width: 300px;
-            margin: 0 auto;
-            display: block;
-            padding: 20px 0;
-        }
         body {
-            background-color: #f8f9fa;
+            background-image: url("{{ url_for('static', filename='img/FONDO CENTRO REGIONAL.png') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 10%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Puntos del radar */
+        .radar-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: rgba(255, 0, 0, 0.7);
+            border-radius: 50%;
+            animation: blink 2s infinite;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        /* Efecto burbuja */
+        .radar-dot::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background-color: rgba(255, 0, 0, 0.2);
+            border-radius: 50%;
+            animation: bubble 2s infinite;
+        }
+
+        /* Posiciones de los puntos - Ajustadas y aumentadas */
+        .dot1 { top: 28%; left: 52%; animation-delay: 0s; } /* Colombia */
+        .dot2 { top: 38%; left: 55%; animation-delay: 0.5s; } /* Brasil norte */
+        .dot3 { top: 48%; left: 53%; animation-delay: 1s; } /* Brasil central */
+        .dot4 { top: 58%; left: 55%; animation-delay: 1.5s; } /* Brasil sur */
+        .dot5 { top: 45%; left: 48%; animation-delay: 0.7s; } /* Perú */
+        .dot6 { top: 55%; left: 50%; animation-delay: 1.2s; } /* Bolivia */
+        .dot7 { top: 65%; left: 52%; animation-delay: 0.3s; } /* Argentina norte */
+        .dot8 { top: 75%; left: 51%; animation-delay: 0.9s; } /* Argentina sur */
+        .dot9 { top: 52%; left: 58%; animation-delay: 1.7s; } /* Brasil este */
+        .dot10 { top: 35%; left: 50%; animation-delay: 1.4s; } /* Venezuela */
+        .dot11 { top: 62%; left: 55%; animation-delay: 0.2s; } /* Uruguay */
+        .dot12 { top: 60%; left: 52%; animation-delay: 0.8s; } /* Chile norte */
+        .dot13 { top: 70%; left: 54%; animation-delay: 1.3s; } /* Chile sur */
+        .dot14 { top: 42%; left: 58%; animation-delay: 1.8s; } /* Brasil noreste */
+        .dot15 { top: 32%; left: 48%; animation-delay: 1.1s; } /* Ecuador */
+        
+        /* Nuevos puntos en Brasil */
+        .dot16 { top: 45%; left: 56%; animation-delay: 0.4s; } /* Brasil amazonia */
+        .dot17 { top: 50%; left: 60%; animation-delay: 1.6s; } /* Brasil este 2 */
+        .dot18 { top: 44%; left: 52%; animation-delay: 0.6s; } /* Brasil oeste */
+        .dot19 { top: 40%; left: 58%; animation-delay: 1.9s; } /* Brasil norte 2 */
+        .dot20 { top: 54%; left: 56%; animation-delay: 1.1s; } /* Brasil sureste */
+        
+        /* Puntos en Centroamérica - Ajustados más a la izquierda */
+        .dot21 { top: 22%; left: 39%; animation-delay: 0.3s; } /* Panamá */
+        .dot22 { top: 20%; left: 36%; animation-delay: 1.5s; } /* Costa Rica */
+        .dot23 { top: 18%; left: 35%; animation-delay: 0.7s; } /* Nicaragua */
+        .dot24 { top: 16%; left: 39%; animation-delay: 1.2s; } /* Honduras */
+        .dot25 { top: 14%; left: 38%; animation-delay: 0.9s; } /* Guatemala */
+
+        /* Efecto de radar circular */
+        .radar-circle {
+            position: absolute;
+            border: 2px solid rgba(255, 0, 0, 0.2);
+            border-radius: 50%;
+            animation: radar 4s infinite;
+            pointer-events: none;
+        }
+
+        .radar-circle:nth-child(1) { width: 100px; height: 100px; top: 40%; left: 60%; animation-delay: 0s; }
+        .radar-circle:nth-child(2) { width: 200px; height: 200px; top: 35%; left: 55%; animation-delay: 1s; }
+        .radar-circle:nth-child(3) { width: 300px; height: 300px; top: 30%; left: 50%; animation-delay: 2s; }
+
+        @keyframes blink {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.5); opacity: 0.3; }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+
+        @keyframes bubble {
+            0% { transform: translate(-50%, -50%) scale(2); opacity: 0.5; }
+            100% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+        }
+
+        @keyframes radar {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
         }
         .card {
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            background-color: rgba(22, 28, 36, 0.8);
+            backdrop-filter: blur(10px);
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        .card-body {
+            padding: 2rem;
+        }
+        .form-label {
+            color: #fff;
+            font-weight: 500;
+        }
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 0.8rem;
+        }
+        .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #fff;
+            box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1);
+        }
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .form-check-label {
+            color: #fff;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 0.8rem;
+            font-weight: 500;
+            width: 100%;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card mt-5">
-                    <div class="card-body">
-                        <img src="{{ url_for('static', filename='img/CENTRO REGIONAL con letra.png') }}" alt="Centro Regional Logo" class="login-logo">
-                        <form method="POST" action="{{ url_for('auth.login') }}">
-                            {{ form.hidden_tag() }}
-                            <div class="form-group mb-3">
-                                {{ form.email.label(class="form-label") }}
-                                {{ form.email(class="form-control") }}
-                                {% for error in form.email.errors %}
-                                    <span class="text-danger">{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                            <div class="form-group mb-3">
-                                {{ form.password.label(class="form-label") }}
-                                {{ form.password(class="form-control") }}
-                                {% for error in form.password.errors %}
-                                    <span class="text-danger">{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                            <div class="form-check mb-3">
-                                {{ form.remember_me(class="form-check-input") }}
-                                {{ form.remember_me.label(class="form-check-label") }}
-                            </div>
-                            <div class="d-grid">
-                                {{ form.submit(class="btn btn-primary") }}
-                            </div>
-                        </form>
+    <!-- Puntos del radar -->
+    <div class="radar-dot dot1"></div>
+    <div class="radar-dot dot2"></div>
+    <div class="radar-dot dot3"></div>
+    <div class="radar-dot dot4"></div>
+    <div class="radar-dot dot5"></div>
+    <div class="radar-dot dot6"></div>
+    <div class="radar-dot dot7"></div>
+    <div class="radar-dot dot8"></div>
+    <div class="radar-dot dot9"></div>
+    <div class="radar-dot dot10"></div>
+    <div class="radar-dot dot11"></div>
+    <div class="radar-dot dot12"></div>
+    <div class="radar-dot dot13"></div>
+    <div class="radar-dot dot14"></div>
+    <div class="radar-dot dot15"></div>
+    <div class="radar-dot dot16"></div>
+    <div class="radar-dot dot17"></div>
+    <div class="radar-dot dot18"></div>
+    <div class="radar-dot dot19"></div>
+    <div class="radar-dot dot20"></div>
+    <div class="radar-dot dot21"></div>
+    <div class="radar-dot dot22"></div>
+    <div class="radar-dot dot23"></div>
+    <div class="radar-dot dot24"></div>
+    <div class="radar-dot dot25"></div>
+
+    <!-- Círculos del radar -->
+    <div class="radar-circle"></div>
+    <div class="radar-circle"></div>
+    <div class="radar-circle"></div>
+
+    <div class="login-container">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('auth.login') }}">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group mb-3">
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-control", placeholder="Ingrese su email") }}
+                        {% for error in form.email.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
                     </div>
-                </div>
+                    <div class="form-group mb-4">
+                        {{ form.password.label(class="form-label") }}
+                        {{ form.password(class="form-control", placeholder="Ingrese su contraseña") }}
+                        {% for error in form.password.errors %}
+                            <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="form-check mb-4">
+                        {{ form.remember_me(class="form-check-input") }}
+                        {{ form.remember_me.label(class="form-check-label") }}
+                    </div>
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
             </div>
         </div>
     </div>
