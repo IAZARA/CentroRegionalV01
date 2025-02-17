@@ -3,91 +3,24 @@
 {% block dashboard_content %}
 <div class="card mb-4">
     <div class="card-body">
-        <h1 class="card-title text-center mb-4">Centro Regional de Drogas Sintéticas</h1>
+        <div class="text-center mb-4">
+            <h1 class="card-title">Centro Regional de Observación de Drogas Sintéticas</h1>
+        </div>
         <div class="row">
             <div class="col-md-10 offset-md-1">
                 <p class="lead text-justify mb-4">
-                    El Centro Regional de Drogas Sintéticas es una iniciativa estratégica dedicada a la lucha contra el tráfico y producción de drogas sintéticas en la región. Nuestra misión es coordinar esfuerzos entre diferentes organismos y países para combatir eficazmente este flagelo que afecta a nuestra sociedad.
+                    La plataforma se establece como una iniciativa estratégica del Ministerio de SEGURIDAD NACIONAL, orientado a monitorear, analizar y evaluar el fenómeno de las drogas sintéticas en el continente americano.
                 </p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="card">
-    <div class="card-body">
-        <h2 class="card-title mb-4">Nuestras Herramientas y Recursos</h2>
-        
-        <div class="row g-4">
-            <!-- Noticias -->
-            <div class="col-md-6">
-                <div class="feature-item">
-                    <i class="fas fa-newspaper text-primary"></i>
-                    <h4>Noticias</h4>
-                    <p>Accede a las últimas noticias y actualizaciones sobre drogas sintéticas en la región. Mantente informado sobre incautaciones, operativos y tendencias emergentes.</p>
-                </div>
-            </div>
-
-            <!-- Tendencias y Patrones -->
-            <div class="col-md-6">
-                <div class="feature-item">
-                    <i class="fas fa-chart-line text-primary"></i>
-                    <h4>Tendencias y Patrones</h4>
-                    <p>Análisis detallados de las tendencias en el tráfico y producción de drogas sintéticas. Visualiza datos estadísticos y patrones de comportamiento.</p>
-                </div>
-            </div>
-
-            <!-- Biblioteca de Informes -->
-            <div class="col-md-6">
-                <div class="feature-item">
-                    <i class="fas fa-book text-primary"></i>
-                    <h4>Biblioteca de Informes</h4>
-                    <p>Repositorio completo de informes técnicos, estudios de caso y documentos de investigación sobre drogas sintéticas y su impacto en la región.</p>
-                </div>
-            </div>
-
-            <!-- GeoMap -->
-            <div class="col-md-6">
-                <div class="feature-item">
-                    <i class="fas fa-map-marked-alt text-primary"></i>
-                    <h4>GeoMap</h4>
-                    <p>Visualización geográfica interactiva de datos relacionados con drogas sintéticas. Explora patrones geográficos y zonas de actividad.</p>
-                </div>
-            </div>
-
-            <!-- Datos Abiertos -->
-            <div class="col-md-6">
-                <div class="feature-item">
-                    <i class="fas fa-database text-primary"></i>
-                    <h4>Datos Abiertos</h4>
-                    <p>Acceso a conjuntos de datos públicos sobre drogas sintéticas. Información transparente para investigadores y analistas.</p>
-                </div>
-            </div>
-
-            <!-- Sistema de Alerta -->
-            <div class="col-md-6">
-                <div class="feature-item">
-                    <i class="fas fa-exclamation-triangle text-primary"></i>
-                    <h4>Sistema de Alerta</h4>
-                    <p>Sistema de alertas tempranas sobre nuevas drogas sintéticas, métodos de producción y riesgos emergentes en la región.</p>
-                </div>
-            </div>
-
-            <!-- Legislación -->
-            <div class="col-md-6">
-                <div class="feature-item">
-                    <i class="fas fa-gavel text-primary"></i>
-                    <h4>Legislación</h4>
-                    <p>Compendio de leyes, regulaciones y normativas relacionadas con drogas sintéticas en los diferentes países de la región.</p>
-                </div>
-            </div>
-
-            <!-- Agenda MinSeg -->
-            <div class="col-md-6">
-                <div class="feature-item">
-                    <i class="fas fa-calendar-alt text-primary"></i>
-                    <h4>Agenda MinSeg</h4>
-                    <p>Calendario de eventos, reuniones y actividades relacionadas con la seguridad y el control de drogas sintéticas.</p>
+                <p class="text-justify mb-4">
+                    El centro, tiene como finalidad recopilar, clasificar y valorar información pública proveniente de fuentes confiables, como diarios y medios de comunicación, para generar inteligencia estratégica que permita identificar tendencias, patrones y riesgos emergentes asociados al tráfico, producción y consumo de estas sustancias.
+                </p>
+                <p class="text-justify mb-4">
+                    Dirigido a tomadores de decisiones, organismos de seguridad nacionales e internacionales, autoridades gubernamentales y actores clave en la lucha contra el narcotráfico, el observatorio busca fortalecer la capacidad de respuesta regional mediante la creación de tableros de control dinámicos y accesibles en línea, promoviendo la cooperación y el intercambio de información entre los países del continente.
+                </p>
+                <div class="logos-container mt-5">
+                    <img src="{{ url_for('static', filename='img/ICONOdelministerio.png') }}" alt="Logo Ministerio" class="logo-img">
+                    <img src="{{ url_for('static', filename='img/logo192.png') }}" alt="Logo Centro Regional" class="logo-img">
+                    <img src="{{ url_for('static', filename='img/Minseg png.png') }}" alt="Logo MinSeg" class="logo-img">
                 </div>
             </div>
         </div>
@@ -97,27 +30,48 @@
 
 {% block extra_css %}
 <style>
-.feature-item {
-    padding: 20px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    height: 100%;
+.text-justify {
+    text-align: justify;
 }
-.feature-item:hover {
-    background-color: #f8f9fa;
-    transform: translateY(-5px);
+
+.logos-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
 }
-.feature-item i {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+
+.logo-img {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
 }
-.feature-item h4 {
-    margin-bottom: 1rem;
+
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    background-color: #1e2124;
+    color: white;
+}
+
+.card-body {
+    padding: 2.5rem;
+}
+
+.card-title {
+    color: #4169e1;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.lead {
     font-size: 1.25rem;
+    line-height: 1.8;
 }
-.feature-item p {
-    color: #6c757d;
-    margin-bottom: 0;
+
+p {
+    line-height: 1.7;
 }
 </style>
 {% endblock %}

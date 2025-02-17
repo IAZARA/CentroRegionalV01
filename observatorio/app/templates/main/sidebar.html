@@ -7,39 +7,9 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#" onclick="return false;">
-                <i class="fas fa-newspaper"></i>
-                Noticias
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" onclick="return false;">
-                <i class="fas fa-chart-line"></i>
-                Tendencias y Patrones
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" onclick="return false;">
-                <i class="fas fa-book"></i>
-                Biblioteca de Informes
-            </a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link {{ 'active' if request.endpoint == 'main.geomap' }}" href="{{ url_for('main.geomap') }}">
                 <i class="fas fa-map-marked-alt"></i>
-                GeoMap
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" onclick="return false;">
-                <i class="fas fa-database"></i>
-                Datos Abiertos
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" onclick="return false;">
-                <i class="fas fa-exclamation-triangle"></i>
-                Sistema de Alerta
+                Observatorio de Drogas Sintéticas
             </a>
         </li>
         <li class="nav-item">
@@ -59,6 +29,12 @@
     <hr class="my-3">
 
     <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('auth.change_password') }}">
+                <i class="fas fa-key"></i>
+                Cambiar Contraseña
+            </a>
+        </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ url_for('auth.logout') }}">
                 <i class="fas fa-sign-out-alt"></i>

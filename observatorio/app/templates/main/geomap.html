@@ -21,29 +21,31 @@
         left: 0;
         right: 0;
         bottom: 0;
-        width: 100vw;
-        height: 100vh;
+        width: 100%;
+        height: 100%;
         margin: 0;
         overflow: hidden;
+        background-color: white;
     }
 
     /* Contenedor del mapa */
     .looker-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        background-color: white;
+    }
+
+    /* iframe del mapa */
+    .looker-container iframe {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        margin: 0;
-        background-color: var(--background-color);
-    }
-
-    /* iframe del mapa */
-    .looker-iframe {
-        width: 100%;
-        height: 100%;
-        border: 0;
-        background-color: transparent;
+        border: none;
+        background-color: white;
     }
 
     /* Estilos para la barra lateral */
@@ -122,13 +124,7 @@
 <!-- Contenido principal (mapa) -->
 <main class="main-content">
     <div class="looker-container">
-        <iframe 
-            class="looker-iframe"
-            src="https://lookerstudio.google.com/embed/reporting/38893315-37a0-40ea-b016-b50ab0b007ea/page/p_4gadg0ynpd"
-            frameborder="0"
-            allowfullscreen
-            sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
-        </iframe>
+        <iframe width="1200" height="900" src="https://lookerstudio.google.com/embed/reporting/38893315-37a0-40ea-b016-b50ab0b007ea/page/p_4gadg0ynpd" frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
     </div>
 </main>
 
