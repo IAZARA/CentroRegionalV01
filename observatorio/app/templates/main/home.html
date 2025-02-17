@@ -1,77 +1,114 @@
 {% extends "base_dashboard.html" %}
 
 {% block dashboard_content %}
-<div class="card mb-4">
-    <div class="card-body">
-        <div class="text-center mb-4">
-            <h1 class="card-title">Centro Regional de Observación de Drogas Sintéticas</h1>
+<div class="home-container">
+    <div class="content-section">
+        <h1 class="main-title">Centro Regional de Observación de Drogas Sintéticas</h1>
+        
+        <div class="text-content">
+            <p class="lead text-justify">
+                La plataforma se establece como una iniciativa estratégica del Ministerio de SEGURIDAD NACIONAL, orientado a monitorear, analizar y evaluar el fenómeno de las drogas sintéticas en el continente americano.
+            </p>
+            <p class="text-justify">
+                El centro, tiene como finalidad recopilar, clasificar y valorar información pública proveniente de fuentes confiables, como diarios y medios de comunicación, para generar inteligencia estratégica que permita identificar tendencias, patrones y riesgos emergentes asociados al tráfico, producción y consumo de estas sustancias.
+            </p>
+            <p class="text-justify">
+                Dirigido a tomadores de decisiones, organismos de seguridad nacionales e internacionales, autoridades gubernamentales y actores clave en la lucha contra el narcotráfico, el observatorio busca fortalecer la capacidad de respuesta regional mediante la creación de tableros de control dinámicos y accesibles en línea, promoviendo la cooperación y el intercambio de información entre los países del continente.
+            </p>
         </div>
-        <div class="row">
-            <div class="col-md-10 offset-md-1">
-                <p class="lead text-justify mb-4">
-                    La plataforma se establece como una iniciativa estratégica del Ministerio de SEGURIDAD NACIONAL, orientado a monitorear, analizar y evaluar el fenómeno de las drogas sintéticas en el continente americano.
-                </p>
-                <p class="text-justify mb-4">
-                    El centro, tiene como finalidad recopilar, clasificar y valorar información pública proveniente de fuentes confiables, como diarios y medios de comunicación, para generar inteligencia estratégica que permita identificar tendencias, patrones y riesgos emergentes asociados al tráfico, producción y consumo de estas sustancias.
-                </p>
-                <p class="text-justify mb-4">
-                    Dirigido a tomadores de decisiones, organismos de seguridad nacionales e internacionales, autoridades gubernamentales y actores clave en la lucha contra el narcotráfico, el observatorio busca fortalecer la capacidad de respuesta regional mediante la creación de tableros de control dinámicos y accesibles en línea, promoviendo la cooperación y el intercambio de información entre los países del continente.
-                </p>
-                <div class="logos-container mt-5">
-                    <img src="{{ url_for('static', filename='img/ICONOdelministerio.png') }}" alt="Logo Ministerio" class="logo-img">
-                    <img src="{{ url_for('static', filename='img/logo192.png') }}" alt="Logo Centro Regional" class="logo-img">
-                    <img src="{{ url_for('static', filename='img/Minseg png.png') }}" alt="Logo MinSeg" class="logo-img">
-                </div>
-            </div>
-        </div>
+    </div>
+
+    <div class="logos-container">
+        <img src="{{ url_for('static', filename='img/ICONOdelministerio.png') }}" alt="Logo Ministerio" class="logo-img">
+        <img src="{{ url_for('static', filename='img/logo192.png') }}" alt="Logo Centro Regional" class="logo-img">
+        <img src="{{ url_for('static', filename='img/Minseg png.png') }}" alt="Logo MinSeg" class="logo-img">
     </div>
 </div>
 {% endblock %}
 
 {% block extra_css %}
 <style>
+.home-container {
+    min-height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 2rem;
+    background-color: #1e2124;
+    color: white;
+}
+
+.content-section {
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-title {
+    color: #4169e1;
+    font-weight: 600;
+    font-size: 1.8rem;
+    margin: 0 0 1rem 0;
+    text-align: center;
+    padding: 0 1rem;
+}
+
+.text-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+    max-width: 1000px;
+    width: 100%;
+}
+
 .text-justify {
     text-align: justify;
+}
+
+.lead {
+    font-size: 1.1rem;
 }
 
 .logos-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-    margin: 0 auto;
+    max-width: 1000px;
+    width: calc(100% - 2rem); /* Mismo ancho que el texto considerando los paddings */
+    margin: 0.5rem auto 0;
 }
 
 .logo-img {
-    height: 100px;
+    height: 70px;
     width: auto;
     object-fit: contain;
 }
 
-.card {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: none;
-    background-color: #1e2124;
-    color: white;
-}
+@media (max-height: 768px) {
+    .home-container {
+        padding: 0.5rem 1.5rem;
+    }
 
-.card-body {
-    padding: 2.5rem;
-}
+    .main-title {
+        font-size: 1.6rem;
+        margin: 0 0 0.75rem 0;
+    }
 
-.card-title {
-    color: #4169e1;
-    font-weight: 600;
-    margin-bottom: 2rem;
-}
+    .text-content {
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
 
-.lead {
-    font-size: 1.25rem;
-    line-height: 1.8;
-}
+    .logos-container {
+        margin-top: 0.25rem;
+    }
 
-p {
-    line-height: 1.7;
+    .logo-img {
+        height: 60px;
+    }
 }
 </style>
 {% endblock %}
