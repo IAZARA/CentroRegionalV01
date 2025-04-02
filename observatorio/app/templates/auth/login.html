@@ -1,223 +1,399 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Centro Regional de Drogas Sintéticas - Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+
     <style>
+        :root {
+            --background-color: #0D1117;
+            --card-bg-color: rgba(26, 31, 44, 0.85);
+            --card-border-color: rgba(255, 255, 255, 0.1);
+            --text-color: #E6EDF3;
+            --text-secondary: #8B949E;
+            --primary-color: #0A4B8F;
+            --input-bg-color: rgba(255, 255, 255, 0.05);
+            --input-border-color: rgba(255, 255, 255, 0.2);
+            --input-focus-border: var(--primary-color);
+            /* Colores para el fondo animado */
+            --particle-color: rgba(139, 148, 158, 0.6);
+            --line-color: rgba(139, 148, 158, 0.15);
+            --mouse-line-color: rgba(10, 75, 143, 0.4);
+        }
+
         body {
-            background-image: url("{{ url_for('static', filename='img/FONDO CENTRO REGIONAL.png') }}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background-color: var(--background-color);
             min-height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            padding-left: 10%;
+            justify-content: center;
             position: relative;
             overflow: hidden;
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", sans-serif;
+            margin: 0;
         }
 
-        /* Puntos del radar */
-        .radar-dot {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background-color: rgba(255, 0, 0, 0.7);
-            border-radius: 50%;
-            animation: blink 2s infinite;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-        }
-
-        /* Efecto burbuja */
-        .radar-dot::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 20px;
-            height: 20px;
-            background-color: rgba(255, 0, 0, 0.2);
-            border-radius: 50%;
-            animation: bubble 2s infinite;
-        }
-
-        /* Posiciones de los puntos - Ajustadas y aumentadas */
-        .dot1 { top: 28%; left: 52%; animation-delay: 0s; } /* Colombia */
-        .dot2 { top: 38%; left: 55%; animation-delay: 0.5s; } /* Brasil norte */
-        .dot3 { top: 48%; left: 53%; animation-delay: 1s; } /* Brasil central */
-        .dot4 { top: 58%; left: 55%; animation-delay: 1.5s; } /* Brasil sur */
-        .dot5 { top: 45%; left: 48%; animation-delay: 0.7s; } /* Perú */
-        .dot6 { top: 55%; left: 50%; animation-delay: 1.2s; } /* Bolivia */
-        .dot7 { top: 65%; left: 52%; animation-delay: 0.3s; } /* Argentina norte */
-        .dot8 { top: 75%; left: 51%; animation-delay: 0.9s; } /* Argentina sur */
-        .dot9 { top: 52%; left: 58%; animation-delay: 1.7s; } /* Brasil este */
-        .dot10 { top: 35%; left: 50%; animation-delay: 1.4s; } /* Venezuela */
-        .dot11 { top: 62%; left: 55%; animation-delay: 0.2s; } /* Uruguay */
-        .dot12 { top: 60%; left: 52%; animation-delay: 0.8s; } /* Chile norte */
-        .dot13 { top: 70%; left: 54%; animation-delay: 1.3s; } /* Chile sur */
-        .dot14 { top: 42%; left: 58%; animation-delay: 1.8s; } /* Brasil noreste */
-        .dot15 { top: 32%; left: 48%; animation-delay: 1.1s; } /* Ecuador */
-        
-        /* Nuevos puntos en Brasil */
-        .dot16 { top: 45%; left: 56%; animation-delay: 0.4s; } /* Brasil amazonia */
-        .dot17 { top: 50%; left: 60%; animation-delay: 1.6s; } /* Brasil este 2 */
-        .dot18 { top: 44%; left: 52%; animation-delay: 0.6s; } /* Brasil oeste */
-        .dot19 { top: 40%; left: 58%; animation-delay: 1.9s; } /* Brasil norte 2 */
-        .dot20 { top: 54%; left: 56%; animation-delay: 1.1s; } /* Brasil sureste */
-        
-        /* Puntos en Centroamérica - Ajustados más a la izquierda */
-        .dot21 { top: 22%; left: 39%; animation-delay: 0.3s; } /* Panamá */
-        .dot22 { top: 20%; left: 36%; animation-delay: 1.5s; } /* Costa Rica */
-        .dot23 { top: 18%; left: 35%; animation-delay: 0.7s; } /* Nicaragua */
-        .dot24 { top: 16%; left: 39%; animation-delay: 1.2s; } /* Honduras */
-        .dot25 { top: 14%; left: 38%; animation-delay: 0.9s; } /* Guatemala */
-
-        /* Efecto de radar circular */
-        .radar-circle {
-            position: absolute;
-            border: 2px solid rgba(255, 0, 0, 0.2);
-            border-radius: 50%;
-            animation: radar 4s infinite;
-            pointer-events: none;
-        }
-
-        .radar-circle:nth-child(1) { width: 100px; height: 100px; top: 40%; left: 60%; animation-delay: 0s; }
-        .radar-circle:nth-child(2) { width: 200px; height: 200px; top: 35%; left: 55%; animation-delay: 1s; }
-        .radar-circle:nth-child(3) { width: 300px; height: 300px; top: 30%; left: 50%; animation-delay: 2s; }
-
-        @keyframes blink {
-            0% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.5); opacity: 0.3; }
-            100% { transform: scale(1); opacity: 0.7; }
-        }
-
-        @keyframes bubble {
-            0% { transform: translate(-50%, -50%) scale(2); opacity: 0.5; }
-            100% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
-        }
-
-        @keyframes radar {
-            0% { transform: scale(0); opacity: 1; }
-            100% { transform: scale(3); opacity: 0; }
+        /* Canvas para el fondo animado */
+        #interactive-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            display: block;
         }
 
         .login-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             padding: 20px;
+            z-index: 1;
         }
-        .card {
-            background-color: rgba(22, 28, 36, 0.8);
+
+        .login-card {
+            background-color: var(--card-bg-color);
             backdrop-filter: blur(10px);
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid var(--card-border-color);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            padding: 2.5rem;
         }
-        .card-body {
-            padding: 2rem;
+
+        /* Estilo para el logo principal dentro de la tarjeta - MODIFICADO */
+        .login-logo {
+            display: block;
+            margin: 0 auto 2.5rem auto;
+            /* Margen inferior ajustado */
+            max-height: 180px;
+            /* AUMENTADO - Ajusta este valor según necesites */
+            width: auto;
+            /* Mantiene la proporción */
+            max-width: 80%;
+            /* Evita que sea más ancho que la tarjeta si es muy horizontal */
         }
+
+        /* --- Resto de estilos (form, input, button, etc. sin cambios) --- */
         .form-label {
-            color: #fff;
+            color: var(--text-secondary);
             font-weight: 500;
+            margin-bottom: 0.5rem;
         }
+
         .form-control {
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            padding: 0.8rem;
+            background-color: var(--input-bg-color);
+            border: 1px solid var(--input-border-color);
+            color: var(--text-color);
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
+
         .form-control:focus {
-            background-color: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
-            color: #fff;
-            box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1);
+            background-color: var(--input-bg-color);
+            border-color: var(--input-focus-border);
+            color: var(--text-color);
+            box-shadow: 0 0 0 0.25rem rgba(10, 75, 143, 0.3);
+            outline: none;
         }
+
         .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(230, 237, 243, 0.4);
         }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group .form-control {
+            padding-left: 2.5rem;
+        }
+
+        .input-group .input-group-text {
+            position: absolute;
+            left: 1px;
+            top: 1px;
+            bottom: 1px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            padding: 0 0.75rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+        }
+
         .form-check-label {
-            color: #fff;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
-        .btn-primary {
-            background-color: #007bff;
+
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-login {
+            background-color: var(--primary-color);
             border: none;
             padding: 0.8rem;
             font-weight: 500;
             width: 100%;
+            border-radius: 8px;
+            transition: background-color 0.2s ease-in-out;
         }
-        .btn-primary:hover {
-            background-color: #0056b3;
+
+        .btn-login:hover {
+            background-color: #083b70;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .login-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .alert-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1100;
+            width: 90%;
+            max-width: 500px;
         }
     </style>
 </head>
+
 <body>
-    <!-- Puntos del radar -->
-    <div class="radar-dot dot1"></div>
-    <div class="radar-dot dot2"></div>
-    <div class="radar-dot dot3"></div>
-    <div class="radar-dot dot4"></div>
-    <div class="radar-dot dot5"></div>
-    <div class="radar-dot dot6"></div>
-    <div class="radar-dot dot7"></div>
-    <div class="radar-dot dot8"></div>
-    <div class="radar-dot dot9"></div>
-    <div class="radar-dot dot10"></div>
-    <div class="radar-dot dot11"></div>
-    <div class="radar-dot dot12"></div>
-    <div class="radar-dot dot13"></div>
-    <div class="radar-dot dot14"></div>
-    <div class="radar-dot dot15"></div>
-    <div class="radar-dot dot16"></div>
-    <div class="radar-dot dot17"></div>
-    <div class="radar-dot dot18"></div>
-    <div class="radar-dot dot19"></div>
-    <div class="radar-dot dot20"></div>
-    <div class="radar-dot dot21"></div>
-    <div class="radar-dot dot22"></div>
-    <div class="radar-dot dot23"></div>
-    <div class="radar-dot dot24"></div>
-    <div class="radar-dot dot25"></div>
+    <!-- Canvas para fondo animado -->
+    <canvas id="interactive-bg"></canvas>
 
-    <!-- Círculos del radar -->
-    <div class="radar-circle"></div>
-    <div class="radar-circle"></div>
-    <div class="radar-circle"></div>
-
+    <!-- Contenedor para centrar -->
     <div class="login-container">
-        <div class="card">
-            <div class="card-body">
-                <form method="POST" action="{{ url_for('auth.login') }}">
-                    {{ form.hidden_tag() }}
-                    <div class="form-group mb-3">
-                        {{ form.email.label(class="form-label") }}
-                        {{ form.email(class="form-control", placeholder="Ingrese su email") }}
-                        {% for error in form.email.errors %}
-                            <span class="text-danger">{{ error }}</span>
-                        {% endfor %}
+        <!-- Tarjeta de Login -->
+        <div class="card login-card">
+
+            <!-- Logo NUEVO -->
+            <img src="{{ url_for('static', filename='img/logo centro regional nuevo.png') }}" alt="Logo Centro Regional"
+                class="login-logo">
+
+            <!-- Formulario -->
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                {{ form.hidden_tag() }}
+                <!-- Campo Email -->
+                <div class="mb-3">
+                    {{ form.email.label(class="form-label") }}
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        {{ form.email(class="form-control", placeholder="usuario@ejemplo.com") }}
                     </div>
-                    <div class="form-group mb-4">
-                        {{ form.password.label(class="form-label") }}
-                        {{ form.password(class="form-control", placeholder="Ingrese su contraseña") }}
-                        {% for error in form.password.errors %}
-                            <span class="text-danger">{{ error }}</span>
-                        {% endfor %}
+                    {% for error in form.email.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <!-- Campo Contraseña -->
+                <div class="mb-4">
+                    {{ form.password.label(class="form-label") }}
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        {{ form.password(class="form-control", placeholder="Contraseña") }}
                     </div>
-                    <div class="form-check mb-4">
-                        {{ form.remember_me(class="form-check-input") }}
-                        {{ form.remember_me.label(class="form-check-label") }}
-                    </div>
-                    <div class="d-grid">
-                        {{ form.submit(class="btn btn-primary") }}
-                    </div>
-                </form>
-            </div>
+                    {% for error in form.password.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <!-- Recordarme -->
+                <div class="form-check mb-4">
+                    {{ form.remember_me(class="form-check-input") }}
+                    {{ form.remember_me.label(class="form-check-label") }}
+                </div>
+                <!-- Botón de Submit -->
+                <div class="d-grid">
+                    {{ form.submit(class="btn btn-login", value='Iniciar Sesión') }}
+                </div>
+            </form>
         </div>
     </div>
+
+    <!-- Contenedor para mensajes Flash -->
+    <div class="alert-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category if category != 'danger' else 'warning' }} alert-dismissible fade show shadow-sm"
+            role="alert">
+            <i
+                class="fas {% if category == 'success' %}fa-check-circle{% elif category == 'info' %}fa-info-circle{% else %}fa-exclamation-triangle{% endif %} me-2"></i>
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script para el fondo animado (sin cambios) -->
+    <script>
+        const canvas = document.getElementById('interactive-bg');
+        const ctx = canvas.getContext('2d');
+        let particlesArray;
+
+        const style = getComputedStyle(document.documentElement);
+        const particleColor = style.getPropertyValue('--particle-color').trim() || 'rgba(139, 148, 158, 0.6)';
+        const lineColor = style.getPropertyValue('--line-color').trim() || 'rgba(139, 148, 158, 0.15)';
+        const mouseLineColor = style.getPropertyValue('--mouse-line-color').trim() || 'rgba(10, 75, 143, 0.4)';
+
+        const mouse = {
+            x: null,
+            y: null,
+            radius: 100
+        }
+
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = event.clientX;
+            mouse.y = event.clientY;
+        });
+        window.addEventListener('mouseout', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = 2;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1;
+                this.color = particleColor;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+            update() {
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                let forceDirectionX = dx / distance;
+                let forceDirectionY = dy / distance;
+                let maxDistance = mouse.radius;
+                let force = (maxDistance - distance) / maxDistance;
+                let directionX = forceDirectionX * force * this.density * 0.6;
+                let directionY = forceDirectionY * force * this.density * 0.6;
+
+                if (distance < mouse.radius && mouse.x !== null) {
+                    this.x -= directionX;
+                    this.y -= directionY;
+                } else {
+                    if (this.x !== this.baseX) {
+                        let dxToBase = this.x - this.baseX;
+                        this.x -= dxToBase / 10;
+                    }
+                    if (this.y !== this.baseY) {
+                        let dyToBase = this.y - this.baseY;
+                        this.y -= dyToBase / 10;
+                    }
+                }
+            }
+        }
+
+        function init() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particlesArray = [];
+            let numberOfParticles = (canvas.width * canvas.height) / 9000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height;
+                particlesArray.push(new Particle(x, y));
+            }
+        }
+
+        function connect() {
+            let opacityValue = 1;
+            const connectDistance = 80;
+            const mouseConnectDistance = 120;
+
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let dx = particlesArray[a].x - particlesArray[b].x;
+                    let dy = particlesArray[a].y - particlesArray[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    let distMouseA = mouse.x ? Math.sqrt(Math.pow(particlesArray[a].x - mouse.x, 2) + Math.pow(particlesArray[a].y - mouse.y, 2)) : Infinity;
+                    let distMouseB = mouse.x ? Math.sqrt(Math.pow(particlesArray[b].x - mouse.x, 2) + Math.pow(particlesArray[b].y - mouse.y, 2)) : Infinity;
+
+                    if (distance < connectDistance) {
+                        opacityValue = 1 - (distance / connectDistance);
+                        ctx.strokeStyle = lineColor.replace(/[\d\.]+\)$/g, `${opacityValue.toFixed(2)})`);
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+
+                    if (mouse.x && (distMouseA < mouseConnectDistance || distMouseB < mouseConnectDistance) && distance < connectDistance * 1.5) {
+                        opacityValue = 1 - (distance / (connectDistance * 1.5));
+                        if (opacityValue < 0) opacityValue = 0;
+                        ctx.strokeStyle = mouseLineColor.replace(/[\d\.]+\)$/g, `${(opacityValue * 0.8).toFixed(2)})`);
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (particlesArray) {
+                for (let i = 0; i < particlesArray.length; i++) {
+                    particlesArray[i].draw();
+                    particlesArray[i].update();
+                }
+                connect();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => {
+            clearTimeout(window.resizedFinished);
+            window.resizedFinished = setTimeout(function () {
+                init();
+            }, 150);
+        });
+
+        init();
+        animate();
+    </script>
+
 </body>
+
 </html>
