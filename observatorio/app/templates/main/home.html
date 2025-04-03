@@ -1,25 +1,32 @@
-{% extends "base_dashboard.html" %}
+{% extends "base.html" %} {# Cambiado de base_dashboard.html #}
 
-{% block dashboard_content %}
+{% block content %} {# Usar block content en lugar de dashboard_content #}
 <div class="home-container">
-    <div class="content-section">
-        <h1 class="main-title">Centro Regional de Observación de Drogas Sintéticas</h1>
-        
-        <div class="text-content">
-            <p class="lead text-justify">
-                La plataforma se establece como una iniciativa estratégica del Ministerio de SEGURIDAD NACIONAL, orientado a monitorear, analizar y evaluar el fenómeno de las drogas sintéticas en el continente americano.
-            </p>
-            <p class="text-justify">
-                El centro, tiene como finalidad recopilar, clasificar y valorar información pública proveniente de fuentes confiables, como diarios y medios de comunicación, para generar inteligencia estratégica que permita identificar tendencias, patrones y riesgos emergentes asociados al tráfico, producción y consumo de estas sustancias.
-            </p>
-            <p class="text-justify">
-                Dirigido a tomadores de decisiones, organismos de seguridad nacionales e internacionales, autoridades gubernamentales y actores clave en la lucha contra el narcotráfico, el observatorio busca fortalecer la capacidad de respuesta regional mediante la creación de tableros de control dinámicos y accesibles en línea, promoviendo la cooperación y el intercambio de información entre los países del continente.
-            </p>
-        </div>
-    </div>
+    {# ... (contenido existente de home.html) ... #}
+    <h1 class="main-title">Centro Regional de Observación de Drogas Sintéticas</h1>
 
+    <div class="text-content">
+        <p class="lead text-justify">
+            La plataforma se establece como una iniciativa estratégica del Ministerio de SEGURIDAD NACIONAL, orientado a
+            monitorear, analizar y evaluar el fenómeno de las drogas sintéticas en el continente americano.
+        </p>
+        <p class="text-justify">
+            El centro, tiene como finalidad recopilar, clasificar y valorar información pública proveniente de fuentes
+            confiables, como diarios y medios de comunicación, para generar inteligencia estratégica que permita
+            identificar tendencias, patrones y riesgos emergentes asociados al tráfico, producción y consumo de estas
+            sustancias.
+        </p>
+        <p class="text-justify">
+            Dirigido a tomadores de decisiones, organismos de seguridad nacionales e internacionales, autoridades
+            gubernamentales y actores clave en la lucha contra el narcotráfico, el observatorio busca fortalecer la
+            capacidad de respuesta regional mediante la creación de tableros de control dinámicos y accesibles en línea,
+            promoviendo la cooperación y el intercambio de información entre los países del continente.
+        </p>
+    </div>
+    {# ... #}
     <div class="logos-container">
-        <img src="{{ url_for('static', filename='img/ICONOdelministerio.png') }}" alt="Logo Ministerio" class="logo-img">
+        <img src="{{ url_for('static', filename='img/ICONOdelministerio.png') }}" alt="Logo Ministerio"
+            class="logo-img">
         <img src="{{ url_for('static', filename='img/logo192.png') }}" alt="Logo Centro Regional" class="logo-img">
         <img src="{{ url_for('static', filename='img/Minseg png.png') }}" alt="Logo MinSeg" class="logo-img">
     </div>
@@ -27,88 +34,121 @@
 {% endblock %}
 
 {% block extra_css %}
+{# Los estilos específicos de home.html pueden permanecer aquí #}
 <style>
-.home-container {
-    min-height: calc(100vh - 60px);
-    display: flex;
-    flex-direction: column;
-    padding: 1rem 2rem;
-    background-color: #1e2124;
-    color: white;
-}
-
-.content-section {
-    max-width: 1000px;
-    margin: 0 auto;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.main-title {
-    color: #4169e1;
-    font-weight: 600;
-    font-size: 1.8rem;
-    margin: 0 0 1rem 0;
-    text-align: center;
-    padding: 0 1rem;
-}
-
-.text-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-    padding: 0 1rem;
-    max-width: 1000px;
-    width: 100%;
-}
-
-.text-justify {
-    text-align: justify;
-}
-
-.lead {
-    font-size: 1.1rem;
-}
-
-.logos-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1000px;
-    width: calc(100% - 2rem); /* Mismo ancho que el texto considerando los paddings */
-    margin: 0.5rem auto 0;
-}
-
-.logo-img {
-    height: 70px;
-    width: auto;
-    object-fit: contain;
-}
-
-@media (max-height: 768px) {
+    /* Ajusta estos estilos si es necesario para que encajen bien */
     .home-container {
-        padding: 0.5rem 1.5rem;
+        /* min-height: calc(100vh - 2rem); */
+        /* Ajustar si es necesario, considerando paddings */
+        display: flex;
+        flex-direction: column;
+        /* padding: 1rem 2rem; */
+        /* Padding ya viene de .main-content */
+        /* background-color: #1e2124; */
+        /* Hereda de main-container */
+        /* color: white; */
+        /* Hereda de body */
+        justify-content: space-between;
+        /* Empuja logos hacia abajo */
+        height: calc(100vh - 2rem);
+        /* Ocupar altura disponible menos padding */
+        box-sizing: border-box;
+    }
+
+    .content-section {
+        max-width: 1000px;
+        margin: 0 auto;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        /* Ocupa espacio disponible */
+        justify-content: center;
+        /* Centra el texto verticalmente */
     }
 
     .main-title {
-        font-size: 1.6rem;
-        margin: 0 0 0.75rem 0;
+        color: var(--primary-color);
+        /* Usar variable */
+        font-weight: 600;
+        font-size: 1.8rem;
+        margin: 0 0 1.5rem 0;
+        /* Aumentado margen inferior */
+        text-align: center;
+        /* padding: 0 1rem; */
+        /* Quitado, padding viene de .main-content */
     }
 
     .text-content {
-        gap: 0.5rem;
-        margin-bottom: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        /* Aumentado espacio entre párrafos */
+        margin-bottom: 2rem;
+        /* Espacio antes de los logos */
+        /* padding: 0 1rem; */
+        /* Quitado */
+        max-width: 900px;
+        /* Ligeramente más estrecho */
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .text-justify {
+        text-align: justify;
+    }
+
+    .lead {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        /* Color secundario para el lead */
     }
 
     .logos-container {
-        margin-top: 0.25rem;
+        display: flex;
+        justify-content: space-around;
+        /* Distribuir logos */
+        align-items: center;
+        max-width: 1000px;
+        width: 100%;
+        margin: 0 auto;
+        /* Centrado */
+        padding-bottom: 1rem;
+        /* Espacio inferior */
+        border-top: 1px solid var(--border-color);
+        /* Línea separadora sutil */
+        padding-top: 1rem;
+        /* Espacio sobre los logos */
     }
 
     .logo-img {
         height: 60px;
+        /* Reducido tamaño */
+        width: auto;
+        object-fit: contain;
+        opacity: 0.8;
+        /* Ligeramente transparentes */
     }
-}
+
+    @media (max-width: 767.98px) {
+        .main-title {
+            font-size: 1.6rem;
+        }
+
+        .text-content {
+            gap: 0.8rem;
+        }
+
+        .logo-img {
+            height: 50px;
+        }
+
+        .home-container {
+            height: auto;
+            /* Altura automática en móvil */
+            min-height: calc(100vh - 2rem);
+        }
+    }
 </style>
 {% endblock %}

@@ -1,86 +1,58 @@
 /* Variables */
 :root {
     --primary-color: #0A4B8F;
-    --secondary-color: #1A1F2C;
-    --background-color: #0D1117;
+    --secondary-color: #1A1F2C; /* Color oscuro para sidebar y elementos */
+    --background-color: #0D1117; /* Fondo principal muy oscuro */
+    --content-bg-color: #161B22; /* Fondo del área de contenido, ligeramente más claro */
     --border-color: #30363D;
     --text-color: #E6EDF3;
     --text-secondary: #8B949E;
-    --hover-color: #1F2937;
+    --hover-color: #1F2937; /* Un gris azulado oscuro para hover */
     --card-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-/* Header */
-.header-logo {
-    height: 40px;
-    width: auto;
-    object-fit: contain;
+    --sidebar-width: 260px; /* Ancho de la sidebar */
 }
 
 /* Estilos generales */
-body {
-    background-color: var(--background-color);
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color); /* Fondo general */
     color: var(--text-color);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", sans-serif;
+    overflow-x: hidden; /* Prevenir scroll horizontal */
 }
 
-/* Navbar */
-.navbar {
-    background-color: var(--secondary-color) !important;
-    box-shadow: var(--card-shadow);
-    padding: 0.5rem 1rem;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.navbar-brand {
-    font-weight: bold;
-    font-size: 1.2rem;
-    padding-top: .75rem;
-    padding-bottom: .75rem;
-}
-
-/* Sidebar */
+/* Sidebar Fija */
 .sidebar {
     position: fixed;
     top: 0;
-    bottom: 0;
     left: 0;
-    z-index: 100;
-    padding: 48px 0 0;
+    bottom: 0;
+    width: var(--sidebar-width);
     background-color: var(--secondary-color);
-    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.3);
-}
-
-@media (max-width: 767.98px) {
-    .sidebar {
-        top: 5rem;
-    }
-}
-
-.sidebar-sticky {
-    position: relative;
-    top: 0;
-    height: calc(100vh - 48px);
-    padding-top: .5rem;
-    overflow-x: hidden;
-    overflow-y: auto;
-    background-color: var(--secondary-color);
+    border-right: 1px solid var(--border-color);
+    z-index: 1000;
+    padding-top: 1rem; /* Espacio superior */
+    overflow-y: auto; /* Scroll si el contenido es largo */
+    transition: transform 0.3s ease;
 }
 
 /* Estilo para el scrollbar de la sidebar */
-.sidebar-sticky::-webkit-scrollbar {
+.sidebar::-webkit-scrollbar {
     width: 6px;
 }
-
-.sidebar-sticky::-webkit-scrollbar-track {
+.sidebar::-webkit-scrollbar-track {
     background: var(--secondary-color);
 }
-
-.sidebar-sticky::-webkit-scrollbar-thumb {
+.sidebar::-webkit-scrollbar-thumb {
     background-color: var(--border-color);
     border-radius: 3px;
+}
+
+/* Contenido dentro de la Sidebar */
+.sidebar .position-sticky {
+    padding: 1rem; /* Ajusta el padding interno si es necesario */
 }
 
 /* Navigation links en la sidebar */
@@ -88,18 +60,24 @@ body {
     color: var(--text-color);
     padding: 0.8rem 1rem;
     border-radius: 0.25rem;
-    margin: 0.2rem 0.8rem;
+    margin: 0.2rem 0; /* Ajustado margen */
     transition: all 0.2s ease;
+    display: flex; /* Alinear icono y texto */
+    align-items: center; /* Centrar verticalmente */
+    white-space: nowrap; /* Evitar que el texto se rompa */
+    overflow: hidden; /* Ocultar texto si no cabe */
+    text-overflow: ellipsis; /* Añadir puntos suspensivos */
 }
 
 .sidebar .nav-link:hover {
     background-color: var(--hover-color);
-    color: var(--text-color);
+    color: var(--text-color); /* Mantener color de texto en hover */
 }
 
 .sidebar .nav-link.active {
     background-color: var(--primary-color);
     color: white;
+    font-weight: 500;
 }
 
 .sidebar .nav-link i {
@@ -107,418 +85,248 @@ body {
     text-align: center;
     margin-right: 0.8rem;
     font-size: 1.1rem;
+    flex-shrink: 0; /* Evitar que el icono se encoja */
 }
 
-/* Ajuste para el botón de cerrar sesión en la sidebar */
-.sidebar .nav-link.logout {
-    margin-top: auto;
-    color: var(--text-secondary);
+/* Separador en la sidebar */
+.sidebar hr {
+    border-top: 1px solid var(--border-color);
 }
 
-.sidebar .nav-link.logout:hover {
-    color: #dc3545;
-    background-color: rgba(220, 53, 69, 0.1);
+/* Contenedor Principal */
+.main-container {
+    height: 100vh; /* Ocupa toda la altura */
+    overflow-y: auto; /* Permite scroll vertical SOLO en el contenido */
+    background-color: var(--content-bg-color); /* Fondo del área de contenido */
+    padding-top: 1rem; /* Espacio superior */
+    padding-bottom: 1rem; /* Espacio inferior */
 }
 
-/* Main content */
-.main {
-    margin-top: 48px;
+/* Ajuste de margen cuando la sidebar está presente */
+body.with-sidebar .main-container {
+    margin-left: var(--sidebar-width);
+    width: calc(100% - var(--sidebar-width));
 }
 
-/* Navigation */
-.nav-link {
-    color: var(--text-color);
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
-    margin-bottom: 0.2rem;
+/* Sin margen cuando no hay sidebar (login, etc.) */
+body.no-sidebar .main-container {
+    margin-left: 0;
+    width: 100%;
 }
 
-.nav-link:hover {
-    background-color: var(--hover-color);
-    color: var(--primary-color);
+/* Contenido principal dentro del contenedor */
+.main-content {
+    padding: 0 1.5rem; /* Padding horizontal para el contenido */
 }
 
-.nav-link.active {
-    background-color: var(--hover-color);
-    color: var(--primary-color);
-    font-weight: 500;
-}
-
-.nav-link i {
-    width: 1.5rem;
-    text-align: center;
-    margin-right: 0.5rem;
+/* Contenedor de Flash Messages */
+.flash-container {
+    padding: 0 1.5rem; /* Alinear con el padding de main-content */
+    margin-bottom: 1rem;
 }
 
 /* Cards */
 .card {
     background-color: var(--secondary-color);
     color: var(--text-color);
-    border: none;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    margin-bottom: 1rem;
-}
-
-/* Stats Card */
-.stats-card {
-    background-color: var(--secondary-color);
-    border: none;
-    border-radius: 15px;
+    border: 1px solid var(--border-color); /* Borde sutil */
     box-shadow: var(--card-shadow);
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem; /* Aumentado espacio entre cards */
+    border-radius: 8px; /* Bordes redondeados */
 }
 
-.stats-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    border-radius: 10px;
-    transition: background-color 0.2s;
+.card-header {
+    background-color: rgba(var(--bs-light-rgb), 0.03); /* Fondo de header ligeramente diferente */
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.75rem 1.25rem;
 }
 
-.stats-item:hover {
-    background-color: var(--hover-color);
+.card-body {
+    padding: 1.25rem;
 }
 
-.stats-item i {
-    font-size: 1.2rem;
-    margin-right: 1rem;
-    color: var(--primary-color);
+.card-footer {
+    background-color: rgba(var(--bs-light-rgb), 0.03);
+    border-top: 1px solid var(--border-color);
+    padding: 0.75rem 1.25rem;
 }
 
-.stats-label {
-    flex-grow: 1;
-    color: var(--text-secondary);
-}
-
-.stats-value {
-    font-weight: bold;
-    color: var(--primary-color);
-}
-
-/* Panel de Control */
-.control-panel {
-    background-color: var(--secondary-color);
-    border: none;
-    border-radius: 15px;
-    box-shadow: var(--card-shadow);
-    padding: 1.5rem;
+.card-title {
     color: var(--text-color);
-}
-
-.control-menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.control-link {
-    color: var(--text-color);
-    display: flex;
-    align-items: center;
-    padding: 1rem;
-    text-decoration: none;
-    border-radius: 10px;
-    transition: all 0.2s;
-    background-color: var(--secondary-color);
-}
-
-.control-link:hover {
-    background-color: var(--hover-color);
-    color: var(--primary-color);
-    text-decoration: none;
-    transform: translateX(5px);
-}
-
-.control-link i {
-    font-size: 1.2rem;
-    margin-right: 1rem;
-    width: 24px;
-    text-align: center;
-    color: var(--primary-color);
-}
-
-/* Estilos para los títulos y textos del tablero */
-.dashboard-title {
-    color: var(--text-color);
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    font-weight: 600;
-}
-
-.dashboard-subtitle {
-    color: var(--text-secondary);
-    font-size: 1rem;
-    margin-bottom: 1rem;
-}
-
-/* Ajustes para las tarjetas del tablero */
-.dashboard-card {
-    background-color: var(--secondary-color);
-    border-radius: 10px;
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-    box-shadow: var(--card-shadow);
-}
-
-.dashboard-card-title {
-    color: var(--text-color);
-    font-size: 1.2rem;
     margin-bottom: 1rem;
     font-weight: 500;
 }
 
-.dashboard-card-content {
-    color: var(--text-color);
-}
-
-/* Ajustes para los elementos interactivos del tablero */
-.dashboard-button {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.dashboard-button:hover {
-    background-color: var(--hover-color);
-    transform: translateY(-2px);
-}
+/* --- ESTILOS ANTERIORES (Feed, Stats, etc.) --- */
+/* Mantén los estilos específicos de .news-card, .stats-card, etc. */
+/* Asegúrate de que no haya conflictos con los nuevos estilos base. */
 
 /* Feed de Noticias */
 .news-feed {
-    max-width: 800px;
+    /* max-width: 800px; */ /* Quitado para que ocupe más ancho */
     margin: 0 auto;
 }
 
 .news-card {
     background-color: var(--secondary-color);
     color: var(--text-color);
-    border-radius: 15px;
+    border-radius: 10px; /* Ajustado */
     box-shadow: var(--card-shadow);
     margin-bottom: 1rem;
-    padding: 1rem;
-    transition: transform 0.2s;
+    padding: 0; /* Padding se maneja en card-body/footer */
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex; /* Para card h-100 */
+    flex-direction: column; /* Para card h-100 */
 }
 
 .news-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
 }
 
-.news-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
+.news-card .card-body {
+    padding: 1rem 1.25rem; /* Ajustado */
+    flex-grow: 1; /* Para que el body ocupe espacio */
 }
 
-.source-info {
-    display: flex;
-    align-items: center;
+.news-card .card-footer {
+    padding: 0.75rem 1.25rem;
+    background-color: transparent; /* Hacer footer transparente */
+    border-top: 1px solid var(--border-color);
 }
 
-.country-flag {
-    font-size: 1.2rem;
-    margin-right: 0.5rem;
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.country-flag-small {
-    font-size: 1rem;
-    margin-right: 0.5rem;
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.source-name {
-    font-weight: bold;
-    margin-right: 0.5rem;
-}
-
-.source-country {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-.keyword-tag {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
+.source-badge { /* Estilo para la fuente */
     font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.news-content {
-    margin-bottom: 1rem;
+.country-badge { /* Estilo para la bandera/país */
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem !important; /* Ajuste de padding */
+    /* background-color y color se definen inline */
 }
 
 .news-title {
     font-size: 1.1rem;
+    font-weight: 600; /* Más peso al título */
     margin-bottom: 0.5rem;
-}
-
-.news-title a {
-    color: var(--text-color);
+    color: var(--text-color); /* Color base del enlace */
     text-decoration: none;
 }
-
-.news-title a:hover {
-    color: var(--primary-color);
-}
-
-.news-snippet {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    line-height: 1.5;
-}
-
-.news-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border-color);
-}
-
-.read-more {
-    color: var(--primary-color);
-    text-decoration: none;
-    font-size: 0.9rem;
-}
-
-.read-more:hover {
+.news-title:hover {
+    color: var(--primary-color); /* Cambio de color en hover */
     text-decoration: underline;
 }
 
-.news-time {
+.news-card .card-text { /* Snippet */
     color: var(--text-secondary);
     font-size: 0.9rem;
+    line-height: 1.5;
+    /* Limitar a 3 líneas */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Panel Derecho */
-.right-sidebar {
-    position: sticky;
-    top: 80px;
+.news-card .badge.bg-primary { /* Keyword tag */
+    font-size: 0.75rem;
+    padding: 0.3em 0.6em;
 }
+
+.news-card .text-muted.small { /* Fecha */
+    font-size: 0.8rem !important;
+}
+
+/* Stats Card (Columna derecha en feed) */
+.stats-card {
+    position: sticky;
+    top: 1rem; /* Se pega debajo del padding superior del main-container */
+    max-height: calc(100vh - 2rem); /* Altura máxima considerando paddings */
+    overflow-y: auto; /* Scroll si es necesario */
+}
+/* Estilo para el scrollbar de stats-card */
+.stats-card::-webkit-scrollbar {
+    width: 5px;
+}
+.stats-card::-webkit-scrollbar-track {
+    background: var(--secondary-color);
+}
+.stats-card::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: 3px;
+}
+
 
 .country-stats {
     margin-top: 1rem;
+    /* max-height y overflow ya están en .stats-card */
 }
 
 .country-stat-item {
     display: flex;
     align-items: center;
-    padding: 0.5rem;
-    border-radius: 10px;
+    justify-content: space-between; /* Alinea elementos */
+    padding: 0.6rem 0.5rem; /* Ajustado padding */
+    border-radius: 6px;
     transition: all 0.2s ease;
     text-decoration: none;
     color: var(--text-color);
-    cursor: pointer;
+    cursor: default; /* No es clickeable por defecto */
+    font-size: 0.9rem;
 }
 
 .country-stat-item:hover {
     background-color: var(--hover-color);
-    transform: translateX(5px);
 }
 
-.country-stat-item.active {
-    background-color: var(--primary-color);
-    color: white;
+.country-stat-item .flag {
+    margin-right: 0.75rem; /* Más espacio para la bandera */
+    font-size: 1.1rem;
 }
 
-.country-stat-item.active .country-count {
-    color: white;
-}
-
-.country-name {
-    flex-grow: 1;
-    margin-right: 0.5rem;
-}
-
-.country-count {
-    font-weight: bold;
-    color: var(--primary-color);
-}
-
-.card-title {
-    margin-bottom: 1rem;
-}
-
-.clear-filter {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 1rem;
-    padding: 0.5rem;
-    color: var(--text-secondary);
-    text-decoration: none;
-    border-radius: 10px;
-    transition: all 0.2s ease;
-}
-
-.clear-filter:hover {
-    background-color: var(--hover-color);
-    color: var(--primary-color);
-}
-
-.clear-filter i {
-    margin-right: 0.5rem;
-}
-
-/* Eliminando los estilos adicionales de títulos */
-.stats-card .card-title,
-.control-panel .card-title,
-.right-sidebar .card-title {
-    margin-bottom: 1rem;
-}
-
-/* No News State */
-.no-news {
+.country-stat-item .badge {
+    font-size: 0.8rem;
+    min-width: 25px; /* Ancho mínimo para el número */
     text-align: center;
-    padding: 3rem;
-    color: var(--text-secondary);
 }
 
-.no-news i {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-}
 
 /* Responsive */
-@media (max-width: 768px) {
-    .sidebar, .right-sidebar {
-        position: static;
-        margin-bottom: 1rem;
+@media (max-width: 767.98px) {
+    :root {
+        --sidebar-width: 200px; /* Sidebar más angosta en móvil */
     }
 
-    .news-feed {
-        margin: 0;
+    .sidebar {
+        transform: translateX(-100%); /* Oculta por defecto */
+        /* Podrías añadir un botón para mostrar/ocultar */
     }
 
-    .container-fluid {
-        padding: 0.5rem;
+    body.with-sidebar .main-container {
+        margin-left: 0; /* Sin margen en móvil */
+        width: 100%;
     }
-}
 
-/* Animaciones */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+    /* Si implementas un botón toggle, necesitarás estilos para mostrar la sidebar */
+    /* body.sidebar-visible .sidebar { transform: translateX(0); } */
 
-.news-card {
-    animation: fadeIn 0.3s ease-out;
+    .main-content {
+        padding: 0 1rem; /* Menos padding en móvil */
+    }
+    .flash-container {
+        padding: 0 1rem;
+    }
+    .stats-card {
+        position: static; /* Quitar sticky en móvil */
+        max-height: none;
+        margin-top: 1.5rem;
+    }
 }
 
 /* Utilities */
@@ -528,14 +336,17 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+.text-truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
 
-/* Fix for sidebar and main content */
-@media (min-width: 768px) {
-    main {
-        margin-top: 48px;
-    }
-    
-    .sidebar {
-        margin-top: 48px;
-    }
+/* Fix para quitar margen superior extra si existía */
+main {
+    margin-top: 0 !important;
+}
+.dashboard-wrapper { /* Si aún existe en algún lado */
+    margin-top: 0 !important;
 }

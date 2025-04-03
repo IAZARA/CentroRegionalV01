@@ -22,116 +22,35 @@
     {% block extra_css %}{% endblock %}
 </head>
 
-<body>
-    <!-- Header -->
-    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow-sm">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 d-flex align-items-center" href="{{ url_for('main.home') }}">
-            <img src="{{ url_for('static', filename='img/logo centro regional nuevo.png') }}" alt="Logo Centro Regional"
-                height="40" class="header-logo">
-        </a>
-        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
-            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<body class="{{ 'with-sidebar' if current_user.is_authenticated else 'no-sidebar' }}">
 
-        <div class="w-100"></div>
-    </header>
+    {% if current_user.is_authenticated %}
+    <!-- Sidebar Fija -->
+    <nav id="sidebarMenu" class="sidebar">
+        {% include 'main/sidebar.html' %}
+    </nav>
+    {% endif %}
 
-    <div class="app-container">
-        {% if current_user.is_authenticated %}
-        <!-- Sidebar -->
-        <nav id="sidebar" class="sidebar">
-            <div class="sidebar-header">
-                <h3>Panel de Control</h3>
+    <!-- Contenedor Principal -->
+    <div class="main-container">
+        <!-- Flash Messages -->
+        <div class="container-fluid flash-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-
-            <ul class="sidebar-menu">
-                <li class="menu-item {% if request.endpoint == 'main.home' %}active{% endif %}">
-                    <a href="{{ url_for('main.home') }}">
-                        <i class="fas fa-home"></i>
-                        <span>Inicio</span>
-                    </a>
-                </li>
-                <li class="menu-item {% if request.endpoint == 'main.feed_new' %}active{% endif %}">
-                    <a href="{{ url_for('main.feed_new') }}">
-                        <i class="fas fa-newspaper"></i>
-                        <span>Noticias</span>
-                    </a>
-                </li>
-                <li class="menu-item {% if request.endpoint == 'main.trends' %}active{% endif %}">
-                    <a href="#">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Tendencias y Patrones</span>
-                    </a>
-                </li>
-                <li class="menu-item {% if request.endpoint == 'main.library' %}active{% endif %}">
-                    <a href="#">
-                        <i class="fas fa-book"></i>
-                        <span>Biblioteca de Informes</span>
-                    </a>
-                </li>
-                <li class="menu-item {% if request.endpoint == 'main.geomap' %}active{% endif %}">
-                    <a href="{{ url_for('main.geomap') }}">
-                        <i class="fas fa-map-marked-alt"></i>
-                        <span>GeoMap</span>
-                    </a>
-                </li>
-                <li class="menu-item {% if request.endpoint == 'main.data' %}active{% endif %}">
-                    <a href="#">
-                        <i class="fas fa-database"></i>
-                        <span>Datos Abiertos</span>
-                    </a>
-                </li>
-                <li class="menu-item {% if request.endpoint == 'main.alerts' %}active{% endif %}">
-                    <a href="#">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <span>Sistema de Alerta</span>
-                    </a>
-                </li>
-                <li class="menu-item {% if request.endpoint == 'main.legislation' %}active{% endif %}">
-                    <a href="{{ url_for('main.legislation') }}">
-                        <i class="fas fa-gavel"></i>
-                        <span>Legislación</span>
-                    </a>
-                </li>
-                <li class="menu-item {% if request.endpoint == 'main.agenda' %}active{% endif %}">
-                    <a href="#">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>Agenda MinSeg</span>
-                    </a>
-                </li>
-            </ul>
-
-            <div class="sidebar-footer">
-                <a href="{{ url_for('auth.logout') }}" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Cerrar Sesión</span>
-                </a>
-            </div>
-        </nav>
-        {% endif %}
-
-        <div class="content-wrapper">
-            <!-- Flash Messages -->
-            <div class="container-fluid">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                {% endfor %}
-                {% endif %}
-                {% endwith %}
-            </div>
-
-            <!-- Main Content -->
-            <main class="main-content">
-                {% block content %}{% endblock %}
-            </main>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
         </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
     </div>
 
     <!-- Bootstrap Bundle with Popper -->
@@ -146,10 +65,10 @@
     <!-- Extra JavaScript -->
     {% block extra_js %}{% endblock %}
 
-    <!-- Toast Flash Messages -->
+    <!-- Toast Flash Messages (si aún los usas) -->
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100"> {# Aumentado z-index #}
         {% for category, message in messages %}
         <div class="toast align-items-center text-white bg-{{ category }} border-0" role="alert" aria-live="assertive"
             aria-atomic="true">
@@ -167,8 +86,12 @@
         document.addEventListener('DOMContentLoaded', function () {
             var toastElList = [].slice.call(document.querySelectorAll('.toast'));
             var toastList = toastElList.map(function (toastEl) {
-                return new bootstrap.Toast(toastEl, { autohide: true, delay: 3000 });
-            });
+                // Asegúrate que Toast esté disponible
+                if (typeof bootstrap !== 'undefined' && bootstrap.Toast) {
+                    return new bootstrap.Toast(toastEl, { autohide: true, delay: 5000 });
+                }
+                return null;
+            }).filter(toast => toast !== null);
             toastList.forEach(toast => toast.show());
         });
     </script>

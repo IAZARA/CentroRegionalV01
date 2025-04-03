@@ -2,42 +2,28 @@
 
 {% block extra_css %}
 <style>
-    /* Ocultar elementos del layout base */
-    .navbar, 
-    .app-container > .sidebar {
-        display: none !important;
-    }
-
-    .app-container {
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-
-    /* Estilos para el contenedor principal */
+    /* Estilos específicos para la página del mapa */
     .main-content {
         padding: 0 !important;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 100%;
+        /* Sin padding para que el mapa ocupe todo */
         height: 100%;
-        margin: 0;
-        overflow: hidden;
-        background-color: white;
+        /* Asegura que el contenedor ocupe la altura */
+        display: flex;
+        /* Usar flexbox */
+        flex-direction: column;
+        /* Organizar contenido verticalmente */
     }
 
-    /* Contenedor del mapa */
     .looker-container {
+        flex-grow: 1;
+        /* Hace que el contenedor del iframe ocupe el espacio restante */
         position: relative;
+        /* Para el posicionamiento absoluto del iframe */
         width: 100%;
-        height: 100%;
-        margin: 0;
         background-color: white;
+        /* Fondo blanco para el área del mapa */
     }
 
-    /* iframe del mapa */
     .looker-container iframe {
         position: absolute;
         top: 0;
@@ -45,100 +31,31 @@
         width: 100%;
         height: 100%;
         border: none;
-        background-color: white;
     }
 
-    /* Estilos para la barra lateral */
-    #sidebarMenu {
-        position: fixed !important;
-        top: 0;
-        left: 0;
+    /* Ocultar el botón de toggle si no lo quieres en esta vista */
+    /* .sidebar-toggle { display: none; } */
+
+    /* Ajustes para asegurar que el contenedor principal no tenga scroll extra */
+    body.with-sidebar .main-container {
         height: 100vh;
-        width: 250px;
-        background-color: var(--secondary-color);
-        z-index: 1050;
-        transition: transform 0.3s ease;
-        box-shadow: var(--card-shadow);
-        padding-top: 1rem;
-    }
-
-    /* Botón para alternar la barra lateral */
-    .sidebar-toggle {
-        position: fixed;
-        left: 250px;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 1060;
-        background-color: var(--secondary-color);
-        color: var(--text-color);
-        border: none;
-        padding: 10px;
-        cursor: pointer;
-        border-radius: 0 5px 5px 0;
-        box-shadow: var(--card-shadow);
-        transition: left 0.3s ease;
-    }
-
-    .sidebar-toggle:hover {
-        background-color: var(--hover-color);
-    }
-
-    .sidebar-toggle i {
-        font-size: 1.2rem;
-    }
-
-    /* Estado colapsado */
-    body.sidebar-collapsed #sidebarMenu {
-        transform: translateX(-100%);
-    }
-
-    body.sidebar-collapsed .sidebar-toggle {
-        left: 0;
-    }
-
-    /* Ajustes responsive */
-    @media (max-width: 767.98px) {
-        .sidebar-toggle {
-            left: 0;
-        }
-        #sidebarMenu {
-            transform: translateX(-100%);
-        }
-        body.sidebar-collapsed #sidebarMenu {
-            transform: translateX(0);
-        }
+        overflow: hidden;
+        /* Evitar scroll en el contenedor principal */
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<button class="sidebar-toggle" onclick="toggleSidebar()" title="Alternar barra lateral">
-    <i class="fas fa-chevron-left"></i>
-</button>
+{# Eliminamos el botón toggle de aquí, ya que está en base.html si se decide mantenerlo #}
 
-<!-- Barra lateral -->
-<nav id="sidebarMenu" class="sidebar">
-    {% include 'main/sidebar.html' %}
-</nav>
-
-<!-- Contenido principal (mapa) -->
-<main class="main-content">
+{# Contenido principal (mapa) #}
+{# No necesitamos <main> aquí porque ya está en base.html #}
     <div class="looker-container">
-        <iframe width="1200" height="900" src="https://lookerstudio.google.com/embed/reporting/38893315-37a0-40ea-b016-b50ab0b007ea/page/p_8vmrfhtkpd" frameborder="0" style="border:0" allowfullscreen sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+        <iframe width="100%" height="100%"
+            src="https://lookerstudio.google.com/embed/reporting/38893315-37a0-40ea-b016-b50ab0b007ea/page/p_8vmrfhtkpd"
+            frameborder="0" style="border:0" allowfullscreen
+            sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
     </div>
-</main>
 
-<script>
-function toggleSidebar() {
-    document.body.classList.toggle('sidebar-collapsed');
-    const icon = document.querySelector('.sidebar-toggle i');
-    if (document.body.classList.contains('sidebar-collapsed')) {
-        icon.classList.remove('fa-chevron-left');
-        icon.classList.add('fa-chevron-right');
-    } else {
-        icon.classList.remove('fa-chevron-right');
-        icon.classList.add('fa-chevron-left');
-    }
-}
-</script>
-{% endblock %}
+    {# El script de toggle ya no es necesario aquí si se maneja globalmente o se elimina #}
+    {% endblock %}
