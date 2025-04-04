@@ -1,12 +1,40 @@
-{% extends "base_dashboard.html" %}
+{% extends "base.html" %}
 
-{% block dashboard_content %}
-<div class="container-fluid mt-4">
-    <div class="row">
-        <div class="col-12">
-            <h2>Agenda MinSeg</h2>
-            <p>Agenda y eventos relacionados con drogas sintéticas.</p>
-        </div>
+{% block extra_css %}
+<style>
+    .main-content {
+        padding: 0 !important;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .alert-container {
+        max-width: 600px;
+        width: 90%;
+    }
+
+    .alert {
+        background-color: var(--secondary-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+    }
+
+    body.with-sidebar .main-container {
+        height: 100vh;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="alert-container">
+    <div class="alert p-5 shadow text-center">
+        <i class="fas fa-exclamation-circle fa-3x mb-3"></i>
+        <h2>Agenda MinSeg</h2>
+        <p class="lead mt-3">Este módulo se encuentra en desarrollo</p>
     </div>
 </div>
 {% endblock %}

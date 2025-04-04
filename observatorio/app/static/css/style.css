@@ -63,10 +63,10 @@ html, body {
     margin: 0.2rem 0; /* Ajustado margen */
     transition: all 0.2s ease;
     display: flex; /* Alinear icono y texto */
-    align-items: center; /* Centrar verticalmente */
-    white-space: nowrap; /* Evitar que el texto se rompa */
-    overflow: hidden; /* Ocultar texto si no cabe */
-    text-overflow: ellipsis; /* Añadir puntos suspensivos */
+    align-items: center; /* Centrar verticalmente POR DEFECTO */
+    white-space: nowrap; /* Evitar que el texto se rompa POR DEFECTO */
+    overflow: hidden; /* Ocultar texto si no cabe POR DEFECTO */
+    text-overflow: ellipsis; /* Añadir puntos suspensivos POR DEFECTO */
 }
 
 .sidebar .nav-link:hover {
@@ -87,6 +87,22 @@ html, body {
     font-size: 1.1rem;
     flex-shrink: 0; /* Evitar que el icono se encoja */
 }
+
+/* --- NUEVAS REGLAS PARA PERMITIR WRAPPING --- */
+.sidebar .nav-link.allow-wrap {
+    white-space: normal; /* Permitir que el texto se divida en líneas */
+    overflow: visible; /* Asegurarse de que el texto extra sea visible */
+    text-overflow: clip; /* No mostrar '...' */
+    align-items: flex-start; /* Alinear el icono con la parte superior del texto */
+    line-height: 1.3; /* Ajustar altura de línea para mejor legibilidad */
+}
+
+/* Ajustar el icono para que se alinee mejor con la primera línea de texto */
+.sidebar .nav-link.allow-wrap i {
+    margin-top: 0.15em; /* Pequeño ajuste superior, puede variar según la fuente/icono */
+}
+/* --- FIN NUEVAS REGLAS --- */
+
 
 /* Separador en la sidebar */
 .sidebar hr {

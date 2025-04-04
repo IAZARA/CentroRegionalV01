@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import os
 import logging
 from logging.handlers import RotatingFileHandler
+from config import Config
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -35,7 +36,7 @@ def create_admin_user():
         db.session.commit()
         print('Usuario administrador creado exitosamente.')
 
-def create_app(config_class=None):
+def create_app(config_class=Config):
     # Crear la aplicación Flask con el directorio instance explícito
     instance_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'instance'))
     app = Flask(__name__, 
@@ -52,10 +53,6 @@ def create_app(config_class=None):
         load_dotenv(env_path)
         app.logger.info("Variables de entorno cargadas desde .env")
         app.logger.info(f"MAPBOX_TOKEN: {os.environ.get('MAPBOX_TOKEN', 'No encontrado')}")
-    
-    if config_class is None:
-        from config import Config
-        config_class = Config
     
     app.config.from_object(config_class)
     
@@ -77,13 +74,18 @@ def create_app(config_class=None):
     # Configurar login manager
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
-    login_manager.login_message = 'Por favor inicia sesión para acceder a esta página'
+    login_manager.login_message = 'Por favor inicia sesión para acceder a esta página.'
     login_manager.login_message_category = 'info'
     
     @login_manager.user_loader
     def load_user(user_id):
-        from app.models.user import User
-        return User.query.get(int(user_id))
+        from app.models.user import User, GuestUser
+        if user_id == '-1':
+            return GuestUser()
+        try:
+            return User.query.get(int(user_id))
+        except:
+            return None
 
     # Importar modelos
     from app.models import News, NewsLocation, User
@@ -96,11 +98,11 @@ def create_app(config_class=None):
         create_admin_user()  # Crear usuario admin si no existe
 
     # Registrar blueprints
-    from app.main.routes import bp as main_bp
+    from app.main import bp as main_bp
     app.register_blueprint(main_bp)
     
-    from app.auth.routes import bp as auth_bp
-    app.register_blueprint(auth_bp, url_prefix='/auth')
+    from app.auth import bp as auth_bp
+    app.register_blueprint(auth_bp)
     
     from app.routes.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')

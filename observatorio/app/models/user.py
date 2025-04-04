@@ -1,4 +1,4 @@
-from flask_login import UserMixin
+from flask_login import UserMixin, AnonymousUserMixin
 from app import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -17,6 +17,39 @@ class UserRoles:
             (UserRoles.OPERADOR, 'Operador'),
             (UserRoles.CONSULTOR, 'Consultor')
         ]
+
+class GuestUser(UserMixin):
+    def __init__(self):
+        self._id = -1
+        self._role = UserRoles.CONSULTOR
+        self._is_active = True
+        self.email = 'invitado@temp.com'
+        self.nombre = 'Usuario'
+        self.apellido = 'Invitado'
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def role(self):
+        return self._role
+
+    @property
+    def is_active(self):
+        return self._is_active
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    @property
+    def full_name(self):
+        return f"{self.nombre} {self.apellido}"
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -66,6 +99,10 @@ class User(UserMixin, db.Model):
     def is_consultor(self):
         return self.role == UserRoles.CONSULTOR
 
+login_manager.anonymous_user = GuestUser
+
 @login_manager.user_loader
 def load_user(id):
+    if id == '-1':
+        return GuestUser()
     return User.query.get(int(id))

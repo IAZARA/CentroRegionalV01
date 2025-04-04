@@ -7,14 +7,14 @@ from app.models import News
 from app.models.news_location import NewsLocation
 from sqlalchemy import and_
 import os
-
-bp = Blueprint('main', __name__)
+from app.models.user import UserRoles
+from app.main import bp
 
 @bp.route('/')
 def index():
-    if current_user.is_authenticated:
-        return redirect(url_for('main.home'))
-    return redirect(url_for('auth.login'))
+    if not current_user.is_authenticated:
+        return redirect(url_for('auth.login'))
+    return redirect(url_for('main.home'))
 
 @bp.route('/home')
 @login_required
@@ -133,6 +133,16 @@ def geomap():
 @login_required
 def legislation():
     return render_template('main/legislation.html')
+
+@bp.route('/analisis-tecnico')
+@login_required
+def analisis_tecnico():
+    return render_template('main/analisis_tecnico.html')
+
+@bp.route('/agenda')
+@login_required
+def agenda():
+    return render_template('main/agenda.html')
 
 @bp.route('/force-logout')
 def force_logout():
