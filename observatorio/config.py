@@ -9,8 +9,8 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-key-12345'
     
     # Configuración de la base de datos
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'postgresql://postgres:Vortex733-@localhost:5432/observatorio'
+    # Usar SQLite con una ubicación específica para almacenar los datos de los usuarios
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'instance', 'observatorio.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Configuración de paginación

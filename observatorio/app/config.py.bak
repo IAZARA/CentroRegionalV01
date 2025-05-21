@@ -3,7 +3,7 @@ from datetime import timedelta
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-key-12345'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///observatorio.db'  # Forzar SQLite
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///observatorio.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Google API

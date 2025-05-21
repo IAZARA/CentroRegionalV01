@@ -1,68 +1,48 @@
-2025-04-01 22:59:22,592 ERROR: Exception on /legislation [GET] [in /Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py:1414]
-Traceback (most recent call last):
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py", line 2190, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py", line 1486, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py", line 1484, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py", line 1469, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask_login/utils.py", line 290, in decorated_view
-    return current_app.ensure_sync(func)(*args, **kwargs)
-  File "/Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py", line 135, in legislation
-    return render_template('main/legislation.html')
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/templating.py", line 150, in render_template
-    template = app.jinja_env.get_or_select_template(template_name_or_list)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 1087, in get_or_select_template
-    return self.get_template(template_name_or_list, parent, globals)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 1016, in get_template
-    return self._load_template(name, globals)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 975, in _load_template
-    template = self.loader.load(self, name, self.make_globals(globals))
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/loaders.py", line 138, in load
-    code = environment.compile(source, name, filename)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 771, in compile
-    self.handle_exception(source=source_hint)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 942, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "<unknown>", line 195, in template
-jinja2.exceptions.TemplateSyntaxError: Missing end of comment tag
-2025-04-01 22:59:23,673 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-01 22:59:48,173 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
-2025-04-01 23:00:13,606 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
-2025-04-01 23:00:19,562 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-01 23:00:19,648 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-02 17:58:58,883 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
-2025-04-02 17:59:03,858 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-02 17:59:03,951 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 09:20:15,732 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
-2025-04-03 09:20:24,878 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 09:20:24,954 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 09:23:06,555 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
-2025-04-03 09:23:14,000 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 09:23:14,098 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 09:23:19,515 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 09:23:19,603 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 09:33:29,067 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
-2025-04-03 09:33:32,745 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 09:33:32,832 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 09:33:41,742 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 09:33:41,827 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 09:36:47,351 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
-2025-04-03 09:37:04,558 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
-2025-04-03 09:45:00,944 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
-2025-04-03 10:23:14,530 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
-2025-04-03 10:23:22,741 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 10:23:22,821 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 10:26:21,327 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
-2025-04-03 10:26:24,539 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 10:26:24,630 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 10:26:40,217 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 10:26:40,309 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 10:30:03,246 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
-2025-04-03 10:30:07,933 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 10:30:08,018 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 10:30:14,236 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 10:30:14,328 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-03 10:33:14,300 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
+2025-04-03 10:33:24,884 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 10:33:24,977 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 10:34:42,692 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
+2025-04-03 10:34:47,196 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 10:34:47,287 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 10:35:07,456 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 10:35:07,552 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 10:36:05,449 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 10:36:05,474 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 10:36:17,760 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 10:36:17,846 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 10:36:41,333 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
+2025-04-03 10:37:16,963 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 10:37:17,062 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 10:38:22,820 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 10:38:22,911 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 10:51:03,778 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
+2025-04-03 10:51:33,918 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 10:51:34,002 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 10:52:30,065 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
+2025-04-03 10:52:30,481 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
+2025-04-03 11:05:58,998 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 11:05:59,966 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 11:09:51,531 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 13:27:08,402 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
+2025-04-03 13:27:08,817 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
+2025-04-03 14:11:21,745 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 14:11:22,889 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 14:15:45,430 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-03 14:27:32,955 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-04 09:49:33,145 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
+2025-04-04 09:49:33,650 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
+2025-04-04 11:45:51,949 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-04 11:49:26,958 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-04 11:49:27,043 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-04 11:53:41,766 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-04 11:53:41,849 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-04 11:54:01,670 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-04 11:54:01,754 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-04 12:04:31,425 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-04 12:04:31,519 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-04 12:04:43,282 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-04 12:04:43,356 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-04 12:09:57,591 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-04 12:09:57,687 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-04 12:20:28,099 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-04 12:20:28,191 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
+2025-04-04 12:22:41,615 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
