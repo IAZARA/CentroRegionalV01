@@ -3,25 +3,25 @@
 {% block extra_css %}
 <style>
     /* Estilos específicos para la página del mapa */
-    .main-content {
-        padding: 0 !important;
-        /* Sin padding para que el mapa ocupe todo */
+    /* Ensure main-content and its parents take full height */
+    html, body, .main-container, .main-content {
         height: 100%;
-        /* Asegura que el contenedor ocupe la altura */
-        display: flex;
-        /* Usar flexbox */
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* Prevent scrollbars on these elements */
+    }
+
+    .main-content {
+        display: flex; /* Use flex to make looker-container grow */
         flex-direction: column;
-        /* Organizar contenido verticalmente */
     }
 
     .looker-container {
-        flex-grow: 1;
-        /* Hace que el contenedor del iframe ocupe el espacio restante */
+        flex-grow: 1; /* Ocupa el espacio restante */
         position: relative;
-        /* Para el posicionamiento absoluto del iframe */
         width: 100%;
         background-color: white;
-        /* Fondo blanco para el área del mapa */
+        padding: 0; /* Ensure no padding interferes with iframe */
     }
 
     .looker-container iframe {
@@ -33,79 +33,95 @@
         border: none;
     }
 
-    /* Ocultar el botón de toggle si no lo quieres en esta vista */
-    /* .sidebar-toggle { display: none; } */
-
-    /* Ajustes para asegurar que el contenedor principal no tenga scroll extra */
-    body.with-sidebar .main-container {
-        height: 100vh;
-        overflow: hidden;
-        /* Evitar scroll en el contenedor principal */
+    /* Ajustes para el header y footer de Poncho para que no interfieran con la altura completa */
+    header.navbar {
+        position: fixed; /* O relative si prefieres que el mapa empuje el footer */
+        top: 0;
+        width: 100%;
+        z-index: 1030; /* BS3 default for navbars */
     }
 
-    /* Estilos para el botón de toggle */
+    footer.main-footer {
+      display: none; /* Ocultar footer en la página del mapa para vista completa */
+       /* position: fixed; /* O relative */
+       /* bottom: 0;
+       width: 100%;
+       z-index: 1030; */
+    }
+    
+    /* Ajustar el padding del body si el navbar es fixed-top */
+    body {
+        padding-top: 70px; /* Altura aproximada del navbar de Poncho, ajustar si es necesario */
+        /* padding-bottom: 60px; /* Altura aproximada del footer de Poncho, ajustar si es necesario */
+    }
+
+
+    /* Estilos para el botón de toggle (adaptado de BS5) */
+    /* Poncho usa .btn .btn-primary, etc. Estos son estilos customizados */
     .sidebar-toggle {
         position: fixed;
-        top: 20px;
+        top: 80px; /* Ajustado para no superponerse con el header fijo */
         left: 20px;
-        z-index: 1001;
-        background-color: var(--primary-color);
+        z-index: 1031; /* Encima del navbar */
+        background-color: #232d4f; /* Color primario de Poncho (azul) */
         color: white;
         border: none;
         border-radius: 50%;
         width: 40px;
         height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        /* display: flex; align-items: center; justify-content: center; BS3 no tiene flex utilities, usar text-align y line-height */
+        text-align: center;
+        line-height: 40px; /* Ajustar para centrar el ícono verticalmente */
         cursor: pointer;
         box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        transition: all 0.3s ease;
+        /* transition: all 0.3s ease; CSS3 transitions son compatibles */
     }
 
     .sidebar-toggle:hover {
-        background-color: #0a3d7a;
-        transform: scale(1.1);
+        background-color: #1e2335; /* Un azul más oscuro para hover */
+        /* transform: scale(1.1); CSS3 transform es compatible */
     }
+    
+    /* Estilos para la barra lateral (si se implementa una similar a base_dashboard.html) */
+    /* body.sidebar-hidden .sidebar { transform: translateX(-100%); } */
+    /* body.sidebar-hidden .main-container { margin-left: 0; width: 100%; } */
 
-    /* Estilos cuando la barra lateral está oculta */
-    body.sidebar-hidden .sidebar {
-        transform: translateX(-100%);
-    }
-
-    body.sidebar-hidden .main-container {
-        margin-left: 0;
-        width: 100%;
-    }
 </style>
 {% endblock %}
 
 {% block content %}
-<button id="sidebarToggle" class="sidebar-toggle">
-    <i class="fas fa-bars"></i>
-</button>
+{# El botón de toggle puede necesitar estar fuera del main-content si main-content tiene overflow:hidden #}
+{# <button id="sidebarToggle" class="sidebar-toggle btn btn-primary">
+    <i class="fa fa-bars"></i>
+</button> #}
 
-{# Contenido principal (mapa) #}
-{# No necesitamos <main> aquí porque ya está en base.html #}
-    <div class="looker-container">
-        <iframe width="100%" height="100%"
-            src="https://lookerstudio.google.com/embed/reporting/38893315-37a0-40ea-b016-b50ab0b007ea/page/p_8vmrfhtkpd"
-            frameborder="0" style="border:0" allowfullscreen
-            sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
-    </div>
+{# Contenido principal (mapa) ocupa toda la altura posible gracias a flex-grow en .looker-container #}
+<div class="looker-container">
+    <iframe width="100%" height="100%"
+        src="https://lookerstudio.google.com/embed/reporting/38893315-37a0-40ea-b016-b50ab0b007ea/page/p_8vmrfhtkpd"
+        frameborder="0" style="border:0" allowfullscreen
+        sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+</div>
 
+{# No es necesario el script de toggle si no hay sidebar en esta vista específica o si se maneja globalmente en base.html #}
+{# 
 <script>
-document.getElementById('sidebarToggle').addEventListener('click', function() {
-    document.body.classList.toggle('sidebar-hidden');
-    // Cambiar el ícono según el estado
-    const icon = this.querySelector('i');
-    if (document.body.classList.contains('sidebar-hidden')) {
-        icon.classList.remove('fa-bars');
-        icon.classList.add('fa-times');
-    } else {
-        icon.classList.remove('fa-times');
-        icon.classList.add('fa-bars');
+document.addEventListener('DOMContentLoaded', function() {
+    var sidebarToggle = document.getElementById('sidebarToggle');
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function() {
+            document.body.classList.toggle('sidebar-hidden');
+            const icon = this.querySelector('i');
+            if (document.body.classList.contains('sidebar-hidden')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
     }
 });
 </script>
+#}
 {% endblock %}

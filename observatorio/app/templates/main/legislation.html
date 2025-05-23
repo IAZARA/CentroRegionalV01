@@ -1,247 +1,280 @@
-{% extends "base.html" %} {# Changed from base_dashboard.html #}
+{% extends "base.html" %} 
 
-{% block content %} {# Changed from dashboard_content #}
-<div class="container-fluid py-4"> {# Keep container-fluid for full width within main-content #}
-    <h1 class="mb-4 text-light">Legislación Internacional</h1>
+{% block title %}Legislación Internacional{% endblock %}
+
+{% block content %} 
+<div class="container"> {# Changed container-fluid to container for standard Poncho layout, removed py-4 #}
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-primary">Legislación Internacional</h1> {# Removed mb-4 and text-light (Poncho will style h1) #}
+        </div>
+    </div>
 
     <!-- Argentina -->
-    <div class="country-section mb-5">
-        <h2 class="border-bottom pb-2 mb-4">
-            <span class="flag-emoji me-2">🇦🇷</span>
-            Legislación Argentina
-        </h2>
-        <ul class="list-unstyled">
-            <li class="mb-3">
-                <strong class="text-light">Constitución de la Nación Argentina</strong>
-                <br>
-                <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/804/norma.htm" target="_blank"
-                    class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-            <li class="mb-3">
-                <strong class="text-light">Ley 23737 - Modificación al Codigo Penal – Narcotrafico</strong>
-                <br>
-                <a href="https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=138" target="_blank"
-                    class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-            <li class="mb-3">
-                <strong class="text-light">Ley 17818 - Normas para su comercialización. Ley de estupefacientes</strong>
-                <br>
-                <a href="https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=20883" target="_blank"
-                    class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-            <li class="mb-3">
-                <strong class="text-light">Ley 26.045 - Ley del Registro Nacional de Precursores Químicos</strong>
-                <br>
-                <a href="https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=107623" target="_blank"
-                    class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-            <li class="mb-3">
-                <strong class="text-light">Ley N° 26.052 - Ley de Desfederalización Parcial de la Competencia
-                    Penal</strong>
-                <br>
-                <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/105000-109999/109264/texact.htm"
-                    target="_blank" class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-            <li class="mb-3">
-                <strong class="text-light">Ley 27319 - Delitos Complejos</strong>
-                <br>
-                <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/265000-269999/268004/norma.htm"
-                    target="_blank" class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-        </ul>
+    <div class="panel panel-default country-section"> {# mb-5 removed, panel structure added #}
+        <div class="panel-heading">
+            <h2 class="panel-title"> {# Removed border-bottom, pb-2, mb-4; using panel-title #}
+                <span class="flag-emoji"><i class="fa fa-flag"></i> 🇦🇷</span> {# me-2 removed, consider custom CSS for spacing if needed #}
+                Legislación Argentina
+            </h2>
+        </div>
+        <div class="panel-body">
+            <ul class="list-unstyled">
+                <li style="margin-bottom: 10px;"> {# mb-3 to inline style #}
+                    <strong>Constitución de la Nación Argentina</strong> {# text-light removed #}
+                    <br>
+                    <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/804/norma.htm" target="_blank"
+                        class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento {# fas to fa, me-1 removed #}
+                    </a>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Ley 23737 - Modificación al Codigo Penal – Narcotrafico</strong>
+                    <br>
+                    <a href="https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=138" target="_blank"
+                        class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento
+                    </a>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Ley 17818 - Normas para su comercialización. Ley de estupefacientes</strong>
+                    <br>
+                    <a href="https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=20883" target="_blank"
+                        class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento
+                    </a>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Ley 26.045 - Ley del Registro Nacional de Precursores Químicos</strong>
+                    <br>
+                    <a href="https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=107623" target="_blank"
+                        class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento
+                    </a>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Ley N° 26.052 - Ley de Desfederalización Parcial de la Competencia
+                        Penal</strong>
+                    <br>
+                    <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/105000-109999/109264/texact.htm"
+                        target="_blank" class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento
+                    </a>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Ley 27319 - Delitos Complejos</strong>
+                    <br>
+                    <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/265000-269999/268004/norma.htm"
+                        target="_blank" class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <!-- Brasil -->
-    <div class="country-section mb-5">
-        <h2 class="border-bottom pb-2 mb-4">
-            <span class="flag-emoji me-2">🇧🇷</span>
-            Legislación Brasil
-        </h2>
-        <ul class="list-unstyled">
-            <li class="mb-3">
-                <strong class="text-light">Ley 11.343 (2006)</strong>
-                <br>
-                <a href="https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2006/lei/l11343.htm" target="_blank"
-                    class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-        </ul>
+    <div class="panel panel-default country-section">
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="flag-emoji"><i class="fa fa-flag"></i> 🇧🇷</span>
+                Legislación Brasil
+            </h2>
+        </div>
+        <div class="panel-body">
+            <ul class="list-unstyled">
+                <li style="margin-bottom: 10px;">
+                    <strong>Ley 11.343 (2006)</strong>
+                    <br>
+                    <a href="https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2006/lei/l11343.htm" target="_blank"
+                        class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <!-- Chile -->
-    <div class="country-section mb-5">
-        <h2 class="border-bottom pb-2 mb-4">
-            <span class="flag-emoji me-2">🇨🇱</span>
-            Legislación Chile
-        </h2>
-        <ul class="list-unstyled">
-            <li class="mb-3">
-                <strong class="text-light">Ley N° 20.000 (1997)</strong>
-                <br>
-                <a href="https://www.bcn.cl/leychile/navegar?idNorma=235507" target="_blank" class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-        </ul>
+    <div class="panel panel-default country-section">
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="flag-emoji"><i class="fa fa-flag"></i> 🇨🇱</span>
+                Legislación Chile
+            </h2>
+        </div>
+        <div class="panel-body">
+            <ul class="list-unstyled">
+                <li style="margin-bottom: 10px;">
+                    <strong>Ley N° 20.000 (1997)</strong>
+                    <br>
+                    <a href="https://www.bcn.cl/leychile/navegar?idNorma=235507" target="_blank" class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <!-- Colombia -->
-    <div class="country-section mb-5">
-        <h2 class="border-bottom pb-2 mb-4">
-            <span class="flag-emoji me-2">🇨🇴</span>
-            Legislación Colombiana
-        </h2>
-        <ul class="list-unstyled">
-            <li class="mb-3">
-                <strong class="text-light">Ley 30 - Estatuto de Estupefacientes</strong>
-                <br>
-                <a href="https://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes/1586799" target="_blank"
-                    class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-            <li class="mb-3">
-                <strong class="text-light">Ley 599 - Código Penal</strong>
-                <br>
-                <a href="https://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes/1663230" target="_blank"
-                    class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-            <li class="mb-3">
-                <strong class="text-light">Ley 624 - Acuerdo entre Colombia y España sobre cooperación</strong>
-                <br>
-                <a href="https://www.minjusticia.gov.co/programas-co/ODC/Normas" target="_blank"
-                    class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-            <li class="mb-3">
-                <strong class="text-light">Ley 745 - Tipificación de contravención y porte de dosis personal</strong>
-                <br>
-                <a href="https://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes/1667717" target="_blank"
-                    class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-        </ul>
+    <div class="panel panel-default country-section">
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="flag-emoji"><i class="fa fa-flag"></i> 🇨🇴</span>
+                Legislación Colombiana
+            </h2>
+        </div>
+        <div class="panel-body">
+            <ul class="list-unstyled">
+                <li style="margin-bottom: 10px;">
+                    <strong>Ley 30 - Estatuto de Estupefacientes</strong>
+                    <br>
+                    <a href="https://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes/1586799" target="_blank"
+                        class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento
+                    </a>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Ley 599 - Código Penal</strong>
+                    <br>
+                    <a href="https://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes/1663230" target="_blank"
+                        class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento
+                    </a>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Ley 624 - Acuerdo entre Colombia y España sobre cooperación</strong>
+                    <br>
+                    <a href="https://www.minjusticia.gov.co/programas-co/ODC/Normas" target="_blank"
+                        class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento
+                    </a>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Ley 745 - Tipificación de contravención y porte de dosis personal</strong>
+                    <br>
+                    <a href="https://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes/1667717" target="_blank"
+                        class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <!-- México -->
-    <div class="country-section mb-5">
-        <h2 class="border-bottom pb-2 mb-4">
-            <span class="flag-emoji me-2">🇲🇽</span>
-            Legislación México
-        </h2>
-        <ul class="list-unstyled">
-            <li class="mb-3">
-                <strong class="text-light">Convención para la Supresión del Tráfico Ilícito de Estupefacientes
-                    Nocivos</strong>
-                <br>
-                <a href="https://www.ordenjuridico.gob.mx/TratInt/2022ml/ESTUPEFACIENTES%20NOCIVOS.pdf" target="_blank"
-                    class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-            <li class="mb-3">
-                <strong class="text-light">Convención Única de 1961 sobre Estupefacientes</strong>
-                <br>
-                <a href="https://www.unodc.org/pdf/convention_1961_es.pdf" target="_blank" class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-            <li class="mb-3">
-                <strong class="text-light">Convenio sobre Sustancias Sicotrópicas (1971)</strong>
-                <br>
-                <a href="https://www.unodc.org/pdf/convention_1971_es.pdf" target="_blank" class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-            <li class="mb-3">
-                <strong class="text-light">Convención de las Naciones Unidas contra el Tráfico Ilícito</strong>
-                <br>
-                <a href="https://www.unodc.org/pdf/convention_1988_es.pdf" target="_blank" class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-            <li class="mb-3">
-                <strong class="text-light">Código Penal Federal – Art. 193</strong>
-                <br>
-                <a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/CPF.pdf" target="_blank" class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
-                </a>
-            </li>
-        </ul>
+    <div class="panel panel-default country-section">
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                <span class="flag-emoji"><i class="fa fa-flag"></i> 🇲🇽</span>
+                Legislación México
+            </h2>
+        </div>
+        <div class="panel-body">
+            <ul class="list-unstyled">
+                <li style="margin-bottom: 10px;">
+                    <strong>Convención para la Supresión del Tráfico Ilícito de Estupefacientes
+                        Nocivos</strong>
+                    <br>
+                    <a href="https://www.ordenjuridico.gob.mx/TratInt/2022ml/ESTUPEFACIENTES%20NOCIVOS.pdf" target="_blank"
+                        class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento
+                    </a>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Convención Única de 1961 sobre Estupefacientes</strong>
+                    <br>
+                    <a href="https://www.unodc.org/pdf/convention_1961_es.pdf" target="_blank" class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento
+                    </a>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Convenio sobre Sustancias Sicotrópicas (1971)</strong>
+                    <br>
+                    <a href="https://www.unodc.org/pdf/convention_1971_es.pdf" target="_blank" class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento
+                    </a>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Convención de las Naciones Unidas contra el Tráfico Ilícito</strong>
+                    <br>
+                    <a href="https://www.unodc.org/pdf/convention_1988_es.pdf" target="_blank" class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento
+                    </a>
+                </li>
+                <li style="margin-bottom: 10px;">
+                    <strong>Código Penal Federal – Art. 193</strong>
+                    <br>
+                    <a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/CPF.pdf" target="_blank" class="legislation-link">
+                        <i class="fa fa-external-link"></i> Ver documento
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_css %}
-{# Moved styles here from inline #}
+{# Styles adapted for Poncho/BS3 #}
 <style>
     .country-section {
-        background: var(--secondary-color);
-        border-radius: 8px;
-        padding: 2rem;
-        box-shadow: var(--card-shadow);
-        /* No need for margin-left here, handled by main-container */
+        /* background: var(--secondary-color); Poncho panels have default background. Use custom if needed. */
+        border-radius: 4px; /* Default for panel */
+        padding: 15px; /* Default for panel-body, this applies to the whole panel if panel-body is not used directly under .country-section */
+        /* box-shadow: var(--card-shadow); BS3 panels have a light shadow by default */
+        margin-bottom: 20px; /* Standard BS3 panel margin */
     }
 
-    .country-section h2 {
-        color: var(--text-color);
-        display: flex;
-        align-items: center;
-        border-bottom-color: var(--border-color) !important;
+    .country-section .panel-heading { /* Style for panel heading */
+         /* color: var(--text-color); Use Poncho's text colors or default */
     }
+    .country-section .panel-title {
+        display: flex; /* For icon and text alignment if needed, or use standard hN classes */
+        align-items: center;
+    }
+
 
     .country-section ul li {
-        padding: 0.5rem 0;
+        padding: 5px 0; /* BS3 equivalent for 0.5rem */
+        margin-bottom: 10px; /* Added for spacing between li items */
     }
 
     .legislation-link {
-        color: var(--primary-color);
+        /* color: var(--primary-color); BS3 default link color will apply */
         text-decoration: none;
-        transition: all 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        padding: 0.3rem 0.6rem;
-        border-radius: 4px;
+        /* transition: all 0.3s ease; Fine for modern browsers */
+        display: inline-block; /* was inline-flex */
+        /* align-items: center; Not needed if just icon and text */
+        padding: 3px 6px; /* BS3 equivalent for 0.3rem 0.6rem */
+        border-radius: 3px; /* BS3 default for buttons, can be applied to links */
     }
 
     .legislation-link:hover {
-        color: var(--text-color);
-        background-color: var(--hover-color);
-        transform: translateX(5px);
+        /* color: var(--text-color); */
+        /* background-color: var(--hover-color); */
+        text-decoration: underline;
+        /* transform: translateX(5px); Fine for modern browsers */
     }
 
     .flag-emoji {
-        font-size: 1.5rem;
+        font-size: 1.5em; /* BS3 equivalent for 1.5rem */
+        margin-right: 5px; /* Spacing for icon */
+    }
+    .flag-emoji .fa { /* If using FA for flags */
+        vertical-align: middle;
     }
 
     strong {
         display: block;
-        margin-bottom: 0.5rem;
-        /* color: var(--text-light); -> Inherited or use var(--text-color) if needed */
+        margin-bottom: 5px; /* BS3 equivalent for 0.5rem */
+        /* color: var(--text-light); */
     }
-
-    /* Ensure main-content padding is respected */
-    /* .main-content .container-fluid {
-    padding-left: 0;
-    padding-right: 0;
-} */
-    /* Commented out the above rule - container-fluid should naturally fill main-content which already has padding */
+    .text-primary { /* Poncho uses .text-primary for its primary color */
+        color: #0072bb; /* Example Poncho primary color, adjust if needed */
+    }
+    .panel-title .fa-flag { /* Specific styling for flag icon in title */
+        margin-right: 8px;
+    }
 </style>
 {% endblock %}

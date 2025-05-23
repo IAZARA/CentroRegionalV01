@@ -4,33 +4,34 @@
 <div class="row">
     <!-- Columna principal de noticias -->
     <div class="col-md-9">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="card-title mb-0">
-                        <i class="fas fa-newspaper text-primary"></i> Noticias
-                    </h5>
-                    <div class="stats d-flex gap-4">
-                        <div class="stat-item">
-                            <i class="fas fa-chart-bar text-primary"></i>
-                            <span class="ms-2">Total: {{ stats.total }}</span>
-                        </div>
-                        <div class="stat-item">
-                            <i class="fas fa-clock text-primary"></i>
-                            <span class="ms-2">Últimas 24h: {{ stats.news_last_24h }}</span>
-                        </div>
+        <div class="panel panel-default"> {# Replaced card with panel #}
+            <div class="panel-body"> {# Replaced card-body with panel-body #}
+                <div class="page-header"> {# BS3 page-header for title section, removed d-flex, justify-content, align-items, mb-4 #}
+                    <h3 class="panel-title pull-left"> {# card-title to panel-title, mb-0 removed, pull-left for BS3 #}
+                        <i class="fa fa-newspaper text-primary"></i> Noticias
+                    </h3>
+                    <div class="stats pull-right"> {# pull-right for BS3, removed d-flex gap-4 #}
+                        <span class="stat-item" style="margin-left: 15px;"> {# Added style for spacing #}
+                            <i class="fa fa-chart-bar text-primary"></i>
+                            <span>Total: {{ stats.total }}</span> {# ms-2 removed #}
+                        </span>
+                        <span class="stat-item" style="margin-left: 15px;">
+                            <i class="fa fa-clock text-primary"></i>
+                            <span>Últimas 24h: {{ stats.news_last_24h }}</span>
+                        </span>
                     </div>
+                    <div class="clearfix"></div> {# Clearfix for floats #}
                 </div>
 
                 {% if news %}
                 <div class="row">
                     {% for item in news %}
-                    <div class="col-md-6 mb-4">
-                        <div class="card h-100 news-card">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="col-md-6" style="margin-bottom: 20px;"> {# mb-4 to inline style #}
+                        <div class="panel panel-default news-card"> {# card h-100 to panel panel-default #}
+                            <div class="panel-body">
+                                <div style="margin-bottom: 15px;"> {# mb-3 to inline style, removed d-flex etc. #}
                                     <span class="text-capitalize source-badge">{{ item.source }}</span>
-                                    <span class="country-badge px-2 py-1 rounded-pill" style="background-color: {% if item.country == '.ar' %}#74ACDF{% elif item.country == '.cl' %}#D52B1E{% elif item.country == '.uy' %}#FCD116{% elif item.country == '.py' %}#D80027{% elif item.country == '.bo' %}#007934{% elif item.country == '.mx' %}#006847{% elif item.country == '.co' %}#FCD116{% elif item.country == '.pe' %}#D91023{% elif item.country == '.ec' %}#FFD100{% elif item.country == '.ve' %}#CF142B{% else %}#6C757D{% endif %}; color: white;">
+                                    <span class="country-badge label" style="background-color: {% if item.country == '.ar' %}#74ACDF{% elif item.country == '.cl' %}#D52B1E{% elif item.country == '.uy' %}#FCD116{% elif item.country == '.py' %}#D80027{% elif item.country == '.bo' %}#007934{% elif item.country == '.mx' %}#006847{% elif item.country == '.co' %}#FCD116{% elif item.country == '.pe' %}#D91023{% elif item.country == '.ec' %}#FFD100{% elif item.country == '.ve' %}#CF142B{% else %}#6C757D{% endif %}; color: white; float: right;"> {# px-2 py-1 rounded-pill to label and float #}
                                         {% if item.country == '.ar' %}🇦🇷 Argentina
                                         {% elif item.country == '.cl' %}🇨🇱 Chile
                                         {% elif item.country == '.uy' %}🇺🇾 Uruguay
@@ -44,25 +45,27 @@
                                         {% else %}🌎 Internacional
                                         {% endif %}
                                     </span>
+                                    <div class="clearfix"></div>
                                 </div>
                                 
-                                <h6 class="card-title mb-3">
-                                    <a href="{{ item.url }}" target="_blank" class="news-title text-decoration-none">{{ item.title }}</a>
-                                </h6>
+                                <h4 style="margin-bottom: 15px;"> {# h6 card-title mb-3 to h4 with style #}
+                                    <a href="{{ item.url }}" target="_blank" class="news-title">{{ item.title }}</a> {# text-decoration-none is BS5, default link style in BS3 #}
+                                </h4>
                                 
-                                <p class="card-text text-muted small mb-3">{{ item.content }}</p>
+                                <p class="text-muted small" style="margin-bottom: 15px;">{{ item.content }}</p> {# card-text removed, mb-3 to style #}
                                 
-                                <div class="d-flex justify-content-between align-items-center mt-auto">
-                                    <span class="badge bg-primary">{{ item.keywords }}</span>
-                                    <small class="text-muted">
-                                        <i class="far fa-clock me-1"></i>
+                                <div> {# Removed d-flex etc, mt-auto. Elements will stack or use pull-right/left #}
+                                    <span class="label label-primary">{{ item.keywords }}</span> {# badge bg-primary to label label-primary #}
+                                    <small class="text-muted pull-right"> {# pull-right for BS3 #}
+                                        <i class="fa fa-clock-o"></i> {# far fa-clock to fa fa-clock-o, me-1 removed #}
                                         {{ item.published_date.strftime('%d/%m/%Y %H:%M') if item.published_date else 'Fecha no disponible' }}
                                     </small>
+                                    <div class="clearfix"></div>
                                 </div>
                             </div>
-                            <div class="card-footer bg-transparent">
-                                <a href="{{ item.url }}" target="_blank" class="btn btn-sm btn-outline-primary w-100">
-                                    <i class="fas fa-external-link-alt me-1"></i> Leer más
+                            <div class="panel-footer" style="background-color: transparent;"> {# card-footer bg-transparent to panel-footer with style #}
+                                <a href="{{ item.url }}" target="_blank" class="btn btn-xs btn-default btn-block"> {# btn-sm btn-outline-primary w-100 to btn-xs btn-default btn-block #}
+                                    <i class="fa fa-external-link-alt"></i> Leer más {# me-1 removed #}
                                 </a>
                             </div>
                         </div>
@@ -71,36 +74,36 @@
                 </div>
 
                 {% if pagination.pages > 1 %}
-                <nav aria-label="Navegación de páginas" class="mt-4">
-                    <ul class="pagination justify-content-center mb-0">
-                        <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
-                            <a class="page-link" href="{{ url_for('main.feed_new', page=pagination.prev_num) if pagination.has_prev else '#' }}">
-                                <i class="fas fa-chevron-left"></i>
+                <nav aria-label="Navegación de páginas" class="text-center" style="margin-top: 20px;"> {# mt-4 to style, text-center for pagination #}
+                    <ul class="pagination"> {# justify-content-center mb-0 removed #}
+                        <li class="{% if not pagination.has_prev %}disabled{% endif %}">
+                            <a href="{{ url_for('main.feed_new', page=pagination.prev_num) if pagination.has_prev else '#' }}">
+                                <i class="fa fa-chevron-left"></i>
                             </a>
                         </li>
                         
                         {% for page in pagination.iter_pages() %}
                             {% if page %}
-                                <li class="page-item {% if page == pagination.page %}active{% endif %}">
-                                    <a class="page-link" href="{{ url_for('main.feed_new', page=page) }}">{{ page }}</a>
+                                <li class="{% if page == pagination.page %}active{% endif %}">
+                                    <a href="{{ url_for('main.feed_new', page=page) }}">{{ page }}</a>
                                 </li>
                             {% else %}
-                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                <li class="disabled"><span>...</span></li>
                             {% endif %}
                         {% endfor %}
                         
-                        <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
-                            <a class="page-link" href="{{ url_for('main.feed_new', page=pagination.next_num) if pagination.has_next else '#' }}">
-                                <i class="fas fa-chevron-right"></i>
+                        <li class="{% if not pagination.has_next %}disabled{% endif %}">
+                            <a href="{{ url_for('main.feed_new', page=pagination.next_num) if pagination.has_next else '#' }}">
+                                <i class="fa fa-chevron-right"></i>
                             </a>
                         </li>
                     </ul>
                 </nav>
                 {% endif %}
                 {% else %}
-                <div class="text-center text-muted py-5">
-                    <i class="fas fa-newspaper fa-3x mb-3"></i>
-                    <p class="mb-0">No hay noticias disponibles en este momento.</p>
+                <div class="text-center text-muted" style="padding-top: 50px; padding-bottom: 50px;"> {# py-5 to inline style #}
+                    <i class="fa fa-newspaper-o fa-3x" style="margin-bottom: 15px;"></i> {# fas fa-newspaper to fa fa-newspaper-o, mb-3 to style #}
+                    <p>No hay noticias disponibles en este momento.</p> {# mb-0 removed #}
                 </div>
                 {% endif %}
             </div>
@@ -109,11 +112,11 @@
 
     <!-- Columna lateral con estadísticas -->
     <div class="col-md-3">
-        <div class="card stats-card" style="position: sticky; top: 20px;">
-            <div class="card-body">
-                <h5 class="card-title mb-4">
-                    <i class="fas fa-chart-pie text-primary"></i> Estadísticas por País
-                </h5>
+        <div class="panel panel-default stats-card" style="position: sticky; top: 20px;"> {# card to panel panel-default #}
+            <div class="panel-body"> {# card-body to panel-body #}
+                <h4 class="panel-title" style="margin-bottom: 20px;"> {# h5 card-title mb-4 to h4 panel-title with style #}
+                    <i class="fa fa-pie-chart text-primary"></i> Estadísticas por País {# fas to fa #}
+                </h4>
                 
                 <!-- Gráfico de dona -->
                 <div style="height: 200px; margin-bottom: 1rem;">
@@ -122,49 +125,49 @@
                 
                 <!-- Lista de países -->
                 <div class="country-stats" style="max-height: 400px; overflow-y: auto;">
-                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                    <div class="country-stat-item clearfix" style="margin-bottom: 10px;"> {# d-flex etc to clearfix and margin style #}
                         <div><span class="flag">🇦🇷</span> Argentina</div>
-                        <span class="badge bg-primary">{{ stats.by_country['.ar']|default(0) }}</span>
+                        <span class="label label-primary pull-right">{{ stats.by_country['.ar']|default(0) }}</span> {# badge bg-primary to label label-primary pull-right #}
                     </div>
-                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                    <div class="country-stat-item clearfix" style="margin-bottom: 10px;">
                         <div><span class="flag">🇨🇱</span> Chile</div>
-                        <span class="badge bg-primary">{{ stats.by_country['.cl']|default(0) }}</span>
+                        <span class="label label-primary pull-right">{{ stats.by_country['.cl']|default(0) }}</span>
                     </div>
-                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                    <div class="country-stat-item clearfix" style="margin-bottom: 10px;">
                         <div><span class="flag">🇺🇾</span> Uruguay</div>
-                        <span class="badge bg-primary">{{ stats.by_country['.uy']|default(0) }}</span>
+                        <span class="label label-primary pull-right">{{ stats.by_country['.uy']|default(0) }}</span>
                     </div>
-                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                    <div class="country-stat-item clearfix" style="margin-bottom: 10px;">
                         <div><span class="flag">🇵🇾</span> Paraguay</div>
-                        <span class="badge bg-primary">{{ stats.by_country['.py']|default(0) }}</span>
+                        <span class="label label-primary pull-right">{{ stats.by_country['.py']|default(0) }}</span>
                     </div>
-                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                    <div class="country-stat-item clearfix" style="margin-bottom: 10px;">
                         <div><span class="flag">🇧🇴</span> Bolivia</div>
-                        <span class="badge bg-primary">{{ stats.by_country['.bo']|default(0) }}</span>
+                        <span class="label label-primary pull-right">{{ stats.by_country['.bo']|default(0) }}</span>
                     </div>
-                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                    <div class="country-stat-item clearfix" style="margin-bottom: 10px;">
                         <div><span class="flag">🇲🇽</span> México</div>
-                        <span class="badge bg-primary">{{ stats.by_country['.mx']|default(0) }}</span>
+                        <span class="label label-primary pull-right">{{ stats.by_country['.mx']|default(0) }}</span>
                     </div>
-                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                    <div class="country-stat-item clearfix" style="margin-bottom: 10px;">
                         <div><span class="flag">🇨🇴</span> Colombia</div>
-                        <span class="badge bg-primary">{{ stats.by_country['.co']|default(0) }}</span>
+                        <span class="label label-primary pull-right">{{ stats.by_country['.co']|default(0) }}</span>
                     </div>
-                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                    <div class="country-stat-item clearfix" style="margin-bottom: 10px;">
                         <div><span class="flag">🇵🇪</span> Perú</div>
-                        <span class="badge bg-primary">{{ stats.by_country['.pe']|default(0) }}</span>
+                        <span class="label label-primary pull-right">{{ stats.by_country['.pe']|default(0) }}</span>
                     </div>
-                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                    <div class="country-stat-item clearfix" style="margin-bottom: 10px;">
                         <div><span class="flag">🇪🇨</span> Ecuador</div>
-                        <span class="badge bg-primary">{{ stats.by_country['.ec']|default(0) }}</span>
+                        <span class="label label-primary pull-right">{{ stats.by_country['.ec']|default(0) }}</span>
                     </div>
-                    <div class="country-stat-item d-flex justify-content-between align-items-center mb-2">
+                    <div class="country-stat-item clearfix" style="margin-bottom: 10px;">
                         <div><span class="flag">🇻🇪</span> Venezuela</div>
-                        <span class="badge bg-primary">{{ stats.by_country['.ve']|default(0) }}</span>
+                        <span class="label label-primary pull-right">{{ stats.by_country['.ve']|default(0) }}</span>
                     </div>
-                    <div class="country-stat-item d-flex justify-content-between align-items-center">
+                    <div class="country-stat-item clearfix">
                         <div><span class="flag">🌎</span> Internacional</div>
-                        <span class="badge bg-primary">{{ stats.by_country['other']|default(0) }}</span>
+                        <span class="label label-primary pull-right">{{ stats.by_country['other']|default(0) }}</span>
                     </div>
                 </div>
             </div>
@@ -231,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
+            plugins: { // In Chart.js 2.x, legend and tooltip are directly under options, not plugins
                 legend: {
                     display: false
                 },
@@ -252,49 +255,50 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <style>
 .news-card {
-    transition: transform 0.2s;
-    border: none;
+    /* transition: transform 0.2s; BS3 doesn't have transform utilities by default */
+    border: 1px solid #ddd; /* Default panel border */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 .news-card:hover {
-    transform: translateY(-5px);
+    /* transform: translateY(-5px); */
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 .source-badge {
     font-weight: 500;
-    color: #6c757d;
+    color: #777; /* BS3 text-muted */
     text-transform: capitalize;
 }
 .country-badge {
-    font-size: 0.85rem;
-    font-weight: 500;
+    font-size: 0.85em; /* BS3 label is a bit larger */
+    font-weight: bold; /* BS3 label is bold */
     white-space: nowrap;
+    /* padding: .2em .6em .3em; BS3 label default padding */
 }
 .news-title {
-    color: #2c3e50;
+    color: #337ab7; /* BS3 default link color */
     text-decoration: none;
 }
 .news-title:hover {
-    color: #0056b3;
+    color: #23527c; /* BS3 default link hover color */
+    text-decoration: underline;
 }
 
 /* Estilos para la tarjeta de estadísticas */
 .stats-card {
-    height: calc(100vh - 40px);
-    overflow: hidden;
+    /* height: calc(100vh - 40px); BS5 calc, use JS or ensure parent heights are set for sticky to work */
+    overflow: hidden; /* This is fine */
 }
 
-.stats-card .card-body {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+.stats-card .panel-body { /* Changed from card-body */
+    /* display: flex; flex-direction: column; height: 100%; BS5 flex, use block elements or JS for height */
 }
 
 .country-stats {
-    scrollbar-width: thin;
-    scrollbar-color: #6c757d #f8f9fa;
+    /* scrollbar-width: thin; scrollbar-color: #6c757d #f8f9fa; Firefox specific */
+    overflow-y: auto; /* This is fine */
 }
 
+/* Webkit scrollbar styles are fine */
 .country-stats::-webkit-scrollbar {
     width: 6px;
 }
@@ -309,17 +313,21 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .country-stat-item {
-    padding: 0.5rem;
-    border-radius: 4px;
-    transition: background-color 0.2s;
+    padding: 5px; /* BS3 roughly .5rem */
+    border-radius: 3px; /* BS3 default */
+    /* transition: background-color 0.2s; CSS3 fine */
 }
 
 .country-stat-item:hover {
-    background-color: #f8f9fa;
+    background-color: #f5f5f5; /* BS3 default hover */
 }
 
 .flag {
-    margin-right: 0.5rem;
+    margin-right: 5px; /* BS3 roughly .5rem */
+}
+.panel-footer { /* Ensure footer is styled like Poncho panel-footer */
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
 }
 </style>
 {% endblock %}

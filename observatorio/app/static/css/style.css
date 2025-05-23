@@ -10,16 +10,16 @@
     --gray-color: #333; /* Gris oscuro */
 
     /* Colores para tema oscuro (mapa y visualizaciones) */
-    --dark-bg-color: #0D1117; /* Fondo principal muy oscuro */
-    --dark-content-bg-color: #161B22; /* Fondo del área de contenido, ligeramente más claro */
+    --dark-bg-color: #0D1117; 
+    --dark-content-bg-color: #161B22; 
     --dark-border-color: #30363D;
     --dark-text-color: #E6EDF3;
     --dark-text-secondary: #8B949E;
-    --dark-hover-color: #1F2937; /* Un gris azulado oscuro para hover */
-    --dark-card-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    --dark-hover-color: #1F2937; 
+    --dark-card-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Poncho panels have a light shadow by default, this can enhance it if needed */
     
     /* Dimensiones */
-    --sidebar-width: 260px; /* Ancho de la sidebar */
+    --sidebar-width: 250px; /* Ancho de la sidebar, Poncho's default is often around this */
 }
 
 /* Estilos generales */
@@ -27,10 +27,10 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5; /* Fondo claro para el estilo gubernamental */
-    color: #333;
-    font-family: 'Roboto', 'Encode Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Ubuntu, "Helvetica Neue", sans-serif;
-    overflow-x: hidden; /* Prevenir scroll horizontal */
+    background-color: #f5f5f5; 
+    color: #333; /* Default BS3 text color */
+    font-family: 'Encode Sans', sans-serif; /* Poncho's primary font */
+    overflow-x: hidden; 
 }
 
 /* Modo oscuro para páginas específicas */
@@ -40,23 +40,23 @@ body.dark-theme {
 }
 
 /* Sidebar Fija (estilo Poncho) */
-.sidebar {
+.sidebar { /* This class should be applied to the sidebar div in base_dashboard.html */
     position: fixed;
-    top: 60px; /* Espacio para el header */
+    top: 50px; /* Adjust based on actual header height */
     left: 0;
     bottom: 0;
     width: var(--sidebar-width);
-    background-color: #f8f9fa;
-    border-right: 1px solid #dee2e6;
+    background-color: #f8f9fa; /* Default Poncho/BS3 light gray */
+    border-right: 1px solid #ddd; /* BS3 default border color */
     z-index: 1000;
-    padding-top: 1rem; /* Espacio superior */
-    overflow-y: auto; /* Scroll si el contenido es largo */
+    padding-top: 15px; /* BS3 panel-like padding */
+    overflow-y: auto; 
     transition: transform 0.3s ease;
 }
 
 /* Sidebar en modo oscuro */
 body.dark-theme .sidebar {
-    background-color: var(--dark-bg-color);
+    background-color: var(--dark-content-bg-color); /* Darker for sidebar itself */
     border-right: 1px solid var(--dark-border-color);
 }
 
@@ -82,78 +82,89 @@ body.dark-theme .sidebar::-webkit-scrollbar-thumb {
 }
 
 /* Contenido dentro de la Sidebar */
-.sidebar .position-sticky {
-    padding: 1rem; /* Ajusta el padding interno si es necesario */
+.sidebar .page-sidebar { /* If using Poncho's .page-sidebar class inside for structure */
+    padding: 0 15px; 
+}
+.sidebar .text-center { /* For the logo section */
+    margin-bottom: 20px;
+    background-color: #fff; /* Keep white background for logo if desired */
+    padding:15px;
+    border-radius: 4px;
+}
+body.dark-theme .sidebar .text-center {
+    background-color: var(--dark-hover-color); /* Darker background for logo in dark mode */
 }
 
-/* Navigation links en la sidebar (estilo Poncho) */
-.sidebar .nav-link {
-    color: #333;
-    padding: 0.8rem 1rem;
-    border-radius: 0.25rem;
-    margin: 0.2rem 0; /* Ajustado margen */
+
+/* Navigation links en la sidebar (estilo Poncho - nav-pills nav-stacked) */
+.sidebar .nav-pills > li > a {
+    color: #333; /* Default BS3 link color */
+    padding: 10px 15px; /* BS3 default */
+    border-radius: 4px; /* BS3 default */
+    margin: 2px 0; 
     transition: all 0.2s ease;
-    display: flex; /* Alinear icono y texto */
-    align-items: center; /* Centrar verticalmente POR DEFECTO */
-    white-space: nowrap; /* Evitar que el texto se rompa POR DEFECTO */
-    overflow: hidden; /* Ocultar texto si no cabe POR DEFECTO */
-    text-overflow: ellipsis; /* Añadir puntos suspensivos POR DEFECTO */
+    display: block; /* Changed from flex for BS3 */
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
 }
 
 /* Links de navegación en modo oscuro */
-body.dark-theme .sidebar .nav-link {
-    color: var(--dark-text-color);
+body.dark-theme .sidebar .nav-pills > li > a {
+    color: var(--dark-text-secondary);
 }
 
-.sidebar .nav-link:hover {
-    background-color: #e9ecef;
-    color: var(--primary-color); /* Color de texto en hover */
+.sidebar .nav-pills > li > a:hover {
+    background-color: #e9ecef; /* BS3 hover color */
+    color: var(--primary-color); 
 }
 
-.sidebar .nav-link.active {
-    background-color: var(--primary-color);
+.sidebar .nav-pills > li.active > a,
+.sidebar .nav-pills > li.active > a:hover,
+.sidebar .nav-pills > li.active > a:focus {
+    background-color: var(--primary-color); /* Poncho primary color */
     color: white;
-    font-weight: 500;
+    font-weight: bold; /* Poncho active links are often bold */
 }
 
 /* Hover y active en modo oscuro */
-body.dark-theme .sidebar .nav-link:hover {
+body.dark-theme .sidebar .nav-pills > li > a:hover {
     background-color: var(--dark-hover-color);
     color: var(--dark-text-color);
 }
 
-body.dark-theme .sidebar .nav-link.active {
-    background-color: var(--primary-color);
+body.dark-theme .sidebar .nav-pills > li.active > a,
+body.dark-theme .sidebar .nav-pills > li.active > a:hover,
+body.dark-theme .sidebar .nav-pills > li.active > a:focus {
+    background-color: var(--primary-color); /* Ensure this contrasts well with dark theme */
     color: white;
 }
 
-.sidebar .nav-link i {
-    width: 1.5rem;
+.sidebar .nav-pills > li > a > i.fa { /* Targeting Font Awesome icons */
+    width: 20px; /* BS3/Poncho icon width */
     text-align: center;
-    margin-right: 0.8rem;
-    font-size: 1.1rem;
-    flex-shrink: 0; /* Evitar que el icono se encoja */
+    margin-right: 8px; /* BS3/Poncho icon spacing */
+    font-size: 1.1em; /* BS3/Poncho icon size */
 }
 
 /* --- NUEVAS REGLAS PARA PERMITIR WRAPPING --- */
-.sidebar .nav-link.allow-wrap {
-    white-space: normal; /* Permitir que el texto se divida en líneas */
-    overflow: visible; /* Asegurarse de que el texto extra sea visible */
-    text-overflow: clip; /* No mostrar '...' */
-    align-items: flex-start; /* Alinear el icono con la parte superior del texto */
-    line-height: 1.3; /* Ajustar altura de línea para mejor legibilidad */
+.sidebar .nav-pills > li > a.allow-wrap {
+    white-space: normal; 
+    overflow: visible; 
+    text-overflow: clip; 
+    /* align-items: flex-start; BS3: icons usually align with text baseline by default */
+    line-height: 1.3; 
 }
 
-/* Ajustar el icono para que se alinee mejor con la primera línea de texto */
-.sidebar .nav-link.allow-wrap i {
-    margin-top: 0.15em; /* Pequeño ajuste superior, puede variar según la fuente/icono */
+.sidebar .nav-pills > li > a.allow-wrap i.fa {
+    margin-top: 0.15em; 
 }
 /* --- FIN NUEVAS REGLAS --- */
 
 
 /* Separador en la sidebar */
 .sidebar hr {
-    border-top: 1px solid #dee2e6;
+    border-top: 1px solid #ddd; /* BS3 border color */
 }
 
 /* Separador en modo oscuro */
@@ -163,11 +174,13 @@ body.dark-theme .sidebar hr {
 
 /* Contenedor Principal (estilo Poncho) */
 .main-container {
-    height: 100vh; /* Ocupa toda la altura */
-    overflow-y: auto; /* Permite scroll vertical SOLO en el contenido */
-    background-color: #ffffff; /* Fondo claro para estilo gubernamental */
-    padding-top: 60px; /* Espacio para el header */
-    padding-bottom: 1rem; /* Espacio inferior */
+    /* height: 100vh; Esto puede ser problemático con headers/footers fijos en BS3. 
+                      Mejor usar min-height y permitir que el contenido defina la altura. */
+    min-height: calc(100vh - 50px); /* Ajustado para header fijo, asumiendo 50px header height */
+    overflow-y: auto; 
+    background-color: #ffffff; 
+    padding-top: 50px; /* Match header height, assuming fixed header */
+    padding-bottom: 15px; /* BS3 default padding */
 }
 
 /* Contenedor principal en modo oscuro */
@@ -175,98 +188,122 @@ body.dark-theme .main-container {
     background-color: var(--dark-content-bg-color);
 }
 
-/* Ajuste para la main-container sin sidebar */
-.main-container {
+/* Ajuste para la main-container CON sidebar */
+body.with-sidebar .main-container { /* This class should be added to body in base_dashboard.html when sidebar is present */
+    margin-left: var(--sidebar-width); 
+    width: calc(100% - var(--sidebar-width));
+}
+/* Ajuste para la main-container SIN sidebar (default state or if class 'no-sidebar' is used) */
+body.no-sidebar .main-container {
     margin-left: 0;
     width: 100%;
 }
 
+
 /* Contenido principal dentro del contenedor */
 .main-content {
-    padding: 0 1.5rem; /* Padding horizontal para el contenido */
+    padding: 0 15px; /* BS3 default container padding */
 }
 
 /* Contenedor de Flash Messages */
 .flash-container {
-    padding: 0 1.5rem; /* Alinear con el padding de main-content */
-    margin-bottom: 1rem;
+    padding: 0 15px; 
+    margin-bottom: 15px; /* BS3 default */
+}
+/* Ensure BS3 alerts are styled correctly */
+.alert {
+    border-radius: 4px; /* BS3 standard */
+}
+.alert .close { /* BS3 dismiss button */
+    font-size: 20px;
 }
 
-/* Cards (estilo Poncho) */
-.card {
+
+/* Panels (estilo Poncho, replacing .card) */
+.panel { /* General panel styling */
     background-color: #ffffff;
-    border: 1px solid #dee2e6;
-    border-radius: 0.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 1.5rem; /* Aumentado espacio entre cards */
+    border: 1px solid #ddd; /* BS3 default */
+    border-radius: 4px; /* BS3 default */
+    box-shadow: 0 1px 1px rgba(0,0,0,.05); /* BS3 default */
+    margin-bottom: 20px; /* BS3 default */
+}
+.panel-default > .panel-heading {
+    background-color: #f5f5f5; /* BS3 default */
+    border-bottom: 1px solid #ddd;
+    padding: 10px 15px; /* BS3 default */
+    color: #333; /* BS3 default */
+}
+.panel-title { /* BS3 default */
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 16px; 
+    color: inherit;
+}
+.panel-body {
+    padding: 15px; /* BS3 default */
+}
+.panel-footer {
+    background-color: #f5f5f5; /* BS3 default footer */
+    border-top: 1px solid #ddd;
+    padding: 10px 15px;
 }
 
-/* Cards en modo oscuro */
-body.dark-theme .card {
+
+/* Panels en modo oscuro */
+body.dark-theme .panel-default {
     background-color: var(--dark-bg-color);
     border: 1px solid var(--dark-border-color);
     box-shadow: var(--dark-card-shadow);
 }
-
-.card-header {
-    background-color: rgba(var(--bs-light-rgb), 0.03); /* Fondo de header ligeramente diferente */
-    border-bottom: 1px solid #dee2e6;
-    border-bottom: 1px solid var(--border-color);
-    padding: 0.75rem 1.25rem;
+body.dark-theme .panel-default > .panel-heading {
+    background-color: var(--dark-hover-color); /* Darker heading for panel */
+    border-bottom: 1px solid var(--dark-border-color);
+    color: var(--dark-text-color);
+}
+body.dark-theme .panel-body {
+    color: var(--dark-text-secondary);
+}
+body.dark-theme .panel-footer {
+    background-color: var(--dark-hover-color);
+    border-top: 1px solid var(--dark-border-color);
+    color: var(--dark-text-secondary);
 }
 
-.card-body {
-    padding: 1.25rem;
-}
-
-.card-footer {
-    background-color: rgba(var(--bs-light-rgb), 0.03);
-    border-top: 1px solid var(--border-color);
-    padding: 0.75rem 1.25rem;
-}
-
-.card-title {
-    color: var(--text-color);
-    margin-bottom: 1rem;
-    font-weight: 500;
-}
-
-/* --- ESTILOS ANTERIORES (Feed, Stats, etc.) --- */
-/* Mantén los estilos específicos de .news-card, .stats-card, etc. */
-/* Asegúrate de que no haya conflictos con los nuevos estilos base. */
 
 /* Feed de Noticias */
 .news-feed {
-    /* max-width: 800px; */ /* Quitado para que ocupe más ancho */
     margin: 0 auto;
 }
 
-.news-card {
-    background-color: var(--secondary-color);
-    color: var(--text-color);
-    border-radius: 10px; /* Ajustado */
-    box-shadow: var(--card-shadow);
-    margin-bottom: 1rem;
-    padding: 0; /* Padding se maneja en card-body/footer */
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: flex; /* Para card h-100 */
-    flex-direction: column; /* Para card h-100 */
+.news-card { /* Custom style, now applied to panel */
+    /* background-color: var(--secondary-color); Panel default is white/dark, this would override */
+    /* color: var(--text-color); Panel default text color will apply */
+    border-radius: 4px; /* Default panel radius */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Custom shadow kept */
+    margin-bottom: 20px; /* BS3 panel default */
+    padding: 0; 
+    /* transition: transform 0.2s, box-shadow 0.2s; */
+    /* display: flex; Removed, panels are block by default */
+    /* flex-direction: column; Removed */
 }
 
 .news-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+    /* transform: translateY(-3px); */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Keep hover shadow */
 }
 
-.news-card .card-body {
-    padding: 1rem 1.25rem; /* Ajustado */
-    flex-grow: 1; /* Para que el body ocupe espacio */
+.news-card .panel-body { /* Was .card-body */
+    padding: 15px; /* BS3 panel-body default */
+    /* flex-grow: 1; Removed */
 }
 
-.news-card .card-footer {
-    padding: 0.75rem 1.25rem;
-    background-color: transparent; /* Hacer footer transparente */
-    border-top: 1px solid var(--border-color);
+.news-card .panel-footer { /* Was .card-footer */
+    padding: 10px 15px; /* BS3 panel-footer default */
+    background-color: transparent; /* Keep transparent if desired, overrides panel-footer default */
+    border-top: 1px solid #ddd; /* BS3 default border color */
+}
+body.dark-theme .news-card .panel-footer {
+    border-top: 1px solid var(--dark-border-color); /* Dark theme border */
 }
 
 .source-badge { /* Estilo para la fuente */
@@ -292,143 +329,152 @@ body.dark-theme .card {
     text-decoration: none;
 }
 .news-title:hover {
-    color: var(--primary-color); /* Cambio de color en hover */
+    color: #23527c; /* BS3 default link hover color */
     text-decoration: underline;
 }
 
-.news-card .card-text { /* Snippet */
-    color: #666;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    /* Limitar a 3 líneas */
+.news-card .panel-body .text-muted.small { /* Snippet text, selector adjusted */
+    color: #777; /* BS3 text-muted color */
+    font-size: 12px; 
+    line-height: 1.4; /* Adjust for readability */
+    margin-bottom: 10px;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
+    -webkit-line-clamp: 3; 
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-height: calc(1.4em * 3); /* Fallback for non-webkit */
 }
 
 /* Texto de noticias en modo oscuro */
-body.dark-theme .news-card .card-text {
-    color: var(--dark-text-secondary);
+body.dark-theme .news-card .panel-body .text-muted.small { /* Selector adjusted */
+    color: var(--dark-text-secondary) !important; 
 }
 
-.news-card .badge.bg-primary { /* Keyword tag */
-    font-size: 0.75rem;
-    padding: 0.3em 0.6em;
+.news-card .label.label-primary { /* Keyword tag, was .badge.bg-primary */
+    font-size: 11px; 
+    /* padding: .2em .6em .3em; BS3 label default */
 }
 
-.news-card .text-muted.small { /* Fecha */
-    font-size: 0.8rem !important;
+.news-card .panel-body .text-muted.small { /* Date text, ensure it's distinct from snippet if necessary */
+    font-size: 12px !important; /* Keep if specific size needed for date */
 }
 
 /* Stats Card (Columna derecha en feed) */
-.stats-card {
-    position: sticky;
-    top: 1rem; /* Se pega debajo del padding superior del main-container */
-    max-height: calc(100vh - 2rem); /* Altura máxima considerando paddings */
-    overflow-y: auto; /* Scroll si es necesario */
+.stats-card { /* This is a .panel.panel-default */
+    position: sticky; 
+    top: 70px; 
+    max-height: calc(100vh - 90px); /* Adjusted max-height, ensure vh units are acceptable for target browsers */
+    overflow-y: auto; 
 }
 /* Estilo para el scrollbar de stats-card */
 .stats-card::-webkit-scrollbar {
     width: 5px;
 }
 .stats-card::-webkit-scrollbar-track {
-    background: var(--secondary-color);
+    background: #f5f5f5; /* BS3 default light gray */
 }
 .stats-card::-webkit-scrollbar-thumb {
-    background-color: var(--border-color);
+    background-color: #ccc; /* BS3 default darker gray */
     border-radius: 3px;
+}
+body.dark-theme .stats-card::-webkit-scrollbar-track {
+    background: var(--dark-bg-color); /* Use CSS variable */
+}
+body.dark-theme .stats-card::-webkit-scrollbar-thumb {
+    background-color: var(--dark-border-color); /* Use CSS variable */
 }
 
 
 .country-stats {
-    margin-top: 1rem;
-    /* max-height y overflow ya están en .stats-card */
+    margin-top: 15px; /* BS3 default margin */
 }
 
-.country-stat-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Alinea elementos */
-    padding: 0.6rem 0.5rem; /* Ajustado padding */
-    border-radius: 6px;
-    transition: all 0.2s ease;
+.country-stat-item { /* This is a div with clearfix, HTML was updated */
+    padding: 5px; 
+    border-radius: 3px; 
+    margin-bottom: 5px; 
+    /* Removed BS5 flex styles: display, align-items, justify-content */
+    /* transition: all 0.2s ease; Kept for hover effect */
     text-decoration: none;
-    color: var(--text-color);
-    cursor: default; /* No es clickeable por defecto */
-    font-size: 0.9rem;
+    /* color: var(--text-color); Inherits from panel body */
+    cursor: default; 
+    font-size: 0.9em; /* BS3 relative size */
 }
 
 .country-stat-item:hover {
-    background-color: var(--hover-color);
+    background-color: #f5f5f5; /* BS3 default hover */
+}
+body.dark-theme .country-stat-item:hover {
+    background-color: var(--dark-hover-color);
 }
 
 .country-stat-item .flag {
-    margin-right: 0.75rem; /* Más espacio para la bandera */
-    font-size: 1.1rem;
+    margin-right: 8px; 
+    font-size: 1.1em;
 }
 
-.country-stat-item .badge {
-    font-size: 0.8rem;
-    min-width: 25px; /* Ancho mínimo para el número */
+.country-stat-item .label { /* This is .label.label-primary.pull-right in HTML */
+    font-size: 11px; 
+    min-width: 25px; 
     text-align: center;
 }
 
 
 /* Responsive */
-@media (max-width: 767.98px) {
-    :root {
-        --sidebar-width: 200px; /* Sidebar más angosta en móvil */
-    }
-
+@media (max-width: 767px) { /* Simplified breakpoint for BS3 xs */
+    /* Sidebar width for mobile, if .sidebar class is used from base_dashboard */
     .sidebar {
-        transform: translateX(-100%); /* Oculta por defecto */
-        /* Podrías añadir un botón para mostrar/ocultar */
+        /* transform: translateX(-100%); Control visibility via JS or different CSS for BS3 */
+        width: 220px; /* Example width for mobile */
+        /* Add styles for toggled state if using a JS toggle */
     }
 
     body.with-sidebar .main-container {
-        margin-left: 0; /* Sin margen en móvil */
+        margin-left: 0; 
         width: 100%;
     }
-
-    /* Si implementas un botón toggle, necesitarás estilos para mostrar la sidebar */
-    /* body.sidebar-visible .sidebar { transform: translateX(0); } */
+    body.sidebar-active .main-container { /* Assuming a class 'sidebar-active' is added to body */
+        margin-left: 220px; /* Match sidebar width */
+    }
 
     .main-content {
-        padding: 0 1rem; /* Menos padding en móvil */
+        padding: 0 10px; 
     }
     .flash-container {
-        padding: 0 1rem;
+        padding: 0 10px;
     }
     .stats-card {
-        position: static; /* Quitar sticky en móvil */
+        position: static; 
         max-height: none;
-        margin-top: 1.5rem;
+        margin-top: 20px; /* BS3 default margin */
     }
 }
 
 /* Utilities */
-.text-truncate-2 {
+.text-truncate-2 { 
     display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
+    -webkit-line-clamp: 2; 
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: calc(1.4em * 2); /* Fallback for line-height 1.4, adjust if needed */
 }
-.text-truncate-3 {
+.text-truncate-3 { 
     display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
+    -webkit-line-clamp: 3; 
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: calc(1.4em * 3); /* Fallback for line-height 1.4, adjust if needed */
 }
 
 /* Fix para quitar margen superior extra si existía */
-main {
-    margin-top: 0 !important;
-}
-.dashboard-wrapper { /* Si aún existe en algún lado */
+/* Removing generic 'main' tag styling as it might be too broad.
+   Target specific wrapper classes if margin adjustments are needed. */
+/* main {
+    margin-top: 0 !important; 
+} */
+.dashboard-wrapper { /* If this class is used in base_dashboard.html for specific content area */
     margin-top: 0 !important;
 }

@@ -3,66 +3,70 @@
 {% block title %}Registro{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="mb-0">Registro de Usuario</h4>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2"> {# Centering for BS3 #}
+        <div class="panel panel-default"> {# Replaced card with panel #}
+            <div class="panel-heading">
+                <h3 class="panel-title">Registro de Usuario</h3> {# panel-title for BS3 #}
             </div>
-            <div class="card-body">
-                <form method="POST" action="{{ url_for('auth.register') }}">
+            <div class="panel-body">
+                <form method="POST" action="{{ url_for('auth.register') }}" role="form"> {# Added role="form" for BS3 #}
                     {{ form.hidden_tag() }}
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            {{ form.nombre.label(class="form-label") }}
-                            {{ form.nombre(class="form-control") }}
-                            {% for error in form.nombre.errors %}
-                                <span class="text-danger">{{ error }}</span>
-                            {% endfor %}
+                        <div class="col-md-6">
+                            <div class="form-group {% if form.nombre.errors %}has-error{% endif %}"> {# Replaced mb-3 with form-group and error handling #}
+                                {{ form.nombre.label(class="control-label") }} {# form-label to control-label #}
+                                {{ form.nombre(class="form-control") }}
+                                {% for error in form.nombre.errors %}
+                                    <span class="help-block">{{ error }}</span> {# text-danger to help-block #}
+                                {% endfor %}
+                            </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            {{ form.apellido.label(class="form-label") }}
-                            {{ form.apellido(class="form-control") }}
-                            {% for error in form.apellido.errors %}
-                                <span class="text-danger">{{ error }}</span>
-                            {% endfor %}
+                        <div class="col-md-6">
+                            <div class="form-group {% if form.apellido.errors %}has-error{% endif %}">
+                                {{ form.apellido.label(class="control-label") }}
+                                {{ form.apellido(class="form-control") }}
+                                {% for error in form.apellido.errors %}
+                                    <span class="help-block">{{ error }}</span>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        {{ form.email.label(class="form-label") }}
+                    <div class="form-group {% if form.email.errors %}has-error{% endif %}">
+                        {{ form.email.label(class="control-label") }}
                         {{ form.email(class="form-control") }}
                         {% for error in form.email.errors %}
-                            <span class="text-danger">{{ error }}</span>
+                            <span class="help-block">{{ error }}</span>
                         {% endfor %}
                     </div>
-                    <div class="mb-3">
-                        {{ form.telefono.label(class="form-label") }}
+                    <div class="form-group {% if form.telefono.errors %}has-error{% endif %}">
+                        {{ form.telefono.label(class="control-label") }}
                         {{ form.telefono(class="form-control") }}
                         {% for error in form.telefono.errors %}
-                            <span class="text-danger">{{ error }}</span>
+                            <span class="help-block">{{ error }}</span>
                         {% endfor %}
                     </div>
-                    <div class="mb-3">
-                        {{ form.dependencia.label(class="form-label") }}
+                    <div class="form-group {% if form.dependencia.errors %}has-error{% endif %}">
+                        {{ form.dependencia.label(class="control-label") }}
                         {{ form.dependencia(class="form-control") }}
                         {% for error in form.dependencia.errors %}
-                            <span class="text-danger">{{ error }}</span>
+                            <span class="help-block">{{ error }}</span>
                         {% endfor %}
                     </div>
-                    <div class="mb-3">
-                        {{ form.role.label(class="form-label") }}
+                    <div class="form-group {% if form.role.errors %}has-error{% endif %}">
+                        {{ form.role.label(class="control-label") }}
                         {{ form.role(class="form-control") }}
                         {% for error in form.role.errors %}
-                            <span class="text-danger">{{ error }}</span>
+                            <span class="help-block">{{ error }}</span>
                         {% endfor %}
                     </div>
-                    <div class="d-grid">
-                        {{ form.submit(class="btn btn-primary") }}
+                    <div class="form-group"> {# Removed d-grid, btn-block can be used for full-width button #}
+                        {{ form.submit(class="btn btn-primary btn-block") }}
                     </div>
                 </form>
             </div>
-            <div class="card-footer text-center">
-                <p class="mb-0">¿Ya tienes cuenta? <a href="{{ url_for('auth.login') }}">Inicia sesión</a></p>
+            <div class="panel-footer text-center"> {# card-footer to panel-footer, mb-0 removed #}
+                <p>¿Ya tienes cuenta? <a href="{{ url_for('auth.login') }}">Inicia sesión</a></p>
             </div>
         </div>
     </div>

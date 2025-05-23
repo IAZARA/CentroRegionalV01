@@ -2,29 +2,29 @@
 
 {% block content %}
 <!-- Jumbotron con logo -->
-<div class="jumbotron text-white py-2 mb-0" style="background-color: #232d4f; margin-top: -5px;">
+<div class="jumbotron text-white" style="background-color: #232d4f; margin-top: -5px; padding-top: 20px; padding-bottom: 20px; margin-bottom: 0;">
     <div class="container">
-        <div class="row align-items-center">
+        <div class="row">
             <div class="col-md-8">
-                <h1 class="display-4">Observatorio de Drogas Sintéticas</h1>
+                <h1>Observatorio de Drogas Sintéticas</h1> {# Removed display-4, BS3 uses simple h1-h6 #}
                 <p class="lead">Ministerio de Seguridad Nacional de la República Argentina</p>
             </div>
-            <div class="col-md-4 text-md-end">
-                <img src="{{ url_for('static', filename='img/logo_ministerio_seguridad_nacional.png') }}" alt="Logo Ministerio de Seguridad Nacional" class="img-fluid" style="max-height: 120px;">
+            <div class="col-md-4 text-right"> {# text-right for BS3 #}
+                <img src="{{ url_for('static', filename='img/logo_ministerio_seguridad_nacional.png') }}" alt="Logo Ministerio de Seguridad Nacional" class="img-responsive" style="max-height: 100px;"> {# img-responsive for BS3, adjusted max-height #}
             </div>
         </div>
     </div>
 </div>
 
 <!-- Contenido principal -->
-<div class="container pt-3">
+<div class="container" style="padding-top: 20px;"> {# Added padding-top via style as pt-3 is BS5 #}
     <div class="row">
         <div class="col-md-8">
-            <div class="card mb-4">
-                <div class="card-header text-white" style="background-color: #232d4f;">
-                    <h3 class="h5 mb-0">Acerca del Observatorio</h3>
+            <div class="panel panel-default"> {# Replaced card with panel panel-default #}
+                <div class="panel-heading text-white" style="background-color: #232d4f;">
+                    <h3 class="panel-title">Acerca del Observatorio</h3> {# panel-title for BS3 panel headers, removed h5 and mb-0 #}
                 </div>
-                <div class="card-body">
+                <div class="panel-body">
                 <p>
                     La plataforma se establece como una iniciativa estratégica del Ministerio de Seguridad Nacional, orientada a
                     monitorear, analizar y evaluar el fenómeno de las drogas sintéticas en el continente americano.
@@ -46,22 +46,22 @@
         </div>
         <div class="col-md-4">
             <!-- Accesos Rápidos -->
-            <div class="card mb-4">
-                <div class="card-header text-white" style="background-color: #232d4f;">
-                    <h3 class="h5 mb-0">Accesos</h3>
+            <div class="panel panel-default"> {# Replaced card with panel panel-default #}
+                <div class="panel-heading text-white" style="background-color: #232d4f;">
+                    <h3 class="panel-title">Accesos</h3> {# panel-title for BS3 panel headers #}
                 </div>
-                <div class="list-group list-group-flush">
-                    <a href="{{ url_for('main.geomap') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        <span><i class="fas fa-map-marked-alt me-2"></i> Mapa Interactivo</span>
-                        <i class="fas fa-chevron-right"></i>
+                <div class="list-group"> {# Removed list-group-flush #}
+                    <a href="{{ url_for('main.geomap') }}" class="list-group-item">
+                        <i class="fa fa-map-marked-alt"></i> Mapa Interactivo
+                        <i class="fa fa-chevron-right pull-right"></i> {# pull-right for BS3 icon alignment #}
                     </a>
-                    <a href="{{ url_for('main.legislation') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        <span><i class="fas fa-gavel me-2"></i> Legislación</span>
-                        <i class="fas fa-chevron-right"></i>
+                    <a href="{{ url_for('main.legislation') }}" class="list-group-item">
+                        <i class="fa fa-gavel"></i> Legislación
+                        <i class="fa fa-chevron-right pull-right"></i>
                     </a>
-                    <a href="{{ url_for('main.agenda') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                        <span><i class="fas fa-calendar-alt me-2"></i> Agenda MinSeg</span>
-                        <i class="fas fa-chevron-right"></i>
+                    <a href="{{ url_for('main.agenda') }}" class="list-group-item">
+                        <i class="fa fa-calendar-alt"></i> Agenda MinSeg
+                        <i class="fa fa-chevron-right pull-right"></i>
                     </a>
                 </div>
             </div>
@@ -75,46 +75,45 @@
     /* Estilos específicos para la página de inicio con estilo Poncho */
     .jumbotron {
         background-color: #232d4f;
-        padding: 1rem 0;
+        /* padding: 1rem 0; BS5 specific, use direct padding or BS3 helpers if needed */
         margin-bottom: 0;
         border-radius: 0;
     }
     
-    .card {
+    /* Poncho typically uses panel-default for cards */
+    .panel-default {
         border-radius: 4px;
-        margin-bottom: 1.5rem;
+        margin-bottom: 20px; /* BS3 default or use custom margin */
     }
     
-    .card-header {
-        font-weight: 600;
+    .panel-heading {
+        font-weight: 600; /* Poncho might have its own heading styles */
     }
     
-    .bg-primary {
-        background-color: #232d4f !important;
-    }
+    /* .bg-primary is a BS5 class, Poncho uses specific color classes like .bg-azul or direct styling */
+    /* .text-primary is a BS5 class */
     
-    .text-primary {
-        color: #232d4f !important;
-    }
-    
-    .list-group-item-action:hover {
-        background-color: #f8f9fa;
-        color: var(--primary-color);
+    .list-group-item:hover { /* BS3 hover effect is default, adjust if needed */
+        background-color: #f5f5f5;
+        /* color: var(--primary-color); BS5 variable, use specific color or Poncho variable */
     }
     
     /* Estilos responsivos */
-    @media (max-width: 767.98px) {
+    @media (max-width: 767px) { /* BS3 uses max-width: 767px for xs screens */
         .jumbotron h1 {
-            font-size: 1.8rem;
+            font-size: 30px; /* Adjust as needed for BS3 h1 in jumbotron */
         }
         
         .jumbotron .lead {
-            font-size: 1rem;
+            font-size: 16px; /* Adjust as needed for BS3 lead in jumbotron */
+        }
+        .text-right { /* Ensure text-right works on smaller screens if needed */
+            text-align: right;
         }
     }
     
-    /* Modo oscuro */
-    body.dark-theme .card {
+    /* Modo oscuro - Assuming these variables are defined elsewhere or you'll add BS3 compatible dark theme */
+    body.dark-theme .panel-default { /* Changed .card to .panel-default */
         background-color: var(--dark-bg-color);
         border-color: var(--dark-border-color);
     }
@@ -125,14 +124,21 @@
         color: var(--dark-text-color);
     }
     
-    body.dark-theme .list-group-item-action:hover {
+    body.dark-theme .list-group-item:hover {
         background-color: var(--dark-hover-color);
         color: var(--dark-text-color);
     }
     
-    body.dark-theme .card-header.bg-light {
-        background-color: var(--dark-hover-color) !important;
+    body.dark-theme .panel-heading { /* Changed .card-header.bg-light */
+        background-color: var(--dark-hover-color) !important; /* Ensure Poncho's styles are overridden if needed */
         color: var(--dark-text-color);
+        border-bottom-color: var(--dark-border-color); /* Adjust for panel heading border */
+    }
+
+    /* Ensure Poncho's specific header/footer styles from poncho.min.css are applied */
+    /* Custom styles for icon spacing if needed, as me-2 is BS5 */
+    .list-group-item .fa {
+        margin-right: 5px;
     }
 </style>
 {% endblock %}
