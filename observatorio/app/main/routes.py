@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, jsonify
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, jsonify, session
 from flask_login import login_required, current_user, logout_user
+# Removed get_locale from here, it will be in __init__.py
 from app.services.news_service import NewsService
 from app.services.geocoding_service import GeocodingService
 from datetime import datetime, timedelta
@@ -148,3 +149,14 @@ def agenda():
 def force_logout():
     logout_user()
     return 'Logged out'
+
+@bp.route('/set_language/<language_code>')
+def set_language(language_code):
+    # Ensure the language code is one of the supported languages
+    if language_code not in current_app.config['LANGUAGES']:
+        flash('Invalid language selected.', 'danger')
+        return redirect(request.referrer or url_for('main.home'))
+
+    session['language'] = language_code
+    # flash(f'Language set to {language_code}', 'success') # Optional: for debugging
+    return redirect(request.referrer or url_for('main.home'))

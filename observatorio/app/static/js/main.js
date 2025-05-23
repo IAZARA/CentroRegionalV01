@@ -12,4 +12,16 @@ document.addEventListener('DOMContentLoaded', function() {
     alertList.forEach(function (alert) {
         new bootstrap.Alert(alert)
     });
+
+    // Language selector logic
+    var langSelectors = document.querySelectorAll('.dropdown-menu a[data-lang]');
+    langSelectors.forEach(function(selector) {
+        selector.addEventListener('click', function(event) {
+            event.preventDefault();
+            var lang = this.getAttribute('data-lang');
+            // Construct the URL for setting language.
+            // Assumes the Flask app is running at the root.
+            window.location.href = '/set_language/' + lang;
+        });
+    });
 });

@@ -1,8 +1,9 @@
-from flask import Flask
+from flask import Flask, session, request, current_app
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
+from flask_babel import Babel
 from celery import Celery
 from dotenv import load_dotenv
 import os
@@ -14,6 +15,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
+babel = Babel()
 celery = Celery(__name__, broker=os.environ.get('REDIS_URL', 'redis://localhost:6379/0'))
 
 def create_admin_user():
@@ -70,6 +72,13 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
     bcrypt.init_app(app)
+    babel.init_app(app)
+
+    @babel.localeselector
+    def get_locale():
+        if 'language' in session:
+            return session['language']
+        return current_app.config['BABEL_DEFAULT_LOCALE']
     
     # Configurar login manager
     login_manager.init_app(app)

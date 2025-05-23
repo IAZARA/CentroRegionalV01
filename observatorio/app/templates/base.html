@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ get_locale() }}"> {# Use get_locale() for dynamic lang attribute #}
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Observatorio de Drogas Sintéticas | Ministerio de Seguridad Nacional{% endblock %}</title>
+    <title>{% block title %}{{ _('Observatorio de Drogas Sintéticas | Ministerio de Seguridad Nacional') }}{% endblock %}</title>
 
     <!-- Poncho CSS (Sistema de diseño del Gobierno Argentino) -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/poncho.min.css') }}">
@@ -55,30 +55,40 @@
         <div class="container-fluid"> {# container-fluid is generally fine #}
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarNav" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
+                    <span class="sr-only">{{ _('Toggle navigation') }}</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="/"> {# d-flex and align-items-center are BS5, use custom CSS or simpler structure if needed #}
-                    <img src="{{ url_for('static', filename='img/Logo MInisterio en negro.png') }}" alt="Logo Ministerio de Seguridad" height="50"> {# Adjusted height for BS3 navbar #}
+                    <img src="{{ url_for('static', filename='img/Logo MInisterio en negro.png') }}" alt="{{ _('Logo Ministerio de Seguridad') }}" height="50"> {# Adjusted height for BS3 navbar #}
                     {# Removed nested divs for simplicity, text can be styled directly or with spans if needed #}
-                    <span style="font-size: 16px; font-weight: bold; vertical-align: middle; margin-left: 10px;">Ministerio de Seguridad Nacional</span><br>
-                    <span class="small text-muted" style="font-size: 12px; vertical-align: middle; margin-left: 10px;">Observatorio de Drogas Sintéticas</span>
+                    <span style="font-size: 16px; font-weight: bold; vertical-align: middle; margin-left: 10px;">{{ _('Ministerio de Seguridad Nacional') }}</span><br>
+                    <span class="small text-muted" style="font-size: 12px; vertical-align: middle; margin-left: 10px;">{{ _('Observatorio de Drogas Sintéticas') }}</span>
                 </a>
             </div>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="nav navbar-nav navbar-right"> {# Simplified nav alignment for BS3/Poncho #}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            {{ _('Idioma') }} <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" data-lang="es">Español</a></li> {# Language names themselves are not translated #}
+                            <li><a href="#" data-lang="en">English</a></li>
+                            <li><a href="#" data-lang="pt">Português</a></li>
+                        </ul>
+                    </li>
                     {% if current_user.is_authenticated %}
                     <li>
-                        <p class="navbar-text">Bienvenido, {{ current_user.username }}</p> {# Use navbar-text for non-link items #}
+                        <p class="navbar-text">{{ _('Bienvenido,') }} {{ current_user.username }}</p> {# Use navbar-text for non-link items #}
                     </li>
                     <li>
-                        <a href="{{ url_for('auth.logout') }}" class="text-danger">Cerrar sesión</a>
+                        <a href="{{ url_for('auth.logout') }}" class="text-danger">{{ _('Cerrar sesión') }}</a>
                     </li>
                     {% else %}
                     <li>
-                        <a href="{{ url_for('auth.login') }}" class="text-danger">Iniciar sesión</a>
+                        <a href="{{ url_for('auth.login') }}" class="text-danger">{{ _('Iniciar sesión') }}</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -163,12 +173,12 @@
             <div class="row">
                 <div class="col-md-6 col-sm-6">
                      <a href="https://www.argentina.gob.ar" target="_blank">
-                        <img src="{{ url_for('static', filename='img/escudo_HD.png') }}" alt="Escudo Nacional Argentino" height="50" class="ar-logo">
+                        <img src="{{ url_for('static', filename='img/escudo_HD.png') }}" alt="{{ _('Escudo Nacional Argentino') }}" height="50" class="ar-logo">
                      </a>
                 </div>
                 <div class="col-md-6 col-sm-6 text-right"> {# text-right for BS3 #}
-                    <p class="text-muted small">© 2025 Observatorio de Drogas Sintéticas</p>
-                    <p class="text-muted small">Ministerio de Seguridad Nacional. Todos los derechos reservados</p>
+                    <p class="text-muted small">{{ _('© 2025 Observatorio de Drogas Sintéticas') }}</p>
+                    <p class="text-muted small">{{ _('Ministerio de Seguridad Nacional. Todos los derechos reservados') }}</p>
                 </div>
             </div>
         </div>

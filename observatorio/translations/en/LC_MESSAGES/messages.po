@@ -1,0 +1,68 @@
+# English translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-05-23 17:49+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: app/templates/base.html:7
+msgid "Observatorio de Drogas Sintéticas | Ministerio de Seguridad Nacional"
+msgstr "Synthetic Drug Observatory | Ministry of National Security"
+
+#: app/templates/base.html:58
+msgid "Toggle navigation"
+msgstr "Toggle navigation"
+
+#: app/templates/base.html:64
+msgid "Logo Ministerio de Seguridad"
+msgstr "Ministry of Security Logo"
+
+#: app/templates/base.html:66
+msgid "Ministerio de Seguridad Nacional"
+msgstr "Ministry of National Security"
+
+#: app/templates/base.html:67
+msgid "Observatorio de Drogas Sintéticas"
+msgstr "Synthetic Drug Observatory"
+
+#: app/templates/base.html:74
+msgid "Idioma"
+msgstr "Language"
+
+#: app/templates/base.html:84
+msgid "Bienvenido,"
+msgstr "Welcome,"
+
+#: app/templates/base.html:87
+msgid "Cerrar sesión"
+msgstr "Logout"
+
+#: app/templates/base.html:91
+msgid "Iniciar sesión"
+msgstr "Login"
+
+#: app/templates/base.html:176
+msgid "Escudo Nacional Argentino"
+msgstr "Argentine National Coat of Arms"
+
+#: app/templates/base.html:180
+msgid "© 2025 Observatorio de Drogas Sintéticas"
+msgstr "© 2025 Synthetic Drug Observatory"
+
+#: app/templates/base.html:181
+msgid "Ministerio de Seguridad Nacional. Todos los derechos reservados"
+msgstr "Ministry of National Security. All rights reserved"
+

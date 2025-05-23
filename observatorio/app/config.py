@@ -18,6 +18,11 @@ class Config:
     
     # Redis
     REDIS_URL = os.environ.get('REDIS_URL') or 'redis://localhost:6379/0'
+
+    # Babel
+    LANGUAGES = ['es', 'en', 'pt']
+    BABEL_DEFAULT_LOCALE = 'es'
+    BABEL_TRANSLATION_DIRECTORIES = '../translations'
     
     # Dominios por país
     COUNTRY_DOMAINS = {
