@@ -1,96 +1,67 @@
-2025-04-01 22:56:34,054 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-01 22:56:37,429 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-01 22:56:37,520 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-01 22:59:13,844 INFO: Observatorio startup [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:70]
-2025-04-01 22:59:17,736 ERROR: Exception on /legislation [GET] [in /Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py:1414]
-Traceback (most recent call last):
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py", line 2190, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py", line 1486, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py", line 1484, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py", line 1469, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask_login/utils.py", line 290, in decorated_view
-    return current_app.ensure_sync(func)(*args, **kwargs)
-  File "/Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py", line 135, in legislation
-    return render_template('main/legislation.html')
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/templating.py", line 150, in render_template
-    template = app.jinja_env.get_or_select_template(template_name_or_list)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 1087, in get_or_select_template
-    return self.get_template(template_name_or_list, parent, globals)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 1016, in get_template
-    return self._load_template(name, globals)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 975, in _load_template
-    template = self.loader.load(self, name, self.make_globals(globals))
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/loaders.py", line 138, in load
-    code = environment.compile(source, name, filename)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 771, in compile
-    self.handle_exception(source=source_hint)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 942, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "<unknown>", line 195, in template
-jinja2.exceptions.TemplateSyntaxError: Missing end of comment tag
-2025-04-01 22:59:17,806 ERROR: Exception on /legislation [GET] [in /Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py:1414]
-Traceback (most recent call last):
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py", line 2190, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py", line 1486, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py", line 1484, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py", line 1469, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask_login/utils.py", line 290, in decorated_view
-    return current_app.ensure_sync(func)(*args, **kwargs)
-  File "/Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py", line 135, in legislation
-    return render_template('main/legislation.html')
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/templating.py", line 150, in render_template
-    template = app.jinja_env.get_or_select_template(template_name_or_list)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 1087, in get_or_select_template
-    return self.get_template(template_name_or_list, parent, globals)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 1016, in get_template
-    return self._load_template(name, globals)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 975, in _load_template
-    template = self.loader.load(self, name, self.make_globals(globals))
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/loaders.py", line 138, in load
-    code = environment.compile(source, name, filename)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 771, in compile
-    self.handle_exception(source=source_hint)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 942, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "<unknown>", line 195, in template
-jinja2.exceptions.TemplateSyntaxError: Missing end of comment tag
-2025-04-01 22:59:21,655 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-01 22:59:21,752 INFO: MAPBOX_TOKEN en la ruta: pk.eyJ1IjoiaWF6YXJhdGUxOTk1IiwiYSI6ImNtNjExNzlqMTBqb3MyaW9vamZqODlkZGkifQ.lQ_lfadoe8d_eLqVqVDB [in /Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py:112]
-2025-04-01 22:59:22,506 ERROR: Exception on /legislation [GET] [in /Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py:1414]
-Traceback (most recent call last):
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py", line 2190, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py", line 1486, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py", line 1484, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/app.py", line 1469, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask_login/utils.py", line 290, in decorated_view
-    return current_app.ensure_sync(func)(*args, **kwargs)
-  File "/Users/macbook/Documents/Centro_Regional/observatorio/app/main/routes.py", line 135, in legislation
-    return render_template('main/legislation.html')
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/flask/templating.py", line 150, in render_template
-    template = app.jinja_env.get_or_select_template(template_name_or_list)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 1087, in get_or_select_template
-    return self.get_template(template_name_or_list, parent, globals)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 1016, in get_template
-    return self._load_template(name, globals)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 975, in _load_template
-    template = self.loader.load(self, name, self.make_globals(globals))
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/loaders.py", line 138, in load
-    code = environment.compile(source, name, filename)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 771, in compile
-    self.handle_exception(source=source_hint)
-  File "/Users/macbook/Documents/Centro_Regional/venv/lib/python3.9/site-packages/jinja2/environment.py", line 942, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "<unknown>", line 195, in template
-jinja2.exceptions.TemplateSyntaxError: Missing end of comment tag
+2025-05-23 20:12:35,788 INFO: Config de idiomas: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:83]
+2025-05-23 20:12:35,791 INFO: Babel Translation Directories: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:84]
+2025-05-23 20:12:35,791 INFO: Ruta base de la app: /Users/macbook/Documents/Centro_Regional/observatorio/app [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:85]
+2025-05-23 20:12:35,791 INFO: Idioma solicitado en sesión: pt [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:91]
+2025-05-23 20:12:35,791 INFO: USANDO IDIOMA: pt (desde sesión) [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:95]
+2025-05-23 20:12:35,791 INFO: ======= DIAGNOSTICO DE IDIOMA ======= [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:81]
+2025-05-23 20:12:35,791 INFO: Sesión completa: {'_flashes': [('success', 'Idioma cambiado a: pt')], '_fresh': False, 'language': 'pt'} [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:82]
+2025-05-23 20:12:35,791 INFO: Config de idiomas: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:83]
+2025-05-23 20:12:35,791 INFO: Babel Translation Directories: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:84]
+2025-05-23 20:12:35,791 INFO: Ruta base de la app: /Users/macbook/Documents/Centro_Regional/observatorio/app [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:85]
+2025-05-23 20:12:35,791 INFO: Idioma solicitado en sesión: pt [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:91]
+2025-05-23 20:12:35,791 INFO: USANDO IDIOMA: pt (desde sesión) [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:95]
+2025-05-23 20:12:35,792 INFO: ======= DIAGNOSTICO DE IDIOMA ======= [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:81]
+2025-05-23 20:12:35,792 INFO: Sesión completa: {'_flashes': [('success', 'Idioma cambiado a: pt')], '_fresh': False, 'language': 'pt'} [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:82]
+2025-05-23 20:12:35,792 INFO: Config de idiomas: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:83]
+2025-05-23 20:12:35,792 INFO: Babel Translation Directories: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:84]
+2025-05-23 20:12:35,792 INFO: Ruta base de la app: /Users/macbook/Documents/Centro_Regional/observatorio/app [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:85]
+2025-05-23 20:12:35,792 INFO: Idioma solicitado en sesión: pt [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:91]
+2025-05-23 20:12:35,792 INFO: USANDO IDIOMA: pt (desde sesión) [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:95]
+2025-05-23 20:12:37,612 INFO: ======= DIAGNOSTICO DE IDIOMA ======= [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:81]
+2025-05-23 20:12:37,614 INFO: Sesión completa: {'_fresh': False, 'language': 'pt'} [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:82]
+2025-05-23 20:12:37,614 INFO: Config de idiomas: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:83]
+2025-05-23 20:12:37,614 INFO: Babel Translation Directories: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:84]
+2025-05-23 20:12:37,614 INFO: Ruta base de la app: /Users/macbook/Documents/Centro_Regional/observatorio/app [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:85]
+2025-05-23 20:12:37,615 INFO: Idioma solicitado en sesión: pt [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:91]
+2025-05-23 20:12:37,615 INFO: USANDO IDIOMA: pt (desde sesión) [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:95]
+2025-05-23 20:12:37,615 INFO: ======= DIAGNOSTICO DE IDIOMA ======= [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:81]
+2025-05-23 20:12:37,615 INFO: Sesión completa: {'_fresh': False, 'language': 'pt'} [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:82]
+2025-05-23 20:12:37,615 INFO: Config de idiomas: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:83]
+2025-05-23 20:12:37,615 INFO: Babel Translation Directories: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:84]
+2025-05-23 20:12:37,615 INFO: Ruta base de la app: /Users/macbook/Documents/Centro_Regional/observatorio/app [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:85]
+2025-05-23 20:12:37,615 INFO: Idioma solicitado en sesión: pt [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:91]
+2025-05-23 20:12:37,615 INFO: USANDO IDIOMA: pt (desde sesión) [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:95]
+2025-05-23 20:12:37,616 INFO: ======= DIAGNOSTICO DE IDIOMA ======= [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:81]
+2025-05-23 20:12:37,616 INFO: Sesión completa: {'_fresh': False, 'language': 'pt'} [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:82]
+2025-05-23 20:12:37,616 INFO: Config de idiomas: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:83]
+2025-05-23 20:12:37,616 INFO: Babel Translation Directories: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:84]
+2025-05-23 20:12:37,616 INFO: Ruta base de la app: /Users/macbook/Documents/Centro_Regional/observatorio/app [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:85]
+2025-05-23 20:12:37,616 INFO: Idioma solicitado en sesión: pt [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:91]
+2025-05-23 20:12:37,616 INFO: USANDO IDIOMA: pt (desde sesión) [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:95]
+2025-05-23 20:12:45,434 INFO: ======= DIAGNOSTICO DE IDIOMA ======= [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:81]
+2025-05-23 20:12:45,434 INFO: Sesión completa: {'_fresh': False, 'language': 'pt'} [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:82]
+2025-05-23 20:12:45,434 INFO: Config de idiomas: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:83]
+2025-05-23 20:12:45,434 INFO: Babel Translation Directories: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:84]
+2025-05-23 20:12:45,435 INFO: Ruta base de la app: /Users/macbook/Documents/Centro_Regional/observatorio/app [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:85]
+2025-05-23 20:12:45,435 INFO: Idioma solicitado en sesión: pt [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:91]
+2025-05-23 20:12:45,435 INFO: USANDO IDIOMA: pt (desde sesión) [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:95]
+2025-05-23 20:12:45,435 INFO: ======= DIAGNOSTICO DE IDIOMA ======= [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:81]
+2025-05-23 20:12:45,435 INFO: Sesión completa: {'_fresh': False, 'language': 'pt'} [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:82]
+2025-05-23 20:12:45,435 INFO: Config de idiomas: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:83]
+2025-05-23 20:12:45,435 INFO: Babel Translation Directories: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:84]
+2025-05-23 20:12:45,435 INFO: Ruta base de la app: /Users/macbook/Documents/Centro_Regional/observatorio/app [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:85]
+2025-05-23 20:12:45,435 INFO: Idioma solicitado en sesión: pt [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:91]
+2025-05-23 20:12:45,435 INFO: USANDO IDIOMA: pt (desde sesión) [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:95]
+2025-05-23 20:12:45,436 INFO: ======= DIAGNOSTICO DE IDIOMA ======= [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:81]
+2025-05-23 20:12:45,436 INFO: Sesión completa: {'_fresh': False, 'language': 'pt'} [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:82]
+2025-05-23 20:12:45,436 INFO: Config de idiomas: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:83]
+2025-05-23 20:12:45,436 INFO: Babel Translation Directories: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:84]
+2025-05-23 20:12:45,436 INFO: Ruta base de la app: /Users/macbook/Documents/Centro_Regional/observatorio/app [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:85]
+2025-05-23 20:12:45,436 INFO: Idioma solicitado en sesión: pt [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:91]
+2025-05-23 20:12:45,436 INFO: USANDO IDIOMA: pt (desde sesión) [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:95]
+2025-05-23 20:13:06,223 INFO: ======= DIAGNOSTICO DE IDIOMA ======= [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:81]
+2025-05-23 20:13:06,223 INFO: Sesión completa: {'_fresh': False, 'language': 'pt'} [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:82]
+2025-05-23 20:13:06,223 INFO: Config de idiomas: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:83]
+2025-05-23 20:13:06,223 INFO: Babel Translation Directories: None [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:84]
+2025-05-23 20:13:06,223 INFO: Ruta base de la app: /Users/macbook/Documents/Centro_Regional/observatorio/app [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:85]
+2025-05-23 20:13:06,223 INFO: Idioma solicitado en sesión: pt [in /Users/macbook/Documents/Centro_Regional/observatorio/app/__init__.py:91]

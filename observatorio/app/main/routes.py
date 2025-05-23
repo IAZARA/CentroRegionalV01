@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, jsonify
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, jsonify, session
 from flask_login import login_required, current_user, logout_user
 from app.services.news_service import NewsService
 from app.services.geocoding_service import GeocodingService
@@ -144,7 +144,53 @@ def analisis_tecnico():
 def agenda():
     return render_template('main/agenda.html')
 
-@bp.route('/force-logout')
+@bp.route('/set_language/<language_code>')
+def set_language(language_code):
+    # Agregar logs detallados para depurar
+    current_app.logger.info(f"Cambiando idioma a: {language_code}")
+    current_app.logger.info(f"Idiomas configurados: {current_app.config.get('LANGUAGES')}")
+    current_app.logger.info(f"Sesión actual: {dict(session)}")
+    
+    # Asegurarse de que el código de idioma sea uno de los idiomas soportados
+    supported_languages = current_app.config.get('LANGUAGES', ['es', 'en', 'pt'])
+    if language_code not in supported_languages:
+        flash(f'Idioma seleccionado ({language_code}) no válido. Opciones: {supported_languages}', 'danger')
+        return redirect(request.referrer or url_for('main.home'))
+
+    # Guardar en sesión
+    session['language'] = language_code
+    session.modified = True  # Forzar la actualización de la sesión
+    current_app.logger.info(f"Sesión actualizada: {dict(session)}")
+    
+    # Preparar JSON para respuesta AJAX o redirección normal
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({'success': True, 'language': language_code})
+    
+    # Respuesta normal con redirección
+    flash(f'Idioma cambiado a: {language_code}', 'success')
+    redirect_url = request.referrer or url_for('main.home')
+    current_app.logger.info(f"Redireccionando a: {redirect_url}")
+    return redirect(redirect_url)
+
+@bp.route('/browser_translate/<language_code>')
+def browser_translate(language_code):
+    """Ruta para activar la traducción del navegador con JavaScript"""
+    if language_code not in ['es', 'en', 'pt']:
+        return jsonify({'success': False, 'message': 'Idioma no soportado'})
+        
+    # No necesitamos guardar nada en la sesión, solo devolver el código de idioma
+    # para que el JavaScript lo maneje
+    return jsonify({
+        'success': True,
+        'language': language_code,
+        'language_name': {
+            'es': 'Español',
+            'en': 'English',
+            'pt': 'Português'
+        }.get(language_code, 'Unknown')
+    })
+
+@bp.route('/force_logout')
 def force_logout():
     logout_user()
     return 'Logged out'

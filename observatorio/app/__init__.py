@@ -1,8 +1,9 @@
-from flask import Flask
+from flask import Flask, session, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
+from flask_babel import Babel
 from celery import Celery
 from dotenv import load_dotenv
 import os
@@ -14,6 +15,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
+babel = Babel()
 celery = Celery(__name__, broker=os.environ.get('REDIS_URL', 'redis://localhost:6379/0'))
 
 def create_admin_user():
@@ -70,6 +72,48 @@ def create_app(config_class=Config):
     db.init_app(app)
     migrate.init_app(app, db)
     bcrypt.init_app(app)
+    babel.init_app(app)
+    
+    # Configuración para traducciones con mayor nivel de depuración
+    @babel.localeselector
+    def get_locale():
+        # Depuración detallada
+        app.logger.info("======= DIAGNOSTICO DE IDIOMA =======")
+        app.logger.info(f"Sesión completa: {dict(session)}")
+        app.logger.info(f"Config de idiomas: {app.config.get('LANGUAGES')}")
+        app.logger.info(f"Babel Translation Directories: {app.config.get('BABEL_TRANSLATION_DIRECTORIES')}")
+        app.logger.info(f"Ruta base de la app: {os.path.dirname(__file__)}")
+        
+        # Si el idioma está en la sesión, usarlo FORZANDO uno de los idiomas soportados
+        if 'language' in session:
+            language = session['language']
+            supported = app.config.get('LANGUAGES', ['es', 'en', 'pt'])
+            app.logger.info(f"Idioma solicitado en sesión: {language}")
+            
+            # Forzar que el idioma sea uno válido
+            if language in supported:
+                app.logger.info(f"USANDO IDIOMA: {language} (desde sesión)")
+                return language
+            else:
+                app.logger.info(f"Idioma no soportado: {language}, usando default")
+        else:
+            app.logger.info("No hay idioma en la sesión")
+        
+        # Intentar usar el idioma del navegador como respaldo
+        languages = app.config.get('LANGUAGES', ['es', 'en', 'pt'])
+        best = request.accept_languages.best_match(languages) if request.accept_languages else None
+        if best:
+            app.logger.info(f"USANDO IDIOMA: {best} (desde navegador)")
+            return best
+        
+        # Último respaldo: usar el idioma por defecto
+        default = app.config.get('BABEL_DEFAULT_LOCALE', 'es')
+        app.logger.info(f"USANDO IDIOMA: {default} (idioma por defecto)")
+        app.logger.info("======= FIN DIAGNOSTICO =======")
+        return default
+    
+    # Hacer que get_locale esté disponible en las plantillas
+    app.jinja_env.globals.update(get_locale=get_locale)
     
     # Configurar login manager
     login_manager.init_app(app)

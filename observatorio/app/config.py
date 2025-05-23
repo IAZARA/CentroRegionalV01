@@ -19,6 +19,12 @@ class Config:
     # Redis
     REDIS_URL = os.environ.get('REDIS_URL') or 'redis://localhost:6379/0'
     
+    # Babel - Configuración de idiomas
+    LANGUAGES = ['es', 'en', 'pt']
+    BABEL_DEFAULT_LOCALE = 'es'
+    # El formato correcto para BABEL_TRANSLATION_DIRECTORIES es una ruta con formato de plantilla
+    BABEL_TRANSLATION_DIRECTORIES = 'translations'
+    
     # Dominios por país
     COUNTRY_DOMAINS = {
         '.ar': {

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ get_locale() }}" data-language="{{ get_locale() }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate"> <!-- Evitar traducción automática de Google -->
     <title>{% block title %}Observatorio de Drogas Sintéticas | Ministerio de Seguridad Nacional{% endblock %}</title>
 
     <!-- Poncho CSS (Sistema de diseño del Gobierno Argentino) -->
@@ -17,6 +18,9 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Custom JavaScript para traducciones -->
+    <script src="{{ url_for('static', filename='js/translation.js') }}"></script>
     
     <!-- Estilos para marca de agua -->
     <style>
@@ -55,8 +59,8 @@
             <div class="navbar-brand d-flex align-items-center">
                 <img src="{{ url_for('static', filename='img/Logo MInisterio en negro.png') }}" alt="Logo Ministerio de Seguridad" height="70" class="me-3">
                 <div>
-                    <h5 class="mb-0">Ministerio de Seguridad Nacional</h5>
-                    <p class="small text-muted mb-0">Observatorio de Drogas Sintéticas</p>
+                    <h5 class="mb-0">{{ _('Ministerio de Seguridad Nacional') }}</h5>
+                    <p class="small text-muted mb-0">{{ _('Observatorio de Drogas Sintéticas') }}</p>
                 </div>
             </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,18 +70,38 @@
                 <!-- Menú vacío a la izquierda -->
                 <ul class="navbar-nav me-auto">
                 </ul>
-                <!-- Solo Bienvenido y Cerrar Sesión en rojo -->
+                <!-- Selector de idiomas con banderas (mejorado con soporte JavaScript) -->
+                <ul class="navbar-nav mx-3">
+                    <li class="nav-item px-1">
+                        <a class="nav-link btn btn-sm language-btn" href="#" data-lang="es" title="Español" style="font-size: 1.5rem;">
+                            <span class="flag-icon">🇦🇷</span>
+                        </a>
+                    </li>
+                    <li class="nav-item px-1">
+                        <a class="nav-link btn btn-sm language-btn" href="#" data-lang="en" title="English" style="font-size: 1.5rem;">
+                            <span class="flag-icon">🇺🇸</span>
+                        </a>
+                    </li>
+                    <li class="nav-item px-1">
+                        <a class="nav-link btn btn-sm language-btn" href="#" data-lang="pt" title="Português" style="font-size: 1.5rem;">
+                            <span class="flag-icon">🇧🇷</span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- Contenedor para Google Translate (oculto) -->
+                <div id="google_translate_element" style="display:none;"></div>
+                <!-- Bienvenido y Cerrar Sesión en rojo -->
                 <ul class="navbar-nav ms-auto">
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <span class="nav-link">Bienvenido, {{ current_user.username }}</span>
+                        <span class="nav-link">{{ _('Bienvenido') }}, {{ current_user.username }}</span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-danger" href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+                        <a class="nav-link text-danger" href="{{ url_for('auth.logout') }}">{{ _('Cerrar sesión') }}</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link text-danger" href="{{ url_for('auth.login') }}">Iniciar sesión</a>
+                        <a class="nav-link text-danger" href="{{ url_for('auth.login') }}">{{ _('Iniciar sesión') }}</a>
                     </li>
                     {% endif %}
                 </ul>

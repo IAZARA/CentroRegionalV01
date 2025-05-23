@@ -2,13 +2,24 @@
 
 {% block content %} {# Changed from dashboard_content #}
 <div class="container-fluid py-4"> {# Keep container-fluid for full width within main-content #}
-    <h1 class="mb-4 text-light">Legislación Internacional</h1>
+    <!-- Título con tarjeta azul similar a la página principal -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card bg-primary text-white mb-4">
+                    <div class="card-body">
+                        <h1 class="card-title">{{ _("Legislación Internacional") }}</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Argentina -->
     <div class="country-section mb-5">
         <h2 class="border-bottom pb-2 mb-4">
             <span class="flag-emoji me-2">🇦🇷</span>
-            Legislación Argentina
+            {{ _("Legislación Argentina") }}
         </h2>
         <ul class="list-unstyled">
             <li class="mb-3">
@@ -16,7 +27,7 @@
                 <br>
                 <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/804/norma.htm" target="_blank"
                     class="legislation-link">
-                    <i class="fas fa-external-link-alt me-1"></i>Ver documento
+                    <i class="fas fa-external-link-alt me-1"></i>{{ _("Ver documento") }}
                 </a>
             </li>
             <li class="mb-3">
@@ -67,7 +78,7 @@
     <div class="country-section mb-5">
         <h2 class="border-bottom pb-2 mb-4">
             <span class="flag-emoji me-2">🇧🇷</span>
-            Legislación Brasil
+            {{ _("Legislación Brasil") }}
         </h2>
         <ul class="list-unstyled">
             <li class="mb-3">
@@ -85,7 +96,7 @@
     <div class="country-section mb-5">
         <h2 class="border-bottom pb-2 mb-4">
             <span class="flag-emoji me-2">🇨🇱</span>
-            Legislación Chile
+            {{ _("Legislación Chile") }}
         </h2>
         <ul class="list-unstyled">
             <li class="mb-3">
@@ -102,7 +113,7 @@
     <div class="country-section mb-5">
         <h2 class="border-bottom pb-2 mb-4">
             <span class="flag-emoji me-2">🇨🇴</span>
-            Legislación Colombiana
+            {{ _("Legislación Colombiana") }}
         </h2>
         <ul class="list-unstyled">
             <li class="mb-3">
@@ -144,7 +155,7 @@
     <div class="country-section mb-5">
         <h2 class="border-bottom pb-2 mb-4">
             <span class="flag-emoji me-2">🇲🇽</span>
-            Legislación México
+            {{ _("Legislación México") }}
         </h2>
         <ul class="list-unstyled">
             <li class="mb-3">
