@@ -1,9 +1,9 @@
 {% extends "base_dashboard.html" %}
 
 {% block dashboard_content %}
-<div class="container-fluid mt-4">
+<div class="container-fluid"> {# mt-4 removed, spacing should be handled by Poncho/BS3 structure or custom CSS in base_dashboard/specific style block #}
     <div class="row">
-        <div class="col-12">
+        <div class="col-md-12"> {# col-12 changed to col-md-12 for BS3 convention #}
             <h2>Sistema de Alerta</h2>
             <p>Sistema de alerta temprana sobre drogas sintéticas.</p>
         </div>

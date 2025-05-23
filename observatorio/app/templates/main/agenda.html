@@ -2,39 +2,41 @@
 
 {% block extra_css %}
 <style>
-    .main-content {
-        padding: 0 !important;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+    /* Custom styles for centering the alert message */
+    .agenda-container {
+        margin-top: 50px; /* Adjust as needed for vertical centering */
     }
-
-    .alert-container {
-        max-width: 600px;
-        width: 90%;
+    .alert-custom {
+        /* Poncho's default alert styling will apply. 
+           Add custom background/text colors here if the theme requires it 
+           and Poncho's standard alert classes (alert-info, alert-warning) are not sufficient.
+           For example, if --secondary-color, --border-color, --text-color were from a custom theme:
+           background-color: #your-secondary-color; 
+           border-color: #your-border-color;
+           color: #your-text-color; 
+        */
+        padding: 25px; /* BS3 .alert already has padding, this is p-5 equivalent */
+        text-align: center; /* BS3 text-center */
+        /* box-shadow: 0 .5rem 1rem rgba(0,0,0,.15); BS5 shadow, BS3 usually doesn't emphasize shadows on alerts this way */
     }
-
-    .alert {
-        background-color: var(--secondary-color);
-        border: 1px solid var(--border-color);
-        color: var(--text-color);
+    .alert-custom .fa-3x {
+        font-size: 3em;
+        margin-bottom: 15px; /* BS3 equivalent for mb-3 */
     }
-
-    body.with-sidebar .main-container {
-        height: 100vh;
-        overflow: hidden;
+    .alert-custom .lead {
+        margin-top: 15px; /* BS3 equivalent for mt-3 */
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="alert-container">
-    <div class="alert p-5 shadow text-center">
-        <i class="fas fa-exclamation-circle fa-3x mb-3"></i>
-        <h2>Agenda MinSeg</h2>
-        <p class="lead mt-3">Este módulo se encuentra en desarrollo</p>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2 agenda-container"> {# Centering content using BS3 grid #}
+        <div class="alert alert-info alert-custom" role="alert"> {# Using a standard BS3 alert class, e.g., alert-info, and a custom class for specific styling #}
+            <i class="fa fa-exclamation-circle fa-3x"></i> {# Font Awesome icons are compatible #}
+            <h2>Agenda MinSeg</h2>
+            <p class="lead">Este módulo se encuentra en desarrollo</p>
+        </div>
     </div>
 </div>
 {% endblock %}
