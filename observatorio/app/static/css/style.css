@@ -163,11 +163,12 @@ body.dark-theme .sidebar hr {
 
 /* Contenedor Principal (estilo Poncho) */
 .main-container {
-    height: 100vh; /* Ocupa toda la altura */
-    overflow-y: auto; /* Permite scroll vertical SOLO en el contenido */
-    background-color: #ffffff; /* Fondo claro para estilo gubernamental */
-    padding-top: 60px; /* Espacio para el header */
-    padding-bottom: 1rem; /* Espacio inferior */
+    min-height: 100vh; /* Altura mínima de toda la ventana */
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    padding: 0;
+    margin: 0;
 }
 
 /* Contenedor principal en modo oscuro */
@@ -183,13 +184,16 @@ body.dark-theme .main-container {
 
 /* Contenido principal dentro del contenedor */
 .main-content {
-    padding: 0 1.5rem; /* Padding horizontal para el contenido */
+    flex: 1 0 auto;
+    width: 100%;
+    padding: 0;
+    margin: 0;
 }
 
 /* Contenedor de Flash Messages */
 .flash-container {
-    padding: 0 1.5rem; /* Alinear con el padding de main-content */
-    margin-bottom: 1rem;
+    padding: 0; /* Eliminamos el padding horizontal */
+    margin: 0 0 1rem 0; /* Solo margen inferior */
 }
 
 /* Cards (estilo Poncho) */
@@ -431,4 +435,41 @@ main {
 }
 .dashboard-wrapper { /* Si aún existe en algún lado */
     margin-top: 0 !important;
+}
+
+/* Estilos específicos para el footer */
+footer.footer {
+    background-color: #f8f9fa !important;
+    border-top: 1px solid #dee2e6 !important;
+    padding: 1rem 0 !important;
+    margin: 0 !important;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+/* Asegurar que el contenedor del footer no añada espacios adicionales */
+footer .container {
+    padding: 0 15px;
+    margin: 0 auto;
+}
+
+/* Asegurar que las filas y columnas del footer no añadan márgenes */
+footer .row,
+footer .col-md-6 {
+    margin: 0;
+    padding: 0;
+}
+
+/* Asegurar que el body ocupe toda la altura de la ventana */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Establecer el body como contenedor flex */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }

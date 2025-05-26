@@ -56,13 +56,13 @@
     <!-- Header Gubernamental (Poncho) -->
     <header class="navbar navbar-expand-lg navbar-light bg-light pt-0 pb-0">
         <div class="container-fluid">
-            <div class="navbar-brand d-flex align-items-center">
+            <a href="{{ url_for('main.index') }}" class="navbar-brand d-flex align-items-center text-decoration-none">
                 <img src="{{ url_for('static', filename='img/Logo MInisterio en negro.png') }}" alt="Logo Ministerio de Seguridad" height="70" class="me-3">
                 <div>
-                    <h5 class="mb-0">{{ _('Ministerio de Seguridad Nacional') }}</h5>
+                    <h5 class="mb-0 text-dark">{{ _('Ministerio de Seguridad Nacional') }}</h5>
                     <p class="small text-muted mb-0">{{ _('Observatorio de Drogas Sintéticas') }}</p>
                 </div>
-            </div>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
