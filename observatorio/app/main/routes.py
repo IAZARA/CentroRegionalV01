@@ -107,16 +107,10 @@ def get_news_locations():
 @bp.route('/geomap')
 @login_required
 def geomap():
-    # Obtener el token de Mapbox desde las variables de entorno
-    mapbox_token = current_app.config.get('MAPBOX_TOKEN') or os.environ.get('MAPBOX_TOKEN')
-    current_app.logger.info(f"MAPBOX_TOKEN en la ruta: {mapbox_token}")
+    # Funcionalidad migrada a Looker Pro - redirigir o mostrar mensaje
+    current_app.logger.info("Acceso a geomap - funcionalidad migrada a Looker Pro")
     
-    if not mapbox_token:
-        current_app.logger.error("No se encontró el token de Mapbox ni en config ni en variables de entorno")
-        flash('Error: No se encontró el token de Mapbox', 'error')
-        return redirect(url_for('main.feed_new'))
-    
-    # Lista de países disponibles
+    # Lista de países disponibles (mantenida para compatibilidad)
     countries = [
         {'code': '.ar', 'name': 'Argentina'},
         {'code': '.cl', 'name': 'Chile'},
@@ -125,8 +119,7 @@ def geomap():
         {'code': '.bo', 'name': 'Bolivia'}
     ]
     
-    return render_template('main/geomap.html', 
-                         mapbox_token=mapbox_token,
+    return render_template('main/geomap.html',
                          countries=countries)
 
 @bp.route('/legislation')

@@ -54,7 +54,6 @@ def create_app(config_class=Config):
     if os.path.exists(env_path):
         load_dotenv(env_path)
         app.logger.info("Variables de entorno cargadas desde .env")
-        app.logger.info(f"MAPBOX_TOKEN: {os.environ.get('MAPBOX_TOKEN', 'No encontrado')}")
     
     app.config.from_object(config_class)
     

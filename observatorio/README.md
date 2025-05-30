@@ -37,7 +37,6 @@ pip install -r requirements.txt
 FLASK_APP=app
 FLASK_ENV=development
 DATABASE_URL=postgresql://usuario:contraseña@localhost/nombre_db
-MAPBOX_TOKEN=tu_token_de_mapbox
 ```
 
 5. Inicializar la base de datos:

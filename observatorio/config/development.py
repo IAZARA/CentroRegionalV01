@@ -16,13 +16,6 @@ class DevelopmentConfig:
     CELERY_BROKER_URL = REDIS_URL
     CELERY_RESULT_BACKEND = REDIS_URL
 
-    # Configuración de APIs
-    MAPBOX_TOKEN = os.environ.get('MAPBOX_TOKEN')
-    GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY', 'AIzaSyCvxpQAB-wBAqe25KrBdIelktXrT26IPs4')
-    GOOGLE_SEARCH_ENGINE_ID = os.environ.get('GOOGLE_SEARCH_ENGINE_ID', 'c7187cfce45fa4986')
-    OPENCAGE_API_KEY = os.environ.get('OPENCAGE_API_KEY')
-    ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY')
-    
     # Configuración de Flask-Login
     LOGIN_DISABLED = False
     LOGIN_VIEW = 'auth.login'
