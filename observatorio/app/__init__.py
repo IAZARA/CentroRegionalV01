@@ -91,7 +91,7 @@ def create_app(config_class=Config):
     babel.init_app(app)
     
     # Configuración para traducciones con mayor nivel de depuración
-    @babel.localeselector
+    @babel.locale_selector
     def get_locale():
         # Depuración detallada
         app.logger.info("======= DIAGNOSTICO DE IDIOMA =======")
