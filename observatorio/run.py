@@ -10,12 +10,12 @@ with app.app_context():
     db.create_all()
     
     # Crear un usuario administrador si no existe
-    admin = User.query.filter_by(email='admin@minseg.gob.ar').first()
+    admin = User.query.filter_by(email='ivan.zarate@minseg.gob.ar').first()
     if not admin:
         admin = User(
-            email='admin@minseg.gob.ar',
-            nombre='Administrador',
-            apellido='Sistema',
+            email='ivan.zarate@minseg.gob.ar',
+            nombre='Ivan',
+            apellido='Zarate',
             telefono='0000000000',
             dependencia='Ministerio de Seguridad',
             role=UserRoles.ADMIN
@@ -23,6 +23,7 @@ with app.app_context():
         admin.set_password('Minseg2025-')
         db.session.add(admin)
         db.session.commit()
+        print(f"Usuario administrador creado: {admin.email}")
 
 if __name__ == '__main__':
     # Configurar argumentos de línea de comandos
