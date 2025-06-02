@@ -21,22 +21,39 @@ celery = Celery(__name__, broker=os.environ.get('REDIS_URL', 'redis://localhost:
 def create_admin_user():
     from app.models.user import User, UserRoles
     
-    # Verificar si ya existe un usuario administrador
-    admin_user = User.query.filter_by(email='admin@minseg.gob.ar').first()
+    # Verificar si ya existe un usuario administrador con el email solicitado
+    admin_user = User.query.filter_by(email='ivan.zarate@minseg.gob.ar').first()
     if not admin_user:
         admin_user = User(
+            nombre='Ivan',
+            apellido='Zarate',
+            email='ivan.zarate@minseg.gob.ar',
+            telefono='0000000000',
+            dependencia='Ministerio de Seguridad',
+            role=UserRoles.ADMIN,
+            first_login=False  # El admin no necesita cambiar la contraseña
+        )
+        admin_user.set_password('Minseg2025-')
+        db.session.add(admin_user)
+        db.session.commit()
+        print('Usuario administrador Ivan Zarate creado exitosamente.')
+    
+    # También verificar si existe el admin por defecto y crearlo si no existe
+    default_admin = User.query.filter_by(email='admin@minseg.gob.ar').first()
+    if not default_admin:
+        default_admin = User(
             nombre='Administrador',
             apellido='Sistema',
             email='admin@minseg.gob.ar',
             telefono='0000000000',
             dependencia='Ministerio de Seguridad',
             role=UserRoles.ADMIN,
-            first_login=False  # El admin no necesita cambiar la contraseña
+            first_login=False
         )
-        admin_user.set_password('Admin123!')
-        db.session.add(admin_user)
+        default_admin.set_password('Admin123!')
+        db.session.add(default_admin)
         db.session.commit()
-        print('Usuario administrador creado exitosamente.')
+        print('Usuario administrador por defecto creado exitosamente.')
 
 def create_app(config_class=Config):
     # Crear la aplicación Flask con el directorio instance explícito

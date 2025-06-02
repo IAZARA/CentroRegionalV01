@@ -3,6 +3,14 @@
 {% block extra_css %}
 <style>
     /* Estilos específicos para la página del mapa */
+    body {
+        background-color: #ffffff !important;
+    }
+    
+    .main-container {
+        background-color: #ffffff !important;
+    }
+    
     .main-content {
         padding: 0 !important;
         /* Sin padding para que el mapa ocupe todo */
@@ -12,6 +20,7 @@
         /* Usar flexbox */
         flex-direction: column;
         /* Organizar contenido verticalmente */
+        background-color: #ffffff !important;
     }
 
     .looker-container {
@@ -43,47 +52,29 @@
         /* Evitar scroll en el contenedor principal */
     }
 
-    /* Estilos para el botón de toggle */
-    .sidebar-toggle {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 1001;
-        background-color: var(--primary-color);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        transition: all 0.3s ease;
-    }
 
-    .sidebar-toggle:hover {
-        background-color: #0a3d7a;
-        transform: scale(1.1);
+    
+    /* Ocultar completamente el footer en la página del mapa */
+    footer.footer {
+        display: none !important;
     }
-
-    /* Estilos cuando la barra lateral está oculta */
-    body.sidebar-hidden .sidebar {
-        transform: translateX(-100%);
+    
+    /* Ajustar el main-content para ocupar toda la altura disponible */
+    .main-content {
+        min-height: 100vh !important;
+        height: 100vh !important;
     }
-
-    body.sidebar-hidden .main-container {
-        margin-left: 0;
-        width: 100%;
+    
+    /* Asegurar que el main-container ocupe toda la altura */
+    .main-container {
+        min-height: 100vh !important;
+        height: 100vh !important;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<button id="sidebarToggle" class="sidebar-toggle">
-    <i class="fas fa-bars"></i>
-</button>
+
 
 {# Contenido principal (mapa) #}
 {# No necesitamos <main> aquí porque ya está en base.html #}
@@ -94,18 +85,5 @@
             sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
     </div>
 
-<script>
-document.getElementById('sidebarToggle').addEventListener('click', function() {
-    document.body.classList.toggle('sidebar-hidden');
-    // Cambiar el ícono según el estado
-    const icon = this.querySelector('i');
-    if (document.body.classList.contains('sidebar-hidden')) {
-        icon.classList.remove('fa-bars');
-        icon.classList.add('fa-times');
-    } else {
-        icon.classList.remove('fa-times');
-        icon.classList.add('fa-bars');
-    }
-});
-</script>
+
 {% endblock %}

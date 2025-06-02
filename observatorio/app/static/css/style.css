@@ -27,7 +27,7 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5; /* Fondo claro para el estilo gubernamental */
+    background-color: #ffffff; /* Fondo blanco para eliminar el espacio gris */
     color: #333;
     font-family: 'Roboto', 'Encode Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Ubuntu, "Helvetica Neue", sans-serif;
     overflow-x: hidden; /* Prevenir scroll horizontal */
@@ -37,6 +37,30 @@ html, body {
 body.dark-theme {
     background-color: var(--dark-bg-color);
     color: var(--dark-text-color);
+}
+
+/* Estilos para el navbar y header */
+.navbar-nav .nav-link {
+    white-space: nowrap;
+    padding: 0.5rem 0.75rem;
+}
+
+.navbar-nav .nav-item {
+    display: flex;
+    align-items: center;
+}
+
+/* Asegurar que el texto no se corte en diferentes idiomas */
+.navbar-nav.ms-auto {
+    flex-wrap: nowrap;
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 768px) {
+    .navbar-nav .nav-link {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.6rem;
+    }
 }
 
 /* Sidebar Fija (estilo Poncho) */
@@ -169,6 +193,7 @@ body.dark-theme .sidebar hr {
     background-color: #ffffff;
     padding: 0;
     margin: 0;
+    width: 100%;
 }
 
 /* Contenedor principal en modo oscuro */
@@ -439,10 +464,10 @@ main {
 
 /* Estilos específicos para el footer */
 footer.footer {
-    background-color: #f8f9fa !important;
+    background-color: #ffffff !important;
     border-top: 1px solid #dee2e6 !important;
     padding: 1rem 0 !important;
-    margin: 0 !important;
+    margin: 2rem 0 0 0 !important; /* Añadido margen superior */
     width: 100%;
     flex-shrink: 0;
 }
@@ -472,4 +497,5 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background-color: #ffffff !important;
 }

@@ -1,250 +1,344 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container-fluid">
-    <!-- Hero Section -->
-    <div class="jumbotron text-white text-center">
-        <div class="container">
-            <h1 class="display-4 fw-bold">{{ _("Legislación Internacional") }}</h1>
-            <p class="lead">{{ _("Marco normativo para el control de drogas sintéticas en la región") }}</p>
-        </div>
-        <!-- Espacio adicional para evitar superposición con el pie de página -->
-        <div class="py-4"></div>
-    </div>
-    
-    <!-- Main Content -->
-    <div class="container py-4 mb-5">
-        <div class="row g-4">
-
-            <!-- Argentina -->
-            <div class="col-lg-6 col-xl-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-header text-white" style="background-color: #232d4f;">
-                        <h3 class="h5 mb-0">
-                            <span class="flag-emoji me-2">🇦🇷</span>
-                            {{ _("Legislación Argentina") }}
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group list-group-flush">
-                            <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/804/norma.htm" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Constitución de la Nación Argentina</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                            <a href="https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=138" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Ley 23737 - Modificación al Codigo Penal – Narcotrafico</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                            <a href="https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=20883" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Ley 17818 - Normas para su comercialización. Ley de estupefacientes</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                            <a href="https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=107623" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Ley 26.045 - Ley del Registro Nacional de Precursores Químicos</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                            <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/105000-109999/109264/texact.htm" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Ley N° 26.052 - Ley de Desfederalización Parcial de la Competencia Penal</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                            <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/265000-269999/268004/norma.htm" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Ley 27319 - Delitos Complejos</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Brasil -->
-            <div class="col-lg-6 col-xl-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-header text-white" style="background-color: #232d4f;">
-                        <h3 class="h5 mb-0">
-                            <span class="flag-emoji me-2">🇧🇷</span>
-                            {{ _("Legislación Brasil") }}
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group list-group-flush">
-                            <a href="https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2006/lei/l11343.htm" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Ley 11.343 (2006)</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chile -->
-            <div class="col-lg-6 col-xl-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-header text-white" style="background-color: #232d4f;">
-                        <h3 class="h5 mb-0">
-                            <span class="flag-emoji me-2">🇨🇱</span>
-                            {{ _("Legislación Chile") }}
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group list-group-flush">
-                            <a href="https://www.bcn.cl/leychile/navegar?idNorma=235507" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Ley N° 20.000 (1997)</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Colombia -->
-            <div class="col-lg-6 col-xl-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-header text-white" style="background-color: #232d4f;">
-                        <h3 class="h5 mb-0">
-                            <span class="flag-emoji me-2">🇨🇴</span>
-                            {{ _("Legislación Colombiana") }}
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group list-group-flush">
-                            <a href="https://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes/1586799" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Ley 30 - Estatuto de Estupefacientes</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                            <a href="https://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes/1663230" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Ley 599 - Código Penal</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                            <a href="https://www.minjusticia.gov.co/programas-co/ODC/Normas" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Ley 624 - Acuerdo entre Colombia y España sobre cooperación</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                            <a href="https://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes/1667717" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Ley 745 - Tipificación de contravención y porte de dosis personal</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- México -->
-            <div class="col-lg-6 col-xl-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-header text-white" style="background-color: #232d4f;">
-                        <h3 class="h5 mb-0">
-                            <span class="flag-emoji me-2">🇲🇽</span>
-                            {{ _("Legislación México") }}
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group list-group-flush">
-                            <a href="https://www.ordenjuridico.gob.mx/TratInt/2022ml/ESTUPEFACIENTES%20NOCIVOS.pdf" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Convención para la Supresión del Tráfico Ilícito de Estupefacientes Nocivos</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                            <a href="https://www.unodc.org/pdf/convention_1961_es.pdf" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Convención Única de 1961 sobre Estupefacientes</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                            <a href="https://www.unodc.org/pdf/convention_1971_es.pdf" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Convenio sobre Sustancias Sicotrópicas (1971)</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                            <a href="https://www.unodc.org/pdf/convention_1988_es.pdf" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Convención de las Naciones Unidas contra el Tráfico Ilícito</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                            <a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/CPF.pdf" target="_blank" class="list-group-item list-group-item-action">
-                                <strong>Código Penal Federal – Art. 193</strong>
-                                <i class="fas fa-external-link-alt ms-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+<!-- Jumbotron con título de sección -->
+<div class="jumbotron text-white py-2 mb-0" style="background-color: #232d4f; margin-top: -5px;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-12 text-center">
+                <h1 class="display-4">{{ _("Legislación Internacional") }}</h1>
+                <p class="lead">{{ _("Marco normativo para el control de drogas sintéticas en la región") }}</p>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Contenido principal -->
+<div class="container pt-3">
+    <!-- Argentina -->
+    <div class="legislation-section mb-5">
+        <h2 class="legislation-country-title">
+            <span class="flag-emoji me-2">🇦🇷</span>
+            {{ _("Legislación Argentina") }}
+        </h2>
+        <div class="list-group">
+            <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/804/norma.htm" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Constitución de la Nación Argentina</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=138" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Ley 23737 - Modificación al Codigo Penal – Narcotrafico</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=20883" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Ley 17818 - Normas para su comercialización. Ley de estupefacientes</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=107623" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Ley 26.045 - Ley del Registro Nacional de Precursores Químicos</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/105000-109999/109264/texact.htm" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Ley N° 26.052 - Ley de Desfederalización Parcial de la Competencia Penal</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://servicios.infoleg.gob.ar/infolegInternet/anexos/265000-269999/268004/norma.htm" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Ley 27319 - Delitos Complejos</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Brasil -->
+    <div class="legislation-section mb-5">
+        <h2 class="legislation-country-title">
+            <span class="flag-emoji me-2">🇧🇷</span>
+            {{ _("Legislación Brasil") }}
+        </h2>
+        <div class="list-group">
+            <a href="http://www.planalto.gov.br/ccivil_03/leis/l11343.htm" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Ley 11.343 (2006)</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Chile -->
+    <div class="legislation-section mb-5">
+        <h2 class="legislation-country-title">
+            <span class="flag-emoji me-2">🇨🇱</span>
+            {{ _("Legislación Chile") }}
+        </h2>
+        <div class="list-group">
+            <a href="https://www.bcn.cl/leychile/navegar?idNorma=235507" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Ley 20.000 (2005)</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes/1586799" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Ley 30 - Estatuto de Estupefacientes</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes/1663230" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Ley 599 - Código Penal</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://www.minjusticia.gov.co/programas-co/ODC/Normas" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Ley 624 - Acuerdo entre Colombia y España sobre cooperación</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://www.suin-juriscol.gov.co/viewDocument.asp?ruta=Leyes/1667717" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Ley 745 - Tipificación de contravención y porte de dosis personal</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- México -->
+    <div class="legislation-section mb-5">
+        <h2 class="legislation-country-title">
+            <span class="flag-emoji me-2">🇲🇽</span>
+            {{ _("Legislación México") }}
+        </h2>
+        <div class="list-group">
+            <a href="https://www.ordenjuridico.gob.mx/TratInt/2022ml/ESTUPEFACIENTES%20NOCIVOS.pdf" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Convención para la Supresión del Tráfico Ilícito de Estupefacientes Nocivos</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://www.unodc.org/pdf/convention_1961_es.pdf" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Convención Única de 1961 sobre Estupefacientes</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://www.unodc.org/pdf/convention_1971_es.pdf" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Convenio sobre Sustancias Sicotrópicas (1971)</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://www.unodc.org/pdf/convention_1988_es.pdf" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Convención de las Naciones Unidas contra el Tráfico Ilícito</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+            <a href="https://www.diputados.gob.mx/LeyesBiblio/pdf/CPF.pdf" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span><strong>Código Penal Federal – Art. 193</strong></span>
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_css %}
 <style>
-    /* Estilos específicos para la página de legislación con estilo Poncho */
-    /* Asegura espacio suficiente entre el contenido y el footer */
-    .container-fluid {
-        padding-bottom: 6rem;
-        min-height: calc(100vh - 160px);
+    /* Resetear estilos para evitar conflictos */
+    html, body {
+        background-color: white !important;
+        background: white !important;
     }
+    
+    .main-content {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        background-color: white !important;
+    }
+    
+    .main-container {
+        background-color: white !important;
+        background: white !important;
+    }
+    
+    /* Override footer background and border */
+    footer.footer {
+        background-color: white !important;
+        background: white !important;
+        border-top: none !important;
+        border: none !important;
+    }
+    
+    /* Override any container backgrounds */
+    .container, .container-fluid {
+        background-color: transparent !important;
+    }
+    
+    /* Estilos mejorados para el jumbotron */
     .jumbotron {
-        background-color: #232d4f;
-        padding: 1rem 0;
-        margin-bottom: 0;
-        border-radius: 0;
-    }
-    
-    .card {
-        border-radius: 4px;
-        margin-bottom: 1.5rem;
-    }
-    
-    .card-header {
-        font-weight: 600;
-    }
-    
-    .bg-primary {
         background-color: #232d4f !important;
+        color: white !important;
+        padding: 2rem 0 !important;
+        margin-bottom: 2rem !important;
+        border-radius: 0 !important;
+        width: 100% !important;
+        text-align: center !important;
     }
     
-    .text-primary {
-        color: #232d4f !important;
+    /* Contenedor principal con padding adecuado */
+    .legislation-container {
+        padding: 0 1.5rem 5rem 1.5rem !important;
+        max-width: 1400px !important;
+        margin: 0 auto !important;
     }
     
-    .list-group-item-action:hover {
-        background-color: #f8f9fa;
-        color: var(--primary-color);
-        transform: translateX(5px);
-        transition: all 0.3s ease;
+    /* Estilos para las tarjetas */
+    .legislation-card {
+        height: 100% !important;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+        border: 1px solid #dee2e6 !important;
+        margin-bottom: 1.5rem !important;
+        transition: transform 0.2s !important;
     }
     
+    .legislation-card:hover {
+        transform: translateY(-5px) !important;
+    }
+    
+    /* Cabecera de tarjeta */
+    .legislation-header {
+        background-color: #232d4f !important;
+        color: white !important;
+        padding: 1rem !important;
+        font-weight: 600 !important;
+        border-top-left-radius: 4px !important;
+        border-top-right-radius: 4px !important;
+    }
+    
+    /* Lista de enlaces */
+    .legislation-list {
+        padding: 0 !important;
+        margin: 0 !important;
+        list-style: none !important;
+    }
+    
+    .legislation-item {
+        padding: 0.75rem 1rem !important;
+        border-bottom: 1px solid #dee2e6 !important;
+        transition: all 0.3s ease !important;
+        display: block !important;
+        text-decoration: none !important;
+        color: #333 !important;
+    }
+    
+    .legislation-item:last-child {
+        border-bottom: none !important;
+    }
+    
+    .legislation-item:hover {
+        background-color: #f8f9fa !important;
+        padding-left: 1.5rem !important;
+    }
+    
+    /* Banderas emoji */
     .flag-emoji {
-        font-size: 1.2rem;
+        font-size: 1.2rem !important;
+        margin-right: 0.5rem !important;
     }
     
-    /* Estilos responsivos */
+    /* Icono de enlace externo */
+    .external-link-icon {
+        margin-left: 0.5rem !important;
+        font-size: 0.8rem !important;
+        color: #6c757d !important;
+    }
+    
+    /* Responsive */
     @media (max-width: 767.98px) {
+        .jumbotron {
+            padding: 1.5rem 0 !important;
+        }
+        
         .jumbotron h1 {
-            font-size: 1.8rem;
+            font-size: 1.8rem !important;
         }
         
-        .jumbotron .lead {
-            font-size: 1rem;
+        .jumbotron p {
+            font-size: 1rem !important;
         }
         
-        .col-md-6 {
-            margin-bottom: 1rem;
+        .legislation-container {
+            padding: 0 1rem 3rem 1rem !important;
         }
     }
     
     /* Modo oscuro */
-    body.dark-theme .card {
-        background-color: var(--dark-bg-color);
-        border-color: var(--dark-border-color);
+    body.dark-theme .legislation-card {
+        background-color: var(--dark-content-bg-color) !important;
+        border-color: var(--dark-border-color) !important;
     }
     
-    body.dark-theme .list-group-item {
-        background-color: var(--dark-bg-color);
-        border-color: var(--dark-border-color);
-        color: var(--dark-text-color);
+    body.dark-theme .legislation-item {
+        background-color: var(--dark-content-bg-color) !important;
+        border-color: var(--dark-border-color) !important;
+        color: var(--dark-text-color) !important;
     }
     
-    body.dark-theme .list-group-item-action:hover {
-        background-color: var(--dark-hover-color);
-        color: var(--dark-text-color);
+    body.dark-theme .legislation-item:hover {
+        background-color: var(--dark-hover-color) !important;
     }
     
-    body.dark-theme .jumbotron {
-        background-color: var(--dark-primary-color);
+    /* Estilos CSS del footer removidos para evitar duplicación */
+    
+    /* Legislation list styles */
+    .legislation-section {
+        margin-bottom: 3rem;
+    }
+    
+    .legislation-country-title {
+        color: #232d4f;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #232d4f;
+    }
+    
+    .flag-emoji {
+        font-size: 1.2em;
+    }
+    
+    .list-group-item {
+        border-left: 3px solid transparent;
+        transition: all 0.3s ease;
+    }
+    
+    .list-group-item:hover {
+        border-left-color: #232d4f;
+        background-color: #f8f9fa;
+        transform: translateX(5px);
+    }
+    
+    .list-group-item strong {
+        color: #232d4f;
+    }
+    
+    .list-group-item i {
+        color: #6c757d;
+        transition: color 0.3s ease;
+    }
+    
+    .list-group-item:hover i {
+        color: #232d4f;
+    }
+    
+    /* Dark mode styles for legislation */
+    [data-bs-theme="dark"] .legislation-country-title {
+        color: #ffffff;
+        border-bottom-color: #ffffff;
+    }
+    
+    [data-bs-theme="dark"] .list-group-item {
+        background-color: #212529;
+        border-color: #495057;
+    }
+    
+    [data-bs-theme="dark"] .list-group-item:hover {
+        background-color: #343a40;
+        border-left-color: #ffffff;
+    }
+    
+    [data-bs-theme="dark"] .list-group-item strong {
+        color: #ffffff;
+    }
+    
+    [data-bs-theme="dark"] .list-group-item:hover i {
+        color: #ffffff;
     }
 </style>
 {% endblock %}

@@ -1,4 +1,4 @@
-#!/Users/macbook/Documents/Centro_Regional/venv/bin/python3.10
+#!/Users/macbook/Documents/Centro_Regional/venv/bin/python3.13
 # -*- coding: utf-8 -*-
 import re
 import sys

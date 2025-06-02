@@ -85,6 +85,14 @@ msgstr "Legislation"
 msgid "Agenda MinSeg"
 msgstr "MinSeg Agenda"
 
+#: app/templates/main/home.html:62
+msgid "Análisis Técnico"
+msgstr "Technical Analysis"
+
+#: app/templates/main/home.html:67
+msgid "Gestión de Usuarios"
+msgstr "User Management"
+
 #: venv/lib/python3.13/site-packages/click/_termui_impl.py:600
 #, python-brace-format
 msgid "{editor}: Editing failed"

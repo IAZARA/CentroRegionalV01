@@ -70,38 +70,21 @@
                 <!-- Menú vacío a la izquierda -->
                 <ul class="navbar-nav me-auto">
                 </ul>
-                <!-- Selector de idiomas con banderas (mejorado con soporte JavaScript) -->
-                <ul class="navbar-nav mx-3">
-                    <li class="nav-item px-1">
-                        <a class="nav-link btn btn-sm language-btn" href="#" data-lang="es" title="Español" style="font-size: 1.5rem;">
-                            <span class="flag-icon">🇦🇷</span>
-                        </a>
-                    </li>
-                    <li class="nav-item px-1">
-                        <a class="nav-link btn btn-sm language-btn" href="#" data-lang="en" title="English" style="font-size: 1.5rem;">
-                            <span class="flag-icon">🇺🇸</span>
-                        </a>
-                    </li>
-                    <li class="nav-item px-1">
-                        <a class="nav-link btn btn-sm language-btn" href="#" data-lang="pt" title="Português" style="font-size: 1.5rem;">
-                            <span class="flag-icon">🇧🇷</span>
-                        </a>
-                    </li>
-                </ul>
+
                 <!-- Contenedor para Google Translate (oculto) -->
                 <div id="google_translate_element" style="display:none;"></div>
                 <!-- Bienvenido y Cerrar Sesión en rojo -->
                 <ul class="navbar-nav ms-auto">
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
-                        <span class="nav-link">{{ _('Bienvenido') }}, {{ current_user.username }}</span>
+                        <span class="nav-link text-nowrap">{{ _('Bienvenido') }}, {{ current_user.username }}</span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-danger" href="{{ url_for('auth.logout') }}">{{ _('Cerrar sesión') }}</a>
+                        <a class="nav-link text-danger text-nowrap" href="{{ url_for('auth.logout') }}">{{ _('Cerrar sesión') }}</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link text-danger" href="{{ url_for('auth.login') }}">{{ _('Iniciar sesión') }}</a>
+                        <a class="nav-link text-danger text-nowrap" href="{{ url_for('auth.login') }}">{{ _('Iniciar sesión') }}</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -128,7 +111,7 @@
         </div>
 
         <!-- Main Content -->
-        <main class="main-content">
+        <main class="main-content" style="min-height: calc(100vh - 250px);"> <!-- Ajustado min-height -->
             {% block content %}{% endblock %}
         </main>
     </div>

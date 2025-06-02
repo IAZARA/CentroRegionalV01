@@ -37,6 +37,12 @@ class Config:
     LOGIN_DISABLED = False
     LOGIN_VIEW = 'auth.login'
     USE_SESSION_FOR_NEXT = True
+    
+    # Configuración de Flask-Babel
+    LANGUAGES = ['es', 'en', 'pt']
+    BABEL_DEFAULT_LOCALE = 'es'
+    BABEL_DEFAULT_TIMEZONE = 'UTC'
+    BABEL_TRANSLATION_DIRECTORIES = 'translations'
 
 class DevelopmentConfig(Config):
     DEBUG = True

@@ -10,7 +10,7 @@ def admin_required(f):
     """Decorador para requerir rol de ADMIN"""
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not current_user.is_authenticated or current_user.role != 'ADMIN':
+        if not current_user.is_authenticated or current_user.role != 'administrador':
             flash('Acceso denegado. Se requieren permisos de administrador.', 'error')
             return redirect(url_for('main.index'))
         return f(*args, **kwargs)
@@ -57,7 +57,6 @@ def create_user():
             db.session.add(user)
             db.session.commit()
             
-            flash(f'Usuario {user.nombre} {user.apellido} creado exitosamente.', 'success')
             return redirect(url_for('admin.manage_users'))
             
         except Exception as e:

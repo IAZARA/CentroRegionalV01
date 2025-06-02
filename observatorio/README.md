@@ -14,44 +14,68 @@ Sistema de monitoreo y análisis de noticias sobre drogas sintéticas en Argenti
 ## Requisitos
 
 - Python 3.8+
-- PostgreSQL 12+
-- Mapbox API Key
+- SQLite (configuración por defecto) o PostgreSQL 12+ (opcional)
+- Mapbox API Key (para funcionalidad de mapas)
 - Dependencias de Python listadas en requirements.txt
 
-## Configuración
+## Configuración Inicial
 
-1. Clonar el repositorio
-2. Crear un entorno virtual:
+1. **Clonar el repositorio**
+
+2. **Crear y activar entorno virtual**:
 ```bash
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate  # En Windows: venv\Scripts\activate
 ```
 
-3. Instalar dependencias:
+3. **Instalar dependencias**:
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Configurar variables de entorno en `.env`:
-```
-FLASK_APP=app
-FLASK_ENV=development
-DATABASE_URL=postgresql://usuario:contraseña@localhost/nombre_db
-```
+4. **Configuración de la base de datos**:
 
-5. Inicializar la base de datos:
+   La aplicación está configurada para usar SQLite por defecto. Los datos se almacenarán en `instance/observatorio.db`.
+
+   Si deseas usar PostgreSQL, modifica `config.py` con:
+   ```python
+   SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+       'postgresql://postgres:tu_contraseña@localhost/observatorio'
+   ```
+
+5. **Inicializar la base de datos**:
 ```bash
 flask db upgrade
 ```
 
-## Uso
+## Iniciar la Aplicación
 
-Para ejecutar el servidor de desarrollo:
+1. **Activar el entorno virtual** (si no está activo):
 ```bash
-flask run
+source venv/bin/activate  # En Windows: venv\Scripts\activate
 ```
 
-El servidor estará disponible en `http://localhost:5000`
+2. **Iniciar el servidor de desarrollo**:
+```bash
+flask run --port 5001
+```
+
+3. **Acceder a la aplicación**:
+   - URL: http://127.0.0.1:5001
+
+## Credenciales de Acceso
+
+- **Usuario administrador**: admin@minseg.gob.ar
+- **Contraseña**: Admin123!
+
+## Tareas Programadas
+
+Para actualizar noticias manualmente:
+
+- Últimas 24 horas: `python -m scripts.update_news`
+- Últimos N días: `python -m scripts.update_news --days N`
+- Últimas N horas: `python -m scripts.update_news --hours N`
+- Reprocesar todas las ubicaciones: `python -m scripts.update_news --reprocess-all`
 
 ## Base de Datos
 
@@ -88,3 +112,5 @@ python -m scripts.update_news --hours 12
 Para reprocesar todas las ubicaciones (manteniendo las noticias):
 
 python -m scripts.update_news --reprocess-all
+
+source venv/bin/activate && flask run --port 5001
