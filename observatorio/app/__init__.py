@@ -147,6 +147,9 @@ def create_app(config_class=Config):
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp)
     
+    from app.admin import admin as admin_bp
+    app.register_blueprint(admin_bp)
+    
     from app.routes.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/api')
 

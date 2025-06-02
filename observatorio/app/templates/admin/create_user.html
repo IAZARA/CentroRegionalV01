@@ -1,0 +1,160 @@
+{% extends "base_dashboard.html" %}
+
+{% block title %}Crear Usuario - Observatorio{% endblock %}
+
+{% block dashboard_content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card bg-dark border-secondary">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-plus"></i> Crear Nuevo Usuario
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <!-- Mensajes flash -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.nombre.label(class="form-label text-white") }}
+                                {{ form.nombre(class="form-control" + (" is-invalid" if form.nombre.errors else "")) }}
+                                {% if form.nombre.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.nombre.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                {{ form.apellido.label(class="form-label text-white") }}
+                                {{ form.apellido(class="form-control" + (" is-invalid" if form.apellido.errors else "")) }}
+                                {% if form.apellido.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.apellido.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.email.label(class="form-label text-white") }}
+                            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+                            {% if form.email.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text text-muted">
+                                El email será utilizado como nombre de usuario para iniciar sesión.
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form.telefono.label(class="form-label text-white") }}
+                                {{ form.telefono(class="form-control" + (" is-invalid" if form.telefono.errors else "")) }}
+                                {% if form.telefono.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.telefono.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                {{ form.role.label(class="form-label text-white") }}
+                                {{ form.role(class="form-select" + (" is-invalid" if form.role.errors else "")) }}
+                                {% if form.role.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.role.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.dependencia.label(class="form-label text-white") }}
+                            {{ form.dependencia(class="form-control" + (" is-invalid" if form.dependencia.errors else "")) }}
+                            {% if form.dependencia.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.dependencia.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.password.label(class="form-label text-white") }}
+                            {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
+                            {% if form.password.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.password.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <div class="form-text text-muted">
+                                El usuario deberá cambiar esta contraseña en su primer inicio de sesión.
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('admin.manage_users') }}" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-arrow-left"></i> Cancelar
+                            </a>
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-control, .form-select {
+    background-color: #2d3748;
+    border-color: #4a5568;
+    color: #e2e8f0;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #2d3748;
+    border-color: #63b3ed;
+    color: #e2e8f0;
+    box-shadow: 0 0 0 0.2rem rgba(99, 179, 237, 0.25);
+}
+
+.form-control::placeholder {
+    color: #a0aec0;
+}
+
+.form-text {
+    color: #a0aec0 !important;
+}
+</style>
+{% endblock %}

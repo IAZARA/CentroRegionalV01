@@ -12,7 +12,6 @@ def guest_login():
         logout_user()
     guest = GuestUser()
     login_user(guest)
-    flash('Has ingresado como invitado', 'info')
     return redirect(url_for('main.home'))
 
 @bp.route('/login', methods=['GET', 'POST'])
